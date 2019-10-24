@@ -750,6 +750,21 @@ Só é possível conectar na VM localmente, outras estações de trab não conse
 -> vagrant ssh -> chaves pública e privada criadas automaticamente e é usado localhost para conexão com a VM
 *******************************************************************************
 04 Gerando uma chave SSH
+
+04 Gerando uma chave SSH
+-> dentro da VM -> exit 
+-> vagrant status
+-> Se o SSH estiver instalado no SO -> ssh-keygen -t rsa
+-> criar senha - opcional
+-> ls
+-> as chaves devem ser apresentadas
+-> copiar a chave pública para a VM -> vagrant ssh
+-> acessar pelo terminal a pasta criada -> ls vagrant 
+-> Copiamos a chave publica da pasta "vagrant" para a máquina virtual escrevendo cp /vagrant/id_bionic.pub
+-> ls
+-> Precisamos adicioná-la ao arquivo "authorized_keys" digitando cat id_bionic.pub >> .ssh/authorized_keys
+-> cat .ssh/authorized_keys
+
 -> 
 ->
 ->
