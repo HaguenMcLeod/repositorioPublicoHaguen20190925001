@@ -698,14 +698,37 @@ end
 -> Private Network -> A MV não pode ser acessada por máquinas de fora, só a máquina host pode acessar
 -> vagrant up
 -> Dentro da pasta "bionic" modificar o arquivo Vagrantfile na terceira linha de "config.vm.network "private_network", type: "dhcp"" para "config.vm.network "public_network"" 
+-> vagrant halt ou vagrant reload não necessitando assim do comando abaixo "vagrant up"
+-> vagrant up
+-> pode ser ixibida a seguinte msg:
+*******************************************************************************
+==> default: Available bridged network interfaces:
+1) wlp2s0
+2) enp3s0
+==> default: When choosing an interface, it is usually the one that is
+==> default: being used to connect to the internet.
+    default: Which interface should the network 
+	bridge to? se enp3s0 -> digitar "1"
+*******************************************************************************
 -> exit "se" a VM estiver rodando
--> vagrant reload
 -> no console deve aparecer a linha "default: Adapter 2: bridged" -> permite a VM fazer parte da rede pública e se comunicar com o DHCP da rede pública
 -> vagrant ssh -> para acessar a VM
 -> Pode ser necessário destruir a VM caso o IP público não apareça no console
--> 
--> 
--> 
--> 
--> 
-->  
+-> a saída do comando vagrant ssh deve retornar o segundo IP conforme abaixo:
+*******************************************************************************
+  System load:  0.18              Processes:             102
+  Usage of /:   11.6% of 9.63GB   Users logged in:       0
+  Memory usage: 13%               IP address for enp0s3: 10.0.2.15
+  Swap usage:   0%                IP address for enp0s8: 192.168.1.102
+*******************************************************************************
+-> copiar o IP 192.168.1.102 (pode variar) e testar no navegador
+->  Agora outras máquinas "físicas" podem se conectar 
+	a essa VM através desse IP
+-> É possível setar um IP estático, que deve estar disponível na 
+	rede alterando o arquivo Vagrantfile para "config.vm.network "public_network", ip: "192.168.1.24"" 
+Para testar com IP estático -> exit se estiver executando "vagrant ssh"
+-> Modificar o Vagrantfile mudando a linha de comando para "config.vm.network "public_network", ip: "192.168.1.24""
+-> vagrant reload
+-> digitar o IP estático no browser do celular, por exemplo
+->
+
