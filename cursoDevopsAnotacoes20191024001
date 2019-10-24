@@ -1,0 +1,803 @@
+Comandos no Terminal do Ubuntu -> Ctrl + Alt + Enter
+1 - Identificar diretório corrente -> pwd
+2 - Lista arquivos e diretórios -> ls
+3 - Informa ao terminal para mostrar uma msg -> echo Bem Vindo
+4 - Setas do teclado para navegar por comandos já incluídos no terminal
+5 - Cria arquivo com msg passada pelo terminal -> echo "Bem Vindo" > bemVindo.txt
+6 - Ler o arquivo criado via terminal, o terinal tem que estar aberto na posta aonde o arquivo foi criado - > cat bemVindo.txt
+7 - Tecla Tab completa comandos parcialmente inseridos no terminal
+8 - Limpa a tela do terminal -> clear
+9 - Lista informações sobre conteúdo de diretórios -> ls -l
+10 - Lista informações sobre conteúdo de diretórios, inclusive ocultos -> ls -la
+11 - Comando que retorna ajuda sobre outros comandos -> man comando
+12 - Mostra no terminal o nome do usuário -> whoami
+13 - Mostra conteúdo do arquivo com os números das linhas -> cat bemVindo.txt -n
+14 - Adicionar nova linha ao arquivo txt sem sobrescrever, utilizar duas ">>" -> echo "segunda string dentro do arquivo" >> bemVindo.txt
+15 - para entrar no diretório -> cd diretorio, para voltar ao diretório anterior cd ..
+16 - criar diretório -> mkdir diretorio
+17 - voltar para o diretório original do usuário -> cd
+18 - voltar para o diretório original do usuário -> /
+19 - Remover pasta -> rmdir pasta
+20 - Apagar arquivo -> rm arquivo.txt
+21 - Ler conteúdo de todos os arquivos na pasta -> car arquivo?.txt
+22 - Ler conteúdo de todos os arquivos na pasta com qualquer caractere no final-> car arquivo*.txt
+23 - Apagar diretório e seu conteúdo -> rm -r diretorio
+24 - Copiar arquivo -> cp arquivo destino
+25 - Renomear arquivo -> mv arquivo.txt arquivo2.txt
+26 - Mover arquivo para outra pasta -> mv arquivo.txt pasta/nome do arquivo ou novo nome
+27 - Copiar diretórios -> cp -r origem destino
+28 - Arquivos .zip compactar-> zip -r arquivo.zip pasta/
+29 - Ver conteúdo arquivo .zip -> unzip -l pasta.zip
+30 - Descompactar -> unzip pasta.zip
+31 - Descompactar com menos dados exibidos no console -> unzip -q pasta.zip
+32 - Compactar com menos dados exibidos no console -> zip -rq pasta.zip pasta
+33 - compactar com arquivos .tar -> tar -cz pasta > pasta.tar.gz
+34 - descompactar arquivo .tar -> tar -xz < pasta.tar.gz
+35 - compactar com .tar sem redirecionamento -> tar -czf pasta.tar.gz pasta/
+36 - descompactar com .tar sem redirecionamento -> tar -xzf pasta.tar.gz
+37 - compactar com .tar mostrando log -> tar -vxzf pasta.tar.gz
+
+tar -czf work.tar.gz workspace/ -->> O parâmetro -c indica ao comando tar que desejamos criar um novo arquivo.
+
+O comando tar apenas empacota vários arquivos em um único arquivo, sem realizar compactação, e por isso passamos o parâmetro -z para indicar que queremos, além de criar um único arquivo, realizar um processo de compactação utilizando o formato .gz. Quando compactamos podemos reduzir o tamanho.
+
+O parâmetro -f indica que compactaremos para um arquivo.
+
+38 - editor de arquivos via terminal -> vi arquivo.txt
+navegação via setas do teclado
+39 - inserir conteúdo -> teclar "i" e digitar
+40 - sair da edição teclar esc
+41 - salvar -> :w + enter
+42 - :q + enter para sair
+43 - inserir texto na posição seguinte -> teclar "a" e digitar
+44 - para remover caracteres -> "x"
+45 - remover string -> digitar o numero da caracteres a serem removidos + "x"
+46 - sair salvando -> :wq
+47 - remover linha inteira -> dd
+48 - sair sem salvar -> :q!
+49 - adicionar no final da linha -> "A"
+50 - avançar para ultima linha -> Shift + g
+51 - avançar para linha n -> numero da linha + Shift + g
+52 - ir ao final da linha -> $
+53 - ir ao inicio da linha -> 0
+54 - procurar por palavra -> /palavra
+55 - avançar pelas palavras encontradas -> "n"
+56 - ultima linha do arquivo -> G(Shift + g)
+57 - Primeira linha do arquivo -> 1G (Shift + g)
+58 - copiar linha -> yy
+59 - colar linha -> p
+60 - copiar x linhas -> xyy
+61 - colar linha copiada x vezes -> xp
+
+Nivel 2 do curso ###############################
+
+62 - lista todos os processos rodando -> ps -e
+63 - parar processo rodando -> kill + numero do processo rodando visto no comando anterior
+64 - parar processo "na marra" -> kill -9 + numero do processo
+65 - lista processos rodando com detalhes -> ps -ef
+66 - lista detalhes de um processo especifico rodando -> ps -ef | grep firefox
+67 - lista linhas que contenham um termo dentro de um arquivo -> cat arquivo.txt | grep termoProcurado
+68 - lista % de uso do sistema e memoria pelos processo -> top
+69 - identificar qtos processos com um comando determinado nome estao carregados -> ps -ef | grep processo
+70 - matar mais de um processo -> kill -9 numeros do processos
+71 - matar toas as instancias de um processo -> killall processo ou killall -9 processo
+72 - listar processos de um usuário -> top -u lucas
+73 - listar andamento de processo especifico -> top -p numero do processo
+74 - Mudar o delay em que o Top atualiza as informações -> d + enter
+75 - Abrir processo pelo terminal -> processo + enter -> firefox + enter -> o terminal que abriu o processo fica travado com processo que foi aberto
+76 - Ver arvore de processos -> pstree
+77 - Parar o processo -> ctrl + z
+78 - Ver jobs associados ao processo parado -> jobs
+79 - Reiniciar o processo e joga-lo para o background -> bg 1 (ou numero do processo listado, se nada informado vai executar o primeiro) -> Pressionar Ctrl + z e executar o comando $ bg
+80 - Trazer o processo de volta para o terminal -> fg 1
+81 - Firefox & -> o & indica execução no background
+82 - Abrir processo direto no background -> processo &
+83 - criar programas no terminal -> sh "arquivo com os comandos", pode ser um arquivo texto como o a seguir escrito no gedit:
+
+echo "Vou dormir"
+sleep 5
+echo "Terminei de dormir"
+
+84 - descobrir usuário atual acessando arquivo -> whoami
+85 - permissões de arquivos -> r - leitura, w - escrita, x execução, d - diretório
+86 - mudar permissão para permitir execução de arquivo -> chmod +x arquivo
+87 - agora para executar o arquivo, do item 83, nao precisa mais do comando sh e sim de ./arquivo
+88 - para tirar a permissão -> chmod -x arquivo
+89 - O "~" em ~/workspace/ é um atalho para representar o diretório do usuário
+90 - Listar permissões de arquivo -> ls -1 arquivo
+91 - localizar um arquivo no hd -> locate arquivo -> e atualizado de tempo em tempo pelo sistema
+92 - atualizar db interno de índice do ubuntu para pesquisar por arquivos recentes -> sudo update db
+93 - localizar o executável de um arquivo -> which arquivo
+94 - trocar senha do usuário corrente -> passwd
+95 - trocar senha do usuário root -> sudo passwd
+96 - logar como root -> su root
+97 - logar como outro usuário -> su outro usuario
+98 - criar novo usuário -> sudo adduser jose
+99 - trocar usuário -> su nome do usuario
+100 - logar como root -> su root ou somente su
+OBS.: Usuário root pode logar como outro usuário sem necessidade de senha
+101 - Tirar permissão de acesso de outros usuários a pasta de um usuário -> chmod o-rx usuario -> retira permissão para leitura e execução
+102 - Tirar permissão do próprio usuário -> chmod u-rx
+103 - Tirar permissão do grupo -> chmod g-rx
+104 - Visualizar variáveis de ambiente -> env
+105 - Visualizar variáveis aonde os comandos são executados -> env | grep PATH
+106 - Adicionar diretório ao PATH para poder executar comandos -> PATH=$PATH:/home/usuario/pasta que contem o arquivo a ser executado -> execução de script -> essa configuração só funciona enquanto o terminal estiver aberto
+107 - Para configurar o PATH para perdurar mesmo com o fechamento do terminal -> sudo gedit .bashrc & -> vai abrir no bloco de notas -> adicionar no final -> PATH=&$PATH:/home/usuario/pasta com o script a ser executado
+108 - O comando wc pode ser utilizado para contar o número de palavras, caracteres e linhas que um arquivo possui. Junto com o wc podemos utilizar a opção -w para indicar que desejamos contar apenas o número de palavras que existem no arquivo. O *.txt indica que desejamos realizar a contagem em todos os arquivos .txt do nosso diretório atual.
+109 - wc pode também contar o número de caracteres e linhas em um arquivo, ou em uma saída do terminal. Para isso, podemos utilizar a opção -c para caracteres e -l para linhas.
+110 - Conta quantos processos estão rodando -> ps -e | wc -l
+111 - Modificar variável que o console exibe com informações sobre o usuário ao lado do prompt -> echo $PS1
+112 - Instalar programas atualizando primeiro a lista de repositórios -> sudo apt-get update
+113 - Buscar programa em servidor ftp -> apt-cache search vsftp
+114 - Instalar o programa buscado -> sudo apt-get install programa -> no caso será instalado o servidor ftp "vsftp"
+115 - Subir o servidor -> ftp localhost
+116 - Desinstalar programa -> sudo apt-get remove programa - no caso o vsftp
+117 -     apt-get install: instala um programa dado o nome
+          apt-get remove: desinstala um programa dado o nome
+          apt-get update: busca uma lista das versões atualizadas dos programas
+          apt-cache search: procura os programas disponíveis para instalação
+118 - Instalar programas fora da central de programas do Ubuntu -> arquivos .deb -> baixar a versão .deb do programa a ser instalado -> abrir o terminal na pasta aonde o programa foi baixado -> sudo dpkg -i programa.deb -> exemplo -> $ sudo dpkg -i google-chrome-stable_current_amd64.deb
+119 - Desinstalar programa .deb -> sudo dpkg -r programa -> exemplo(s) -> $ sudo dpkg -r google-chrome-stable ou $ sudo apt-get remove google-chrome-stable
+120 - Verificar se serviço esta rodando -> ps -ef | grep serviço ou -> $ sudo service serviço status
+121 - Para o serviço sem forçar a parada -> sudo service serviço stop
+122 - Reiniciar o serviço -> sudo service serviço start -> Os scripts dentro do diretório /etc/init.d são os programas que são executados no startup da máquina.
+123 - Instalação a partir de código fonte -> Baixar o código fonte .tar.gz -> abrir terminal aonde o arquivo foi salvo -> tar zxf arquivo.tar.gz -> entrar no diretório criado após a descompactação -> o arquivo tar.gz é mais vantajoso que o .zip pois mantém as permissões de execução -> antes do iniciar a instalação, verificar se o arquivo está integro e com todas as dependências, se estiver presente, executar ./configure (dentro da pasta criada após a descompactação) -> buildar através do comando make -> pode acontecer de faltar uma ou mais bibliotecas -> se sim -> buscar a dependência que faltou -> apt-cache search biblioteca | grep dev -> sudo apt-get install biblioteca(do ambiente de desenvolvimento) -> executar "make" novamente agora com a bilbioteca faltante instalada -> depois executar "sudo make install"
+124 - Acesso a servidor remoto -> logar -> sudo apt-get install ssh-client (para efetuar conexões) ou sudo apt-get install ssh-server (para receber conexões) ou para efetuar as duas operações -> sudo apt-get install ssh -> testar se funcionou logando -> ssh usuario@localhost (sem modo grafico, não executa o forefox, por exemplo)
+125 - sair do ssh -> exit
+126 - logar com modo grafico -> ssh -x usuario@localhost
+127 - se travar o terminal -> crtl + c
+128 - copiar arquivo de maquina local para remota -> scp arquivo.zip usuario@localhost:/home/pasta do usuario ou scp arquivo.zip usuario@localhost:~/
+129 - copiar de maneira recursiva -> scp -r
+
+Modulo 3 ##########################################################################################
+
+130 - CVS, SVN, Mercurial, Git - Opções de controle de versão
+131 - Repositórios distribuídos - Isso permite o trabalho de modo offline, antes da comunicação com outro servidor para que o envio de versões
+132 - Instalar GIT via central de pacotes, marcar opções padrão ao instalar ou via comando -> sudo apt-get install git
+133 - GIT Bash - Equivalente ao Terminal do Ubuntu, os comandos podem ser executados no terminal do ubuntu
+134 - Conferir instalação git --version, para o curso serve qualquer versão
+135 - Criar um repositorio git -> git init
+136 - Status do repositório criado -> git status
+137 - Adicionar arquivo para monitoração do git -> git add arquivo -> git status para conferir
+138 - Para monitorar todos os arquivos da pasta -> git add.
+135 - Remover arquivo da monitoração -> git rm arquivo
+136 - Salvar alterações feitas com checkpoint (commit) ->  git commit -m "descricao do commit 001" - ATENÇÃO - Pode dar erro ao salvar, ver item 137 abaixo
+137 - Se der erro para salvar as alterações do passo 136 executar os comandos descritos abaixo:
+
+  git config --global user.email "you@example.com"
+  git config --global user.name "Your Name"
+
+to set your account's default identity.
+Omit --global to set the identity only in this repository.
+138 - Salvar arquivo que foi modificado -> git init se o monitoramento já não estiver ativo -> git add arquivo -> git commit -m "descricao do commit apos modificacao do arquivo "
+139 -
+
+Git - Diretórios remotos com sincronização de dados entre usuários ############
+
+git init
+git status
+git add index.html ou git add .
+git commit -m "Primeiro Commit"
+git config --global user.email
+git config --global user.name
+git commit -m "Primeiro Commit"
+modificação no arquivo index.html para gerar versão
+git status
+git add index.html
+git status
+git commit -m "Commit apos primeira alteracao"
+git log
+git config ..local ou git config --global -> exemplo -> git config -global user.name "Haguen"
+git config user.email
+git log --oneline
+git log -p -> log com mais detalhes
+https://devhints.io/git-log
+ignorar arquivos na monitoração -> criar o arquivo .gitignore e adicionar nele os arquivos a serem ignorados
+git add .gitignore
+git commit -m "Adicionando gitignore"
+git log --oneline
+Tudo fucnionou até aqui #######################################################
+Criando repositórios remotos:
+Abrir console na pasta ANTERIOR a pasta do usuário vinicius
+mkdir servidor
+cd servidor/
+git init  --bare
+copiar o caminho de repositório exibido no log -> /home/haguenmcleod/Backup20190927001/CursosInformatica/DevOps/Git/servidor/
+cd .. -> para voltar para a pasta vinicius
+git remote
+git remote add local /home/haguenmcleod/Backup20190927001/CursosInformatica/DevOps/Git/servidor/
+git remote
+git remote -v
+voltar para a pasta ANTERIOR a do usuario vinicius -> cd ..
+mkdir ana
+cd ana
+git clone /home/haguenmcleod/Backup20190927001/CursosInformatica/DevOps/Git/servidor/ projeto
+Funcionou até aqui ############################################################
+Sincronizando os dados
+Abrir o terminal na pasta do usuario vinicius
+git remote
+git push local master -> a saída do console deve ser ->
+*******************************************************************************
+Counting objects: 9, done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (6/6), done.
+Writing objects: 100% (9/9), 892 bytes | 297.00 KiB/s, done.
+Total 9 (delta 1), reused 0 (delta 0)
+To /home/haguenmcleod/Backup20190927001/CursosInformatica/DevOps/Git/servidor/
+ * [new branch]      master -> master
+*******************************************************************************
+cd ../ana/projeto/
+git remote
+git remote rename origin local
+git remote
+git pull local master
+A saída do console deve ser ->
+*******************************************************************************
+remote: Counting objects: 9, done.
+remote: Compressing objects: 100% (6/6), done.
+remote: Total 9 (delta 1), reused 0 (delta 0)
+Unpacking objects: 100% (9/9), done.
+From /home/haguenmcleod/Backup20190927001/CursosInformatica/DevOps/Git/servidor
+ * branch            master     -> FETCH_HEAD
+ * [new branch]      master     -> local/master
+*******************************************************************************
+ls
+a saída do console deve ser -> index.html
+-> Os asquivos index.html foram sincronizados para os usuários ana e vinicius
+Mofificar o index.html do usuario Ana e salvar
+git status -> dve indicar a alteração
+git add index.html
+git commit -m "Alteracao do usuario Ana 001"
+-> O usuário Vinicius ainda nao pode ver, é preciso enviar
+git push local master
+cd ../../vinicius/
+git status -> não mostrará dados para commitar mas ha dados para receber do usuario Ana
+git pull local master ->
+*******************************************************************************
+remote: Counting objects: 3, done.
+remote: Compressing objects: 100% (3/3), done.
+remote: Total 3 (delta 1), reused 0 (delta 0)
+Unpacking objects: 100% (3/3), done.
+From /home/haguenmcleod/Backup20190927001/CursosInformatica/DevOps/Git/servidor
+ * branch            master     -> FETCH_HEAD
+   093389f..f42b9db  master     -> local/master
+Updating 093389f..f42b9db
+Fast-forward
+ index.html | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+*******************************************************************************
+git log -p -> para mostrar as alterações
+*******************************************************************************
+-> os arquivos dos usuário Ana e Vinicius fora sincronizados
+com a alteração de Ana
+*******************************************************************************
+140 -
+
+############################################################
+14/10/2019 - ##################################################################
+06 GitHub
+
+Site GitHub -> https://github.com/
+-> Criar repositório -> clicar no sinal de "+" no canto superior direito da tela
+-> Atribuir nome ao repositório
+-> Atribuir descrição ao repositório
+-> Informar se o diretório será Publico ou Privado -> para Privado
+normalmente são contas pagas
+-> Clicar em criar repositório -> será exibida a tela inicial e ###############
+texto com sugestão para criação gestão de versões -> ##########################
+*******************************************************************************
+…or create a new repository on the command line
+
+echo "# alura-git" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin https://github.com/HaguenMcLeod/alura-git.git
+git push -u origin master
+
+…or push an existing repository from the command line
+
+git remote add origin https://github.com/HaguenMcLeod/alura-git.git
+git push -u origin master
+*******************************************************************************
+-> Se não estiver selecionado, clicar no botão HTTPS na #######################
+ barra de endereços dentro da página do git ###################################
+ dessa forma sempre será necessário informar senha ############################
+para trafegar dados ###########################################################
+-> Abrir console aonde um repositório possa ser criado, copiar da página ######
+do git o ######################################################################
+comando "git remote add origin https://github.com/HaguenMcLeod/alura-git.git" #
+e colar no console
+-> Enviar os dados do repositório -> git push -u origin master -> "-u" significa que sempre será executado o push de "origin" para "master", neste caso o comando poderia ser somente -> git push -> PARA MANTER MAIOR CONTROLE será usado o comando -> git push origin master -> a saída do console deve ser:
+*******************************************************************************
+Username for 'https://github.com': HaguenMcLeod
+Password for 'https://HaguenMcLeod@github.com':
+Counting objects: 6, done.
+Delta compression using up to 12 threads.
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (6/6), 648 bytes | 648.00 KiB/s, done.
+Total 6 (delta 1), reused 0 (delta 0)
+remote: Resolving deltas: 100% (1/1), done.
+To https://github.com/HaguenMcLeod/alura-git.git
+ * [new branch]      master -> master
+*******************************************************************************
+-> Ao atualizar a página do git o conteúdo da pasta Vinicius deve aparecer ####
+-> Na página do Git deverá ser possível visualizar todo o histórico ###########
+do arquivo submetido ##########################################################
+-> Exercício abaixo:
+1) Crie uma pasta nova eu seu computador;
+2) No terminal (ou Git Bash, no Windows) navegue até a pasta recém criada (utilize o comando cd para navegar entre pastas);
+3) Execute o comando git init --bare;
+4) Navegue até a pasta onde se encontra o seu projeto;
+5) Execute o comando git remote add local {caminho}. Substitua {caminho} pelo caminho completo da pasta recém criada;
+
+-> git commit -m "initial commit"
+
+6) Crie uma nova pasta em seu computador, para representar o trabalho de outra pessoa;
+7) No terminal (ou Git Bash, no Windows) navegue até a pasta recém criada;
+8) Execute o comando git clone {caminho} projeto. Substitua {caminho} pelo caminho completo da pasta que criamos no primeiro passo;
+9) Observe que o repositório clonado está vazio;
+10) Execute o comando 'git remote rename origin local' para renomear o repositório local da outra pessoa de "origin" para "local";
+11) Navegue até a pasta onde se encontra o seu projeto original - a pasta que contém a "primeira"pasta criada para o projeto;
+12) Execute o comando git push local master para enviar as suas modificações para o seu servidor;
+13) Navegue até a pasta criada no passo 6;
+14) Execute o comando git pull local master para baixar as modificações;
+15) Abra o seu navegador e acesse http://github.com/;
+16) Crie uma conta;
+17) Crie um novo repositório, clicando no símbolo de adição no canto superior direito;
+18) No terminal (ou Git Bash, no Windows) adicione, ao seu projeto inicial, o repositório remoto recém criado (os comandos são mostrados pelo próprio GitHub);
+19) Execute git push origin master para enviar as suas alterações para o repositório no GitHub.
+-> Comandos para versionamento na página do próprio Git:
+*******************************************************************************
+…or create a new repository on the command line
+
+echo "# repo006" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin https://github.com/HaguenMcLeod/aluraCursoBackupCodigosEImpressos
+.git
+git push -u origin master
+
+…or push an existing repository from the command line
+
+git remote add origin https://github.com/HaguenMcLeod/aluraCursoBackupCodigosEImpressos
+.git
+git push -u origin master
+
+git push -u origin https://github.com/HaguenMcLeod/aluraCursoBackupCodigosEImpressos.git
+*******************************************************************************
+-> Deletar repositório no Git -> Entrar no repositório -> #####################
+Aba Settings -> Delete ########################################################
+Branches - 15/10/2019 #########################################################
+-> para ver o branch atual -> git branch
+-> criar branch -> git novo branch -> agora se digitar -> git branch vão aparecer master e novo branch
+-> trocar do branch master para novo branch -> git checkout novo branch
+-> Ferramenta para visualização gráfica do Git -> #############################
+http://git-school.github.io/visualizing-git/ -> para usar a ferramenta ########
+digitar os comandos dentro do console da própria ferramenta ###################
+-> criar um segundo branch já trocando para uso do mesmo ->
+comando resumido -> git checkout -b segundo branch ->
+comando completo -> git branch segundo branch + git checkout segundo branch também funcionaria -> agora existem 3 branches -> "master", "novo branch" e "segundo branch"
+###############################################################################
+03 Unindo o trabalho - Docker #################################################
+-> Unir branches -> Se estiver no branch master, considerar a modificação concluída e quiser unir com o segundo branch que também estiver com trabalho concluído->
+-> git merge segundo branch (o branch master vai receber os dados do segundo branch) -> Será exibida msg para confirmação do commit de merge
+-> Mover commits para dentro da branch master ->
+Atualizando a branch - 16/10/2019 #############################################
+-> Atualizar branch master com commits dos outros branchs ->
+-> O merge junta os trabalhos e gera um merge commit. #########################
+-> O rebase aplica os commits de outra branch na branch atual. ################
+-> git rebase "outro branch" -> pega os commits de "outro branch" e junta #####
+ no branch master, o branch que recebe o rebase fica com sua versão ###########
+como a última #################################################################
+-> git log --graph -> exibe lista de commits com grafico simples
+###############################################################################
+Atualizando url/origin de destino no repositorio Git ->
+-> git config --list
+exemplo de retorno no console: ################################################
+...............................................................................
+remote.origin.url=https://github.com/ORG/repo-name.git ########################
+...............................................................................
+-> git remote set-url origin https://github.com/HaguenMcLeod/aluraCursoBackupCodigosEImpressos.git
+###############################################################################
+-> Envio de um .txt para um repositório já existente ##########################
+no Git que já contém arquivos #################################################
+-> Abrir o terminal na pasta do arquivo a ser enviado #########################
+-> git init
+-> git add cursoDevopsAnotacoes20191016001
+-> git commit -m "first commit"
+-> git push -u origin master
+-> origin neste caso é a url do Git ###########################################
+*******************************************************************************
+Saída do console:
+Username for 'https://github.com': HaguenMcLeod
+Password for 'https://HaguenMcLeod@github.com':
+Counting objects: 3, done.
+Delta compression using up to 12 threads.
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 8.15 KiB | 2.04 MiB/s, done.
+Total 3 (delta 1), reused 0 (delta 0)
+remote: Resolving deltas: 100% (1/1), completed with 1 local object.
+To https://github.com/HaguenMcLeod/aluraCursoBackupCodigosEImpressos.git
+   a22ae24..f1a9ad4  master -> master
+Branch 'master' set up to track remote branch 'master' from 'origin'.
+*******************************************************************************
+###############################################################################
+07 Resolvendo conflitos - 16/10/2019
+-> logado como usuário Ana
+-> git merge branch Ana
+-> O Git acusará um conflito se o arquivo sendo versionado ####################
+ tiver sido alterado "no mesmo ponto" por outro usuário #######################
+-> Se o arquivo estiver aberto no VisualStudio ele mostrará o conflito ########
+-> No VisualStudio -> HEAD é o que já está versionado #########################
+-> Para resolver o conflito -> No VisualStudio escolher a versão ##############
+da alteração que deve prevalecer e apagar tudo o que não deve -> salvar #######
+-> No console -> git status -> indicará "both modified"
+-> Após corrigir o conflito -> git add index.html
+-> git commit
+-> git log --grath
+-> git push local master
+-> O conflito acima deve ter sido resolvido com sucesso #######################
+-> ATENÇÃO -> Após o conflito ter sido resolvido, outros usuários #############
+precisam baixar a versão que foi versionada para trabalhar com ################
+o arquivo mais recente ########################################################
+-> git pull local master
+-> Testar alguma alteração com usuário diferente de Ana #######################
+-> git push local master
+-> ATENÇÃO - Sempre verificar se a versão em que esta trabalhando
+é a mais atual -> git pull local master
+*******************************************************************************
+Exercício:
+1) Execute o comando git branch e veja que apenas a branch master existe no seu repositório;
+2) Execute o comando git branch titulo e logo após execute o comando git branch. Veja que uma nova branch foi criada;
+3) Agora, para começar a trabalhar nesta branch, digite git checkout titulo;
+4) Execute novamente git branch e confira que agora você está na branch chamado titulo;
+5) Altere o título da página index.html para "Cursos de DevOps da Alura";
+6) Adicione as alterações com git add index.html;
+7) Faça o commit, com git commit -m "Alterando título da página";
+8) Execute o comando git log e confira o novo commit;
+9) Altere o título da página para "Lista de cursos de DevOps da Alura";
+10) Repita os passos 6 e 7, para adicionar um novo commit, alterando a mensagem;
+11) Repita o passo 8 para conferir o novo commit;
+12) Execute o comando git checkout master para voltar à linha de desenvolvimento master;
+13) Execute git log para conferir que os últimos dois commits não estão lá. Confira se o conteúdo do seu arquivo também voltou ao seu estado original;
+14) Na pasta criada para representar o trabalho de outra pessoa na aula anterior:
+
+    Execute git checkout -b lista para criar uma nova branch, chamada lista e passar a trabalhar nela;
+    Adicione o curso de "Kubernetes" na lista;
+    Repita os passos 6 e 7 para adicionar um novo commit, alterando a mensagem;
+    Execute o comando git checkout master para voltar à linha de desenvolvimento master;
+
+15) Volte para a pasta que representa o seu próprio trabalho;
+16) Altere o nome do curso de Docker para "Docker: Criando containers sem dor de cabeça";
+17) Repita os passos 6 e 7 para adicionar um novo commit, alterando a mensagem;
+18) Execute o comando git merge titulo para trazer o trabalho feito na branch titulo para a branch master;
+
+19) Execute o comando git log --graph para ver as linhas de desenvolvimento (branches);
+20) Execute git checkout titulo para trabalhar na branch chamada titulo;
+21) Altere o título para ter a palavra "Cursos" com letra maiúscula;
+22) Repita os passos 6 e 7 para adicionar um novo commit, alterando a mensagem;
+23) Execute o comando git checkout master para voltar à linha de desenvolvimento master;
+24) Execute o comando git rebase titulo;
+25) Execute o comando git log e confira que o commit foi adicionado antes do commit realizado diretamente na branch master;
+26) Execute o comando git push local master para enviar suas alterações para o repositório remoto que criamos na última aula;
+27) Na pasta criada para representar o trabalho de outra pessoa na aula anterior:
+
+    Execute o comando git pull local master para baixar as alterações que você já realizou;
+    Execute o comando git checkout lista para continuar trabalhando na lista de cursos;
+    Altere o nome do curso de Docker para "Curso de Docker: Criando containers sem dor de cabeça";
+    Repita os passos 6 e 7 para adicionar um novo commit, alterando a mensagem;
+    Execute o comando git checkout master para voltar à linha de desenvolvimento master;
+    Tente juntar seu trabalho com git merge lista;
+    Veja que há conflitos. Corrija-os, deixando apenas a linha com o nome correto do curso;
+    Execute o comando git add index.html para informar que os conflitos neste arquivo foram corrigidos;
+    Execute o comando git commit para que o Git finalize o merge;
+    Execute o comando git push local master para enviar as suas alterações;
+
+28) Volte para a pasta que representa o seu próprio trabalho;
+29) Altere o nome do curso de Vagrant para "Vagrant: Gerenciando máquinas virtuais";
+30) Repita os passos 6 e 7 para adicionar um novo commit, alterando a mensagem;
+31) Tente executar o comando git push local master. Veja a falha;
+32) Execute o comando git pull local master para trazer as alterações da outra pessoa;
+33) Agora sim, execute o comando git push local master para enviar as alterações.
+*******************************************************************************
+01 Ctrl + Z no Git - 17/10/2019 ###############################################
+Para modificações que ainda não receberam "git add" -> git checkout -- arquivo
+Para modificações que já não receberam "git add" -> git reset HEAD -- arquivo ->
+HEAD significa que o arquivo vai voltar ao estado de "não alterado" na ########
+área de trabalho ##############################################################
+Para modificações já commitadas -> Git log -> Para identificar o ##############
+código hash correspondente ao commite pretendido ##############################
+para desfazer -> git revert "numero do hash"
+###############################################################################
+03 Guardando para depois - 17/10/2019 #########################################
+-> Separar código a ser entregue no futuro -> git stash
+-> git stash -> salva o diretório de trabalho com um número "stash{numero}"
+-> git stash list -> para listar o que foi guardado para depois
+-> voltar a trabalhar no diretório
+que foi guardado -> git stash apply "numero do stash" #########################
+ATENÇÃO -> No caso de git stash apply é preciso digitar #######################
+depois -> git stash drop para limpar o dietório que foi separadado ############
+-> Para voltar a trabalhar no diretório separado
+ e ao mesmo tempo remover o temp -> git stash pop
+###############################################################################
+-> Histórico de todos os comandos inseridos no console -> history
+###############################################################################
+05 Viajando no tempo - 17/10/2019 #############################################
+Carregar uma versão que foi commitada ao longo do tempo de vida do projeto: ###
+-> git log --oneline -> para listar todos os commits ##########################
+-> selecionar na coluna com os números dos commits a versão pretendida ########
+-> exemplo -> 6397e2e Alterando título da página 002 -> selecionar "6397e2e"
+-> carregar o commit pretendido ---------------------> git checkout 6397e2e
+ATENÇÃO -> o commit checkoutado agora não pertence a nenhuma linha ############
+de tempo, se for necessário versionar é preciso criar um branch ###############
+-> voltar para o branch master -> git checkout master
+###############################################################################
+Exercício:
+1) Na pasta que representa o seu projeto, faça uma alteração qualquer no arquivo index.html;
+2) Execute o git status e veja que há uma alteração para adicionar;
+3) Execute o comando git checkout -- index.html. Confira se sua alteração foi desfeita;
+4) Novamente, faça alguma alteração no arquivo index.html;
+5) Execute o comando git add index.html;
+6) Execute o comando git reset HEAD index.html para trazer o arquivo index.html de volta para a HEAD do projeto (remover do stage, que é o que será enviado para o commit);
+7) Repita o passo 3;
+8) Faça mais uma vez alguma alteração no código;
+9) Execute o comando git add index.html e o comando git commit -m "Alterando o código" para realizar um commit;
+10) Execute o comando git log e copie o hash deste commit recém criado;
+11) Rode o comando git revert {hash}, substituindo {hash} pelo hash que você copiou anteriormente;
+12) Confira que suas alterações foram desfeitas;
+13) Mude o nome do curso de Ansible para "Ansible: Infraestrutura como código";
+14) Execute o comando git stash para salvar estas alterações na stash;
+15) Altere o nome do curso de Kubernetes para "Kubernetes: Introdução a orquestração de containers";
+16) Execute o comando git add index.html e o comando git commit -m "Alterando o nome do curso de Kubernetes" para realizar um commit;
+17) Execute o comando git stash pop para trazer a última alteração da stash;
+18) Execute o comando git add index.html e o comando git commit -m "Alterando o nome do curso de Ansible" para realizar um commit;
+19) Execute o comando git push local master para enviar todas as suas alterações;
+20) Execute o comando git log --oneline para ver os commits de forma resumida. Copie o hash do commit de merge com a branch lista;
+21) Execute o comando git checkout {hash} substituindo {hash} pelo hash que você copiou;
+22) Veja que diversas alterações não estão mais presentes;
+23) Execute git checkout master para voltar à linha principal de desenvolvimento.
+###############################################################################
+01 Vendo as alterações - 17/10/2019 ###########################################
+-> git log -p -> ver alterações de todos os commits
+-> git diff "numero de commit".."numero do outro commit" -> mostra a diferença entre dois commits, não #######################################################
+necessáriamente seguidos -> exemplo -> git diff ea539b3..6ca12ac ##############
+-> git diff -> mostra o que foi alterado e ainda NÂO commitado
+###############################################################################
+03 Tags e releases
+-> git tag -a nome da tag -m "Comentário na tag" -> cria uma tag
+-> git tag -> mostra todas as tags criadas
+-> git push local nome da tag -> envia para o servidor a tag criada
+-> git push origin master -> atualiza o servidor no GitHub
+-> git push origin nome da tag -> envia a tag para o GitHub -> agora ##########
+no GitHub vai ser exibida uma versão/release do projeto #######################
+Exercício:
+1) Execute o comando git log -p para ver, junto a cada commit, as alterações nele realizadas;
+2) Execute agora o comando git log --oneline;
+3) Execute o comando git diff {hash do commit de merge com lista}..{hash do último commit realizado};
+4) Execute alguma (pequena) alteração no index.html;
+5) Execute o comando git diff e veja esta alteração;
+6) Desfaça esta última alteração;
+7) Execute o comando git tag -a v0.1.0 para criar uma tag no seu código;
+8) Execute o comando git push origin v0.1.0 para enviar esta tag para o GitHub;
+9) Abra a página do repositório do GitHub que você criou e confira a aba de Releases.
+###############################################################################
+Inicio Módulo 3 - 19/10/2019 ##################################################
+1 - Hypervisor -> Hyper-V, VMware e VirtualBox
+2 - Vagrant -> Controlador do Hypervisor
+04 Instalação e a primeira VM - 20/10/2019 ####################################
+1 - Instalação do -> https://www.vagrantup.com/ -> download do .deb -> tentar usar versão mais próxima da 2
+2 - Instalação do VirtualBox -> Usar versão 6.0.x -> https://www.virtualbox.org/wiki/Linux_Downloads
+3 - Instalar VirtualBox
+4 - Instalar o Vagrant -> Será necessário reiniciar o computador após a instalação
+5 - Para usar o Vagrant -> Via terminal -> vagrant version
+6 - OK - Teste - pois não ficou claro se o Drive D acessado na aula é o criado pelo VB
+7 - Abrir terminal na pasta correspondente ao curso DevOps
+8 - mkdir ambiente_dev
+9 - cd ambiente_dev
+10 - vagrant init hashicorp/precise64
+*******************************************************************************
+Saída do console:
+A `Vagrantfile` has been placed in this directory. You are now
+ready to `vagrant up` your first virtual environment! Please read
+the comments in the Vagrantfile as well as documentation on
+`vagrantup.com` for more information on using Vagrant.
+*******************************************************************************
+-> vagrant up -> This command creates and configures guest machines according to your Vagrantfile. -> no VirtualBox a máquina virtual já será exibida em execução
+-> verificar se a pasta oculta ".vagrant" foi criada
+-> vagrant status -> para verificar statu da maquina virtual
+-> parar a máquina virtual -> vagrant halt
+-> suspender  a máquina virtual -> vagrant suspend
+06 Conexão via SSH -> Conexão remota entre máquinas
+-> vagrant ssh -> Para conectar a máquina virtual
+-> exit -> para desconectar
+-> Se der erro para conectar -> Verificar a presença de "Cliente OpenSSH"
+-> Vagrantfile, vamos definir o sistema operacional, a rede,
+memória, entre outras configurações.
+02 Port Forwarding ############################################################
+1 - Criar a pasta "precise" dentro da pasta "ambiente_dev"
+2 - Mover para dentro da pasta "precise" o Vagrantfile e o arquivo oculto .vagrant
+3 - ATENÇÃO -> Em caso de commit, a pasta oculta .vagrant não precisa ser versionada
+4 - Entrar na página "https://app.vagrantup.com/ubuntu" -> selecionar "Oficial Ubuntu 18.04 LST", ou a versão LTS mais mais recente da época, e clicar -> 
+5 - Na página seguinte, copiar o conteúdo do campo Vagrantfile:
+*******************************************************************************
+Segue abaixo o conteúdo:
+*******************************************************************************
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/bionic64"
+end
+*******************************************************************************
+6 - Dentro da pasta "ambiente_dev" criar a pasta "bionic"
+7 - Pelo console, entrar na pasta "bionic" -> vagrant up
+8 - vagrant status
+9 - vagrant ssh -> para conectar à máquina virtual
+10 - sudo apt-get update
+11 - sudo apt-get install -y nginx -> nginx é um servidor web popular
+12 - netstat -lntp - > para confirmar se funcionou, deve indicar uso da porta 80
+13 - curl http://localhost -> também funciona para testar se funcionou, deve retornar formato html
+14 - exit
+15 - No arquivo bionic/Vagrantfile -> inserir a linha "config.vm.network "forwarded_port", guest: 80, host:8080" -> A página fonte da configuração é: https://www.vagrantup.com/docs/networking/forwarded_ports.html
+16 - ATENÇÃO - A porta host:8080 pode variar, basta que seja uma porta livre no sistema operacional host
+ATENÇÃO -> Verificar se o caminho para a pasta "bionic" mudou no console, se sim, abrir outro console dentro da pasta e prosseguir com o comandos abaixo:
+17 - Vagrant halt se a máquina já estiver rodando
+18 - Vagrant up para subir com as novas configurações
+19 - As portas guest o host devem ser mencionadas na saída do log que vai aparecer
+20 - Abrir página do navagador em branco e digitar o endereço -> localhost:8080 (ou o número da porta host escolhido)
+21 - Deve aparecer a página de welcome do nginx
+22 - Exemplo -> config.vm.network "forwarded_port", guest: 80, host: 8088 -> 
+-> O guest é a máquina virtual, host é o sistema que roda o provider/hypervisor
+04 IP na rede privada - 22/10/2019 ############################################
+-> Atribuir IP à máquina virtual -> 
+-> Começar dentro da pasta "bionic" com o Vagrant rodando
+-> Acessar página de configuração do Vagrant -> a parte "Static IP" em "Network > Private Network
+-> Copiar a linha -> config.vm.network "private_network", ip: "192.168.50.4" e inserir como terceira linha no arquivo Vagrantfile
+-> vagrant halt
+-> vagrant up -> para atualizar com o nova linha inserida no arquivo
+-> ALTERNATIVA -> Ao invés dos 2 comandos acima, testar o comando -> vagrant reload (nem sempre funciona) -> se funcionar, um terceiro adaptador deve ser mostrado na saida do console
+-> ifconfig -> deve mostrar 3 adaptadores no console, dois originais da placa de rede e outro da máquina virtual criada com o IP inserido na linha no arquivo Vagrantfile
+-> Se DER ERRO -> o pacote do ifconfig pode não estar instalado -> sudo apt install net-tools
+-> vagrant ssh -> deve mostrar conexão agora com o IP que foi inserido no arquivo Vagrantfile
+-> Copiar o IP e abrir outro console
+-> para testar -> ping 192.168.50.4 - ou o IP que foi inserido no arquivo
+-> ctrl + C para parar o ping
+-> para testar -> abrir browser e inserir o ip criado - não precisa informar a porta
+-> para testar -> localhost:8089 -> também precisa continuar a funcionar
+-> para testar -> abrir o virtual box e verificar a máquina virtual "bionic" rodando, acessar as configurações da máquina -> na sessão "rede" devem aparecer, nas abas adaptador, os dados dos adaptadores criados
+-> para testar -> verificar o adaptador presente no item "Gerenciador de Redes do Hospedeiro"
+-> Usando o VirtualBox como provedor, qual será o Network-Adaptar usado? -> config.vm.network "public_network", ip: "192.168.1.17" -> Alternativa correta! Bridge permite que a máquina virtual participe na rede "pública" (empresarial).
+06 DHCP do VirtualBox - 22/10/2019 ############################################
+-> Na página de configuração do Vagrant, verficar o item DHCP
+-> Como destruir a máquina virtual -> dentro da pasta "bionic" -> vagrant destroy -> O arquivo com a configuração, Vagratnfile, permanecerá existindo permitindo recriar a máquina com sua config inicial
+-> Para destruir a máquina virtual sem precisar 
+responder à confirmação -> vagrant destroy -f
+-> No VirtualBox a máquina virtual deve desaparecer
+-> Não executar ainda -> Recriar a máquina virtual -> dentro da pasta "bionic" -> vagrant up 
+-> Modificar o arquivo Vagrantfile, na terceira linha para: "config.vm.network "private_network", type: "dhcp""
+-> Executar agora o comando "vagrant up" -> a MV deve aparecer no VB
+-> Para testar -> ifconfig -> No VB em Gerenciador de Redes do Hospedeiro deve aparecer um segundo adaptador, esse com DHCP habilitado -> ATENÇÃO -> Este servidor DHCP não é o da máquina(Roteador), é o do VB  
+-> vagrant ssh -> deve aparecer o ip, exemplo: 172.28.128.5, dinamicamente associado à MV
+-> Copiar esse ip e colar na barra de endereço do browser -> DEVE DAR ERRO -> Após da destruição da MV é preciso reinstalar o "nginx" DENTRO DA VM -> sudo apt-get update && sudo apt-get install -y nginx
+-> Para testar -> "netstat -tln" para verificar o funcionamento do Nginx pela porta 80       
+-> volte ao navegador e teste novamente o acesso por localhost:8089 em uma aba e 172.28.128.5 na outra.
+-> Backup - versões do conteúdo arquivo Vagrantfile com IP e DHCP
+*******************************************************************************
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/bionic64"
+  config.vm.network "forwarded_port", guest: 80, host: 8089
+  config.vm.network "private_network", ip: "192.168.50.4"
+end
+*******************************************************************************
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/bionic64"
+  config.vm.network "forwarded_port", guest: 80, host: 8089
+  config.vm.network "private_network", type: "dhcp"
+end
+*******************************************************************************
+07 IP na rede pública (bridge) ################################################
+-> Private Network -> A MV não pode ser acessada por máquinas de fora, só a máquina host pode acessar
+-> vagrant up -> na primeira execução cria e ##################################
+configura a MV, nas execuções seguintes sobe a MV
+-> Dentro da pasta "bionic" modificar o arquivo Vagrantfile na terceira linha de "config.vm.network "private_network", type: "dhcp"" para "config.vm.network "public_network"" 
+-> vagrant halt ou vagrant reload não necessitando assim dos comandos "vagrant halt" "vagrant up" -> servem para reiniciar a MV com as novas configurações
+ATENÇÃO -> Se não atualizar a máquina, executar os comandos referentes a destruição e reconstrução da MV
+-> vagrant up
+-> pode ser exibida a seguinte msg:
+*******************************************************************************
+==> default: Available bridged network interfaces:
+1) wlp2s0
+2) enp3s0
+==> default: When choosing an interface, it is usually the one that is
+==> default: being used to connect to the internet.
+    default: Which interface should the network 
+	bridge to? se enp3s0 -> wlp2s0 "1"
+*******************************************************************************
+-> exit "se" a VM estiver rodando
+-> no console deve aparecer a linha "default: Adapter 2: bridged" -> permite a VM fazer parte da rede pública e se comunicar com o DHCP da rede pública
+-> vagrant ssh -> para acessar a VM
+-> Pode ser necessário destruir a VM caso o IP público não apareça no console
+-> a saída do comando vagrant ssh deve retornar o segundo IP conforme abaixo:
+*******************************************************************************
+  System load:  0.18              Processes:             102
+  Usage of /:   11.6% of 9.63GB   Users logged in:       0
+  Memory usage: 13%               IP address for enp0s3: 10.0.2.15
+  Swap usage:   0%                IP address for enp0s8: 192.168.1.102
+*******************************************************************************
+-> copiar o IP 192.168.1.102 (pode variar) e testar no navegador
+->  Agora outras máquinas "físicas" podem se conectar 
+	a essa VM através desse IP
+-> É possível setar um IP estático, que deve estar disponível na 
+	rede alterando o arquivo Vagrantfile para "config.vm.network "public_network", ip: "192.168.1.24"" 
+Para testar com IP estático -> exit se estiver executando "vagrant ssh"
+-> Modificar o Vagrantfile mudando a linha de comando para "config.vm.network "public_network", ip: "192.168.1.24""
+-> vagrant reload
+-> digitar o IP estático no browser do celular, por exemplo
+*******************************************************************************
+02 Adicionando a chave SSH - 24/10/2019 #######################################
+Só é possível conectar na VM localmente, outras estações de trab não conseguem ainda conectar nessa VM -> é necessário usar uma chave privada para acesso remoto
+-> vagrant ssh-config -> vai mostrar que só é possível acessar a MV via SSH através do localhost
+-> ssh vagrant@192.168.1.24 -> para que outros equipamentos possam conectar precisam de um IP fixo
+-> Neste ponto será exibida msg de erro pois o IP foi armazenado automaticamente pelo SSH no arquivo "known_hosts" - de outros testes de conexão anteriores 
+-> copiar o endereço do "known_hosts" para visualização posterior
+-> cat "endereço copiado" -> o IP armazenado deve aparecer junto com uma identificação única
+-> Este IP e sua idetificaçã única mudaram pois em aulas anteriores a MV foi destruída e recriada -> Será necessário apagar o "known_hosts"
+-> rm "endereço do known_hosts copiado anteriormente"
+-> ssh vagrant@192.168.1.24 (ou IP setado no Vagrantfile) -> Será perguntado se desejamos a adição do IP no novo arquivo "known_hosts" (criado automaticamente)
+-> Deve ser exibida msg de erro para a permissão da chave pública -> o comando ssh vagrant@192.168.1.24 de fato não funciona
+-> O Vagrant automaticamente gera uma chave pública e guarda na pasta "authorized_keys" dentro de ".ssh"
+-> Para visualizar, no console, dentro da VM (vagrant ssh) -> cat .ssh/authorized_keys->
+-> O comando usando o private key associado ao IP fixo funciona -> ssh -i .vagrant/machines/default/virtualbox/private_key vagrant@192.168.1.24
+-> vagrant ssh -> chaves pública e privada criadas automaticamente e é usado localhost para conexão com a VM
+*******************************************************************************
+04 Gerando uma chave SSH
+-> 
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+
