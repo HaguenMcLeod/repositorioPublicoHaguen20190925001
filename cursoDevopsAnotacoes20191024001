@@ -998,9 +998,26 @@ A saída do console deve ter essa passagem:
 -> exit
 -> Conectar na VM usando a chave criada -> ssh -i id_bionic vagrant@192.168.1.24
 Deve aparecer uma msg informando sobre modificação no arquivo known_hosts
--> Apagar o arquivo known_hosts de dentro da pasta .ssh
+-> Apagar o arquivo known_hosts de dentro da pasta .ssh em -> /home/usuario/.ssh/known_hosts
 -> Repetir o comando -> ssh -i id_bionic vagrant@192.168.1.24
-Deve conectar normalmente
+Deve conectar normalmente após exibir a seguinte msg - responder "yes":
+*******************************************************************************
+The authenticity of host '192.168.1.24 (192.168.1.24)' can't be established.
+ECDSA key fingerprint is SHA256:YKgj3NjKupXypM+lKWMDYhwte5wflSFFGm37FkkkPL8.
+Are you sure you want to continue connecting (yes/no)? 
+*******************************************************************************
 -> Mapeamento da pasta compartilhada -> No host é compartilhado a pasta que possui o Vagrantfile. No guest essa pasta é chamada de /vagrant.
-
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
+->
 
