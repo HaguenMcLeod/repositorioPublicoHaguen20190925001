@@ -934,4 +934,73 @@ A saída do console dve ser:
 -> ls -> verificar o arquivo hello.txt dentro da VM
 -> cat hello.txt -> deve mostrar o conteúdo do arquivo txt
 
+###############################################################################
+04 Synced Folder e mais shell - 25/10/2019 
+-> vagrant up
+-> observar a pasta shared criada listada no console:
+*******************************************************************************
+==> default: Mounting shared folders...
+    default: /vagrant => /home/05329594774/backupMaquina20190911001/cursosAlura/cursoDevOps/ambiente_dev/bionic
+*******************************************************************************
+-> vagrant ssh
+-> ls /vagrant
+-> comfiguração para adicionar a chave pública ao iniciar a VM:
+-> exit
+-> dentro da pasta "bionic" criar a pasta "configs"
+-> mkdir configs
+-> mover para dentro a pasta "configs" a chave pública que esta dentro da pasta bionic
+-> Alterar o arqivo Vagrantfile:
+Deve ficar assim:
+*******************************************************************************
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/bionic64"
+  config.vm.network "forwarded_port", guest: 80, host:8089	
+  config.vm.network "private_network", ip: "192.168.1.24"
+  config.vm.provision "shell", inline: "echo Hello, World >> hello.txt"	
+  config.vm.synced_folder "./configs", "/configs"
+end
+*******************************************************************************
+-> vagrant reload
+Na saída do console deve aparecer a pasta "configs" criada:
+*******************************************************************************
+==> default: Mounting shared folders...
+    default: /configs => /home/05329594774/backupMaquina20190911001/cursosAlura/cursoDevOps/ambiente_dev/bionic/configs
+    default: /vagrant => /home/05329594774/backupMaquina20190911001/cursosAlura/cursoDevOps/ambiente_dev/bionic
+*******************************************************************************
+-> Para desabilitar a acesso á pasta Vagrant da VM adicionar ao Vagrantfile a última linha listada abaixo:
+*******************************************************************************
+config.vm.synced_folder ".", "/vagrant", disabled: true
+*******************************************************************************
+Adicionar a chave pública automaticamente ao arquivo Authorizedkeys:
+-> vagrant ssh  
+-> Copiar o comando para colocar no Vagrantfile -> cat /configs/id_bionic.pub >> .ssh/authorized_keys
+-> No Vagrantfile, trocar a string passada na linha "hello word" pelo comando copiado, o Vagrant file deve ficar assim:
+*******************************************************************************
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/bionic64"
+  config.vm.network "forwarded_port", guest: 80, host:8089	
+  config.vm.network "private_network", ip: "192.168.1.24"
+  config.vm.provision "shell", inline: "cat /configs/id_bionic.pub >> .ssh/authorized_keys"	
+  config.vm.synced_folder "./configs", "/configs"
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+end
+******************************************************************************* 
+-> exit
+-> Destruir a VM e recriar com o mesmo comando -> vagrant destroy -f && vagrant up
+A saída do console deve ter essa passagem:
+*******************************************************************************
+==> default: Mounting shared folders...
+    default: /configs => /home/05329594774/backupMaquina20190911001/cursosAlura/cursoDevOps/ambiente_dev/bionic/configs
+==> default: Running provisioner: shell...
+*******************************************************************************
+-> vagrant ssh 
+-> cat .ssh/authorized_keys -> Devem aparecer a chave do vagrant e a chave pública inserida pelo Vagrant file
+-> exit
+-> Conectar na VM usando a chave criada -> ssh -i id_bionic vagrant@192.168.1.24
+Deve aparecer uma msg informando sobre modificação no arquivo known_hosts
+-> Apagar o arquivo known_hosts de dentro da pasta .ssh
+-> Repetir o comando -> ssh -i id_bionic vagrant@192.168.1.24
+Deve conectar normalmente
+-> Mapeamento da pasta compartilhada -> No host é compartilhado a pasta que possui o Vagrantfile. No guest essa pasta é chamada de /vagrant.
+
 
