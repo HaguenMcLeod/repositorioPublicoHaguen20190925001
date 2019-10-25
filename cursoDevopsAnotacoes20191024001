@@ -894,7 +894,7 @@ Last login: Fri Oct 25 00:27:05 2019 from 10.0.2.2
 
 **********************************************************************************
 -> exit 
--> ls .vagrant/machines/default/virtualbox/ -> deve lista a presença da chave privada
+-> ls .vagrant/machines/default/virtualbox/ -> deve listar a presença da chave privada
 ->
 ->
 ->
