@@ -821,12 +821,14 @@ Last login: Thu Oct 24 22:48:48 2019 from 10.0.2.2
 -> exit
 *******************************************************************************
 04 Gerando uma chave SSH - 25/10/2019 #########################################
+-> vagrant up
+-> vagrant status
+-> vagrant ssh
 -> dentro da VM -> exit 
--> se estiver dentro da VM -> exit 
 -> vagrant status
 -> Se o SSH estiver instalado no SO -> ssh-keygen -t rsa
 Informar, de preferência, o endereço da pasta "bionic" -> /home/haguenmcleod/Backup20190927001/CursosInformatica/
-DevOps/ambiente_dev/bionic/id_bionic (id_bionic é informado pelo usuário) 
+DevOps/ambiente_dev/bionic/id_bionic ("id_bionic" é informado pelo usuário) 
 -> criar senha - opcional
 Saída do console:
 ********************************************************************************
@@ -854,17 +856,11 @@ The key's randomart image is:
 -> ls
 -> as chaves devem ser apresentadas
 -> copiar a chave pública para a VM -> vagrant ssh
--> acessar pelo terminal a pasta criada -> ls vagrant 
--> Copiamos a chave publica da pasta "vagrant" para a máquina virtual escrevendo cp /vagrant/id_bionic.pub
--> ls
--> o comando acima deve mostrar a criação de duas chaves, id_bionic (privada) e id_bionic.pub (pública) 
--> Copiar as chaves para dentro da VM -> ver abaixo
--> vagrant ssh
 -> ls /vagrant/
--> cp /vagrant//id_bionic.pub . -> ATENÇÃO para o ponto ao final do comando
+-> cp /vagrant/id_bionic.pub . -> ATENÇÃO para o ponto ao final do comando
 -> ls
 -> cat id_bionic.pub
--> Precisamos adicioná-la ao arquivo "authorized_keys" digitando cat id_bionic.pub >> .ssh/authorized_keys
+-> Precisamos adicioná-la ao arquivo "authorized_keys" -> cat id_bionic.pub >> .ssh/authorized_keys
 -> cat .ssh/authorized_keys
 -> exit 
 -> ls
@@ -891,7 +887,7 @@ Last login: Fri Oct 25 00:27:05 2019 from 10.0.2.2
 
 **********************************************************************************
 -> exit 
--> ls .vagrant/machines/default/virtualbox/ -> deve lista a presença da chave privada
+-> ls .vagrant/machines/default/virtualbox/ -> deve listar a presença da chave privada
 ->
 ->
 ->
