@@ -854,15 +854,12 @@ The key's randomart image is:
 ********************************************************************************
 -> ls
 -> as chaves devem ser apresentadas
--> copiar a chave pública para a VM -> vagrant up e depois vagrant ssh
--> acessar pelo terminal a pasta criada -> ls vagrant 
--> Copiamos a chave publica da pasta "vagrant" para a máquina virtual escrevendo cp /vagrant/id_bionic.pub
--> ls
+-> ls /vagrant/ para ver a pasta vagrant dentro da VM com seu conteúdo e as chaves criadas
 -> o comando acima deve mostrar a criação de duas chaves, id_bionic (privada) e id_bionic.pub (pública) 
 -> Copiar as chaves para dentro da VM -> ver abaixo
 -> vagrant ssh
 -> ls /vagrant/
--> cp /vagrant//id_bionic.pub . -> ATENÇÃO para o ponto ao final do comando
+-> cp /vagrant/id_bionic.pub . -> ATENÇÃO para o ponto ao final do comando
 -> ls
 -> cat id_bionic.pub
 -> Precisamos adicioná-la ao arquivo "authorized_keys" digitando cat id_bionic.pub >> .ssh/authorized_keys
