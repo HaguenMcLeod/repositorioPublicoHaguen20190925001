@@ -820,9 +820,8 @@ Last login: Thu Oct 24 22:48:48 2019 from 10.0.2.2
 *******************************************************************************
 -> exit
 *******************************************************************************
-04 Gerando uma chave SSH
-
-04 Gerando uma chave SSH
+04 Gerando uma chave SSH - 25/10/2019 #########################################
+-> dentro da VM -> exit 
 -> se estiver dentro da VM -> exit 
 -> vagrant status
 -> Se o SSH estiver instalado no SO -> ssh-keygen -t rsa
@@ -854,12 +853,15 @@ The key's randomart image is:
 ********************************************************************************
 -> ls
 -> as chaves devem ser apresentadas
--> ls /vagrant/ para ver a pasta vagrant dentro da VM com seu conteúdo e as chaves criadas
+-> copiar a chave pública para a VM -> vagrant ssh
+-> acessar pelo terminal a pasta criada -> ls vagrant 
+-> Copiamos a chave publica da pasta "vagrant" para a máquina virtual escrevendo cp /vagrant/id_bionic.pub
+-> ls
 -> o comando acima deve mostrar a criação de duas chaves, id_bionic (privada) e id_bionic.pub (pública) 
 -> Copiar as chaves para dentro da VM -> ver abaixo
 -> vagrant ssh
 -> ls /vagrant/
--> cp /vagrant/id_bionic.pub . -> ATENÇÃO para o ponto ao final do comando
+-> cp /vagrant//id_bionic.pub . -> ATENÇÃO para o ponto ao final do comando
 -> ls
 -> cat id_bionic.pub
 -> Precisamos adicioná-la ao arquivo "authorized_keys" digitando cat id_bionic.pub >> .ssh/authorized_keys
@@ -882,28 +884,14 @@ Welcome to Ubuntu 18.04.3 LTS (GNU/Linux 4.15.0-66-generic x86_64)
   Memory usage: 12%               IP address for enp0s3: 10.0.2.15
   Swap usage:   0%                IP address for enp0s8: 192.168.1.24
 
-
 0 packages can be updated.
 0 updates are security updates.
-
 
 Last login: Fri Oct 25 00:27:05 2019 from 10.0.2.2
 
 **********************************************************************************
 -> exit 
--> ls .vagrant/machines/default/virtualbox/ -> deve listar a presença da chave privada
-->
-->
-->
-->
-->
-->
-->
-->
-->
-->
-->
-->
+-> ls .vagrant/machines/default/virtualbox/ -> deve lista a presença da chave privada
 ->
 ->
 ->
