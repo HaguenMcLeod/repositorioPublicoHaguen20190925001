@@ -854,7 +854,7 @@ The key's randomart image is:
 ********************************************************************************
 -> ls
 -> as chaves devem ser apresentadas
--> copiar a chave pública para a VM -> vagrant ssh
+-> copiar a chave pública para a VM -> vagrant up e depois vagrant ssh
 -> acessar pelo terminal a pasta criada -> ls vagrant 
 -> Copiamos a chave publica da pasta "vagrant" para a máquina virtual escrevendo cp /vagrant/id_bionic.pub
 -> ls
