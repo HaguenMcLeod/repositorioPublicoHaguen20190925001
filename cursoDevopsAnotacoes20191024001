@@ -1007,17 +1007,128 @@ ECDSA key fingerprint is SHA256:YKgj3NjKupXypM+lKWMDYhwte5wflSFFGm37FkkkPL8.
 Are you sure you want to continue connecting (yes/no)? 
 *******************************************************************************
 -> Mapeamento da pasta compartilhada -> No host é compartilhado a pasta que possui o Vagrantfile. No guest essa pasta é chamada de /vagrant.
-->
-->
-->
-->
-->
-->
-->
-->
-->
-->
-->
-->
-->
+*******************************************************************************
+06 Provisionando o MySQL - 29/10/2019 #########################################
+-> no Vagrantfile, copiar e colar, para futura alteração, a linha "config.vm.provision "shell", inline: "cat /configs/id_bionic.pub >> .ssh/authorized_keys"" - Podem ser inseridos vários shell providers se necessário
+-> Modificar a linha colada para -> config.vm.provision "shell",
+        inline: "apt-get update && apt-get install -y mysql-server-5.7"
+-> Os comandos do Vagrantfile são atutomaticamente executados como "sudo"
+-> Na página de documentação do Vagrant, verificar no item Provisioning script para configuração do mysql 
+-> O Vagrantfile deve ficar assim:
+*******************************************************************************
+$script_mysql = <<-SCRIPT
+    apt-get update && \
+    apt-get install -y mysql-server-5.7 && \
+    mysql -e "create user 'phpuser'@'%' identified by 'pass';"
+SCRIPT
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/bionic64"
+  config.vm.network "forwarded_port", guest: 80, host:8089	
+  config.vm.network "private_network", ip: "192.168.1.24"
+  config.vm.provision "shell", inline: "cat /configs/id_bionic.pub >> .ssh/authorized_keys"
+
+  config.vm.provision "shell", inline: $script_mysql 
+	
+  config.vm.synced_folder "./configs", "/configs"
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+end
+*******************************************************************************
+-> no console -> vagrant destroy -f && vagrant up
+-> vagrant ssh
+-> sudo mysql
+-> o cursor deve ter mudado para dentro do mysql
+-> select user from mysql.user
+-> digitar ";" após enter no comando acima
+-> a saída do console deve ser:
+*******************************************************************************
+mysql> select user from mysql.user
+    -> ;
++------------------+
+| user             |
++------------------+
+| phpuser          |
+| debian-sys-maint |
+| mysql.session    |
+| mysql.sys        |
+| root             |
++------------------+
+5 rows in set (0.00 sec)
+*******************************************************************************
+-> exit
+-> cat /etc/mysql/mysql.conf.d/mysqld.cnf 
+-> procurar no retorno do console o termo "bind-address	= 127.0.0.1"
+-> Quando o servidor sobe fica associado ao IP listado acima
+-> Para criar um arquivo de onfiguração do mysql dentro da pasta config do projeto -> cat /etc/mysql/mysql.conf.d/mysqld.cnf >> /configs/mysqld.cnf
+-> exit
+-> Abrir no bloco de notas o arquivo criado acima e modificar o termo bind-address para bind-address = 0.0.0.0 -> para aceitar conexão de qualquer IP
+-> ATENÇÃO -> O procedimento acima não oferece grande risco para máquinas de desenvolvimento, porém para produção não se deve liberar acesso por qualquer IP
+-> no Vagrantfile, abaixo da linha já adicionada referente 
+ao mysql, adicionar -> config.vm.provision "shell", inline: "cat /configs/mysqld.cnf > /etc/mysql/mysql.conf.d/mysqld.cnf"
+-> O Vagrantfile deve ficar assim:
+*******************************************************************************
+$script_mysql = <<-SCRIPT
+    apt-get update && \
+    apt-get install -y mysql-server-5.7 && \
+    mysql -e "create user 'phpuser'@'%' identified by 'pass';"
+SCRIPT
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/bionic64"
+  config.vm.network "forwarded_port", guest: 80, host:8089	
+  config.vm.network "private_network", ip: "192.168.1.24"
+  config.vm.provision "shell", inline: "cat /configs/id_bionic.pub >> .ssh/authorized_keys"
+
+  config.vm.provision "shell", inline: $script_mysql 
+
+  config.vm.provision "shell", inline: "cat /configs/mysqld.cnf > /etc/mysql/mysql.conf.d/mysqld.cnf"
+	
+  config.vm.synced_folder "./configs", "/configs"
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+end
+*******************************************************************************
+-> Adicionar, abaixo da linha adicionada acima o comando para
+ reiniciar o mysql -> config.vm.provision "shell", inline: "service mysql restart" 
+-> O Vagrantfile deve ficar assim:
+*******************************************************************************
+$script_mysql = <<-SCRIPT
+    apt-get update && \
+    apt-get install -y mysql-server-5.7 && \
+    mysql -e "create user 'phpuser'@'%' identified by 'pass';"
+SCRIPT
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/bionic64"
+  config.vm.network "forwarded_port", guest: 80, host:8089	
+  config.vm.network "private_network", ip: "192.168.1.24"
+  config.vm.provision "shell", inline: "cat /configs/id_bionic.pub >> .ssh/authorized_keys"
+
+  config.vm.provision "shell", inline: $script_mysql 
+
+  config.vm.provision "shell", inline: "cat /configs/mysqld.cnf > /etc/mysql/mysql.conf.d/mysqld.cnf"
+
+  config.vm.provision "shell", inline: "service mysql restart"
+	
+  config.vm.synced_folder "./configs", "/configs"
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+end
+*******************************************************************************
+-> vagrant destroy -f && vagrant up 
+-> vagrant ssh
+-> Para reiniciar o serpvidor myslq -> sudo service mysql restart
+-> cat /etc/mysql/mysql.conf.d/mysqld.cnf
+-> confirmar na saída do console o termo "bind-address = 0.0.0.0" 
+-> Os provisionadores são chamados sempre quando executamos o comando vagrant provision
+###############################################################################
+05 - Conhecendo o Puppet - 02 Ambiente Multi-Machine 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+
 
