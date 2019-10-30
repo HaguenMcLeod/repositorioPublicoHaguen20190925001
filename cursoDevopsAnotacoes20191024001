@@ -1120,15 +1120,130 @@ end
 -> confirmar na saída do console o termo "bind-address = 0.0.0.0" 
 -> Os provisionadores são chamados sempre quando executamos o comando vagrant provision
 ###############################################################################
-05 - Conhecendo o Puppet - 02 Ambiente Multi-Machine 
--> 
--> 
--> 
--> 
--> 
--> 
--> 
--> 
--> 
+05 - Conhecendo o Puppet - 02 Ambiente Multi-Machine - 30/10/2019 #############
+-> Na página de documentação do Vagrant, verificar o item "Multi-Machine"
+-> No Vagrantfile, logo abaixo da linha "ubuntu/bionic64", adicionar a linha abaixo encapsular as configurações do mysql:
+*******************************************************************************
+    config.vm.define "mysqldb" do |mysql|
+	xxxxxxxxxxxxxxx
+	end
+*******************************************************************************
+-> Selecionar todas as linhas que ficarem abaixo, deixando apenas o "end" sobrando e colocar no lugar de xxxxxxxx acima, ficarão dois "end's" ao final do arquivo 
+-> Substituir, em todas as linhas "config.vm" por "mysql.vm" -> para coincidir com o comando "do |mysql|" nas linhas acima
+-> Agora ao subir a VM esta deve se chamar "mysqldb"
+-> O Vagrantfile deve ficar assim:
+*******************************************************************************
+$script_mysql = <<-SCRIPT
+    apt-get update && \
+    apt-get install -y mysql-server-5.7 && \
+    mysql -e "create user 'phpuser'@'%' identified by 'pass';"
+SCRIPT
 
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/bionic64"
 
+  config.vm.define "mysqldb" do |mysql|		
+
+	  mysql.vm.network "forwarded_port", guest: 80, host:8089	
+	  mysql.vm.network "private_network", ip: "192.168.1.24"
+	  mysql.vm.provision "shell", inline: "cat /configs/id_bionic.pub >> .ssh/authorized_keys"
+	  mysql.vm.provision "shell", inline: $script_mysql 
+	  mysql.vm.provision "shell", inline: "cat /configs/mysqld.cnf > /etc/mysql/mysql.conf.d/mysqld.cnf"
+	  mysql.vm.provision "shell", inline: "service mysql restart"
+	  mysql.vm.synced_folder "./configs", "/configs"
+	  mysql.vm.synced_folder ".", "/vagrant", disabled: true
+	end
+end
+*******************************************************************************
+-> Criando a segunda VM:
+-> Adicionar, logo após o primeiro "end", que define o fechamento da criação da primeira VM, as linhas:
+*******************************************************************************
+	config.vm.define "phpweb" do |phpweb|
+
+		phpweb.vm.network "forwarded_port", guest: 80, host:8089	
+		phpweb.vm.network "public_network", ip: "192.168.1.25"
+*******************************************************************************
+-> Apagar, por falta de nessecidade, a linha "mysql.vm.network "forwarded_port", guest: 80, host:8089" 
+-> o Vagrantfile deve ficar assim:
+*******************************************************************************
+$script_mysql = <<-SCRIPT
+    apt-get update && \
+    apt-get install -y mysql-server-5.7 && \
+    mysql -e "create user 'phpuser'@'%' identified by 'pass';"
+SCRIPT
+
+Vagrant.configure("2") do |config|
+  
+	config.vm.box = "ubuntu/bionic64"
+
+  	config.vm.define "mysqldb" do |mysql|		
+
+		mysql.vm.network "public_network", ip: "192.168.1.24"
+		mysql.vm.provision "shell", inline: "cat /configs/id_bionic.pub >> .ssh/authorized_keys"
+		mysql.vm.provision "shell", inline: $script_mysql 
+		mysql.vm.provision "shell", inline: "cat /configs/mysqld.cnf > /etc/mysql/mysql.conf.d/mysqld.cnf"
+		mysql.vm.provision "shell", inline: "service mysql restart"
+		mysql.vm.synced_folder "./configs", "/configs"
+		mysql.vm.synced_folder ".", "/vagrant", disabled: true
+	end
+
+	config.vm.define "phpweb" do |phpweb|
+
+		phpweb.vm.network "forwarded_port", guest: 80, host:8089	
+		phpweb.vm.network "public_network", ip: "192.168.1.25"
+	end
+end
+*******************************************************************************
+-> Para subir as duas VMs -> "vagrant up" ou "vagrant up nomes das VMs" -> No VirtualBox devem aparecer duas VMs
+-> Para subir apenas uma VM -> vagrant nome da VM
+-> Para verificar o status da uma única VM -> vagrant status nome da VM
+-> Para destruir apenas uma VM -> vagrant destroy -f nome da VM
+-> Para verificar o status das duas VMs -> vagrant status
+-> a saída do console deve ser:
+*******************************************************************************
+Current machine states:
+
+mysqldb                   running (virtualbox)
+phpweb                    running (virtualbox)
+
+This environment represents multiple VMs. The VMs are all listed
+above with their current state. For more information about a specific
+VM, run `vagrant status NAME`.
+*******************************************************************************
+-> Para se conectar a uma VM -> vagrant ssh nome da VM
+-> Para verificar a configuração das duas VMs -> vagrant ssh-config
+-> A saída do console deve ser:
+*******************************************************************************
+Host mysqldb
+  HostName 127.0.0.1
+  User vagrant
+  Port 2222
+  UserKnownHostsFile /dev/null
+  StrictHostKeyChecking no
+  PasswordAuthentication no
+  IdentityFile /home/05329594774/backupMaquina20190911001/cursosAlura/cursoDevOps/ambiente_dev/bionic/.vagrant/machines/mysqldb/virtualbox/private_key
+  IdentitiesOnly yes
+  LogLevel FATAL
+
+Host phpweb
+  HostName 127.0.0.1
+  User vagrant
+  Port 2200
+  UserKnownHostsFile /dev/null
+  StrictHostKeyChecking no
+  PasswordAuthentication no
+  IdentityFile /home/05329594774/backupMaquina20190911001/cursosAlura/cursoDevOps/ambiente_dev/bionic/.vagrant/machines/phpweb/virtualbox/private_key
+  IdentitiesOnly yes
+  LogLevel FATAL
+*******************************************************************************
+-> Verificar na saída de console acima o uso de portas diferentes por cada VM 
+###############################################################################
+05 Usando o Puppet - 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
