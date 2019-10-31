@@ -1164,7 +1164,7 @@ end
 		phpweb.vm.network "public_network", ip: "192.168.1.25"
 *******************************************************************************
 -> Apagar, por falta de nessecidade, a linha "mysql.vm.network "forwarded_port", guest: 80, host:8089" 
--> o Vagrantfile deve ficar assim:
+-> O Vagrantfile deve ficar assim:
 *******************************************************************************
 $script_mysql = <<-SCRIPT
     apt-get update && \
@@ -1199,7 +1199,7 @@ end
 -> Para verificar o status da uma única VM -> vagrant status nome da VM
 -> Para destruir apenas uma VM -> vagrant destroy -f nome da VM
 -> Para verificar o status das duas VMs -> vagrant status
--> a saída do console deve ser:
+-> A saída do console deve ser:
 *******************************************************************************
 Current machine states:
 
@@ -1237,8 +1237,65 @@ Host phpweb
   LogLevel FATAL
 *******************************************************************************
 -> Verificar na saída de console acima o uso de portas diferentes por cada VM 
+-> Parar todas as VMs -> vagrant halt
+-> Parar uma VM específica -> vagrant halt nome da maquina
 ###############################################################################
-05 Usando o Puppet - 
+05 Usando o Puppet - 31/10/2019 - #############################################
+-> Verificar na página do Vagrant outras opções de Provisioning
+-> VM em php passar a ser configurada pelo Puppet e não mais pelo ShellProvisioning 
+-> Página com tutorial para uso do Puppet -> https://www.digitalocean.com/community/tutorials/getting-started-with-puppet-code-manifests-and-modules
+-> Criar dentro da pasta "configs" a pasta "manifests"
+-> Criar dentro da pasta "manifests" o arquivo "phpweb.pp"
+-> Colar dentro do arquivo "phpweb.pp" o seguinte conteúdo:
+*******************************************************************************
+# execute 'apt-get update'
+exec { 'apt-update':
+    command => '/usr/bin/apt-get update' 
+}
+
+package { ['php7.2' ,'php7.2-mysql'] :
+    require => Exec['apt-update'],
+    ensure => installed,
+}
+
+exec { 'run-php7':
+    require => Package['php7.2'],
+    command => '/usr/bin/php -S 192.168.1.25:8888 -t /vagrant/src &'
+}
+*******************************************************************************
+-> Vagrant up phpweb
+-> Vagrant ssh phpweb
+-> ls /vagrant/configs/manifests/ -> deve listar o arquivo php.web
+-> Instalar o Puppet -> sudo apt-get update && sudo apt-get install -y puppet
+-> Ativar o Puppet -> sudo puppet apply /vagrant/configs/manifests/phpweb.pp
+-> O comando logo acima deve demorar pois vai instalar o php em segundo plano
+06 Integração do Puppet com o Vagrant #########################################
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
 -> 
 -> 
 -> 
