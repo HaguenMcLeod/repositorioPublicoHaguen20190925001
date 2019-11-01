@@ -1269,21 +1269,184 @@ exec { 'run-php7':
 -> Instalar o Puppet -> sudo apt-get update && sudo apt-get install -y puppet
 -> Ativar o Puppet -> sudo puppet apply /vagrant/configs/manifests/phpweb.pp
 -> O comando logo acima deve demorar pois vai instalar o php em segundo plano
-06 Integração do Puppet com o Vagrant #########################################
--> 
--> 
--> 
--> 
--> 
--> 
--> 
--> 
--> 
--> 
--> 
--> 
--> 
--> 
+###############################################################################
+06 Integração do Puppet com o Vagrant - 01/11/2019 ############################
+-> Verificar na página do Vagrant a opção Puppet Bare Minumum #################
+para alterar o Vagrantfile
+-> Adicionar ao Vagrantfile as linhas abaixo, ficarão 3 end's ao todo
+ ao final do arquivo
+*******************************************************************************
+		phpweb.vm.provision "shell", inline: "apt-get update && apt-get install -y puppet"
+
+        	phpweb.vm.provision "puppet" do |puppet|
+            	puppet.manifests_path = "./configs/manifests"
+            	puppet.manifest_file = "phpweb.pp"
+        	end
+*******************************************************************************
+-> Criar dentro de "bionic" a pasta "src"
+-> Criar dentro da pasta "src" o arquivo "index.php"
+-> Inserir dentro da pasta "index.php" o conteúdo abaixo:
+*******************************************************************************
+<?php
+echo "Funcionou!!!"
+?>
+*******************************************************************************
+-> Alterar o arquivo php.pp:
+*******************************************************************************
+# execute 'apt-get update'
+exec { 'apt-update':
+    command => '/usr/bin/apt-get update' 
+}
+
+package { ['php7.2' ,'php7.2-mysql'] :
+    require => Exec['apt-update'],
+    ensure => installed,
+}
+
+exec { 'run-php7':
+    require => Package['php7.2'],
+    command => '/usr/bin/php -S 0.0.0.0:8888 -t /vagrant/src &'
+}
+*******************************************************************************
+-> Alterar o Vagrantfile:
+*******************************************************************************
+$script_mysql = <<-SCRIPT
+    apt-get update && \
+    apt-get install -y mysql-server-5.7 && \
+    mysql -e "create user 'phpuser'@'%' identified by 'pass';"
+SCRIPT
+
+Vagrant.configure("2") do |config|
+  
+	config.vm.box = "ubuntu/bionic64"
+
+  	config.vm.define "mysqldb" do |mysql|		
+
+		mysql.vm.network "public_network", ip: "192.168.1.24"
+		mysql.vm.provision "shell", inline: "cat /configs/id_bionic.pub >> .ssh/authorized_keys"
+		mysql.vm.provision "shell", inline: $script_mysql 
+		mysql.vm.provision "shell", inline: "cat /configs/mysqld.cnf > /etc/mysql/mysql.conf.d/mysqld.cnf"
+		mysql.vm.provision "shell", inline: "service mysql restart"
+		mysql.vm.synced_folder "./configs", "/configs"
+		mysql.vm.synced_folder ".", "/vagrant", disabled: true
+	end
+
+	config.vm.define "phpweb" do |phpweb|
+
+		phpweb.vm.network "forwarded_port", guest: 8888, host:8888	
+		phpweb.vm.network "public_network", ip: "192.168.1.25"
+
+		phpweb.vm.provision "shell", inline: "apt-get update && apt-get install -y puppet"
+
+        	phpweb.vm.provision "puppet" do |puppet|
+            	puppet.manifests_path = "./configs/manifests"
+            	puppet.manifest_file = "phpweb.pp"
+        	end
+
+	end
+end
+*******************************************************************************
+-> vagrant destroy -f phpweb && vagrant up phpweb
+-> vagrant status
+-> vagrant ssh phpweb
+-> netstat -tlnp -> deve mostrar o endereço 0.0.0.0:8888 em uso
+-> ps aux | grep php -> deve mostrar o processo phpweb rodando
+-> no browser -> http://localhost:8888/ -> deve exibir msg de sucesso
+-> no browser -> http://192.168.1.25:8888/ -> deve exibir msg de sucesso -> senão, 
+testar o endereço -> http://0.0.0.0:8888/
+-> Alterar o "index.php" para:
+*******************************************************************************
+<?php
+echo "Testando conexao <br /> <br />";
+$servername = "192.168.1.24";
+$username = "phpuser";
+$password = "pass";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Conexão falhou: " . $conn->connect_error);
+}
+echo "Conectado com sucesso";
+?>
+*******************************************************************************
+-> Puppet -> É uma ferramenta relacionada ao IaC (Infrastructure as Code) 
+-> Puppet -> Puppet precisa de um agent instalado, como na máquina guest -> Para aplicar o script de configuração (*.pp), precisa ter instalado um puppet client na máquina guest.
+-> Conteúdo atual Vagrantfile:
+*******************************************************************************
+$script_mysql = <<-SCRIPT
+    apt-get update && \
+    apt-get install -y mysql-server-5.7 && \
+    mysql -e "create user 'phpuser'@'%' identified by 'pass';"
+SCRIPT
+
+Vagrant.configure("2") do |config|
+  
+	config.vm.box = "ubuntu/bionic64"
+
+  	config.vm.define "mysqldb" do |mysql|		
+
+		mysql.vm.network "public_network", ip: "192.168.1.24"
+		mysql.vm.provision "shell", inline: "cat /configs/id_bionic.pub >> .ssh/authorized_keys"
+		mysql.vm.provision "shell", inline: $script_mysql 
+		mysql.vm.provision "shell", inline: "cat /configs/mysqld.cnf > /etc/mysql/mysql.conf.d/mysqld.cnf"
+		mysql.vm.provision "shell", inline: "service mysql restart"
+		mysql.vm.synced_folder "./configs", "/configs"
+		mysql.vm.synced_folder ".", "/vagrant", disabled: true
+	end
+
+	config.vm.define "phpweb" do |phpweb|
+
+		phpweb.vm.network "forwarded_port", guest: 8888, host:8888	
+		phpweb.vm.network "public_network", ip: "192.168.1.25"
+
+		phpweb.vm.provision "shell", inline: "apt-get update && apt-get install -y puppet"
+
+        	phpweb.vm.provision "puppet" do |puppet|
+            	puppet.manifests_path = "./configs/manifests"
+            	puppet.manifest_file = "phpweb.pp"
+        	end
+
+	end
+end
+*******************************************************************************
+-> Conteúdo atual index.php:
+*******************************************************************************
+<?php
+echo "Testando conexao <br /> <br />";
+$servername = "192.168.1.24";
+$username = "phpuser";
+$password = "pass";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Conexão falhou: " . $conn->connect_error);
+}
+echo "Conectado com sucesso";
+?>
+*******************************************************************************
+-> Conteúdo atual phpweb.pp:
+*******************************************************************************
+# execute 'apt-get update'
+exec { 'apt-update':
+    command => '/usr/bin/apt-get update' 
+}
+
+package { ['php7.2' ,'php7.2-mysql'] :
+    require => Exec['apt-update'],
+    ensure => installed,
+}
+
+exec { 'run-php7':
+    require => Package['php7.2'],
+    command => '/usr/bin/php -S 0.0.0.0:8888 -t /vagrant/src &'
+}
+*******************************************************************************
 -> 
 -> 
 -> 
