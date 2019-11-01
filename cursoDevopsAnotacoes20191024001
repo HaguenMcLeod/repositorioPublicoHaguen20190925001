@@ -1412,11 +1412,15 @@ exec { 'run-php7':
     command => '/usr/bin/php -S 0.0.0.0:8888 -t /vagrant/src &'
 }
 *******************************************************************************
--> 
--> 
--> 
--> 
--> 
+###############################################################################
+02 Introdução ao Ansible - 01/11/2019 #########################################
+-> Verificar na página do Vagrant sobre o provisionador Ansible ###############
+-> O Ansible não precisa de instalação na VM já o #############################
+Puppet precisa 
+-> O Ansible só precisa do python instalado ###################################
+-> O Ansible não roda no Windows, só no Mac e Linux ###########################
+-> O Ansible empurra as configurações do host para o guest, o Puppet "puxa" as 
+configurações do host para o guest.
 -> 
 -> 
 -> 
