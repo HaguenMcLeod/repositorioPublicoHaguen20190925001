@@ -1271,7 +1271,8 @@ exec { 'run-php7':
 -> O comando logo acima deve demorar pois vai instalar o php em segundo plano
 ###############################################################################
 06 Integração do Puppet com o Vagrant - 01/11/2019 ############################
--> Verificar na página do Vagrant a opção Puppet Bare Minumum #################
+-> ATENÇÃO -> As duas VMs precisam estar rodando ##############################
+-> Verificar na página do Vagrant a opção Puppet Apply ########################
 para alterar o Vagrantfile
 -> Adicionar ao Vagrantfile as linhas abaixo, ficarão 3 end's ao todo
  ao final do arquivo
@@ -1351,9 +1352,10 @@ end
 -> vagrant ssh phpweb
 -> netstat -tlnp -> deve mostrar o endereço 0.0.0.0:8888 em uso
 -> ps aux | grep php -> deve mostrar o processo phpweb rodando
--> no browser -> http://localhost:8888/ -> deve exibir msg de sucesso
+-> para testar, subir a máquina mysqldb -> vagrant up mysqldb
+-> no browser -> http://localhost:8888/ -> deve exibir msg de sucesso - OK
 -> no browser -> http://192.168.1.25:8888/ -> deve exibir msg de sucesso -> senão, 
-testar o endereço -> http://0.0.0.0:8888/
+testar o endereço -> http://0.0.0.0:8888/ -> OK
 -> Alterar o "index.php" para:
 *******************************************************************************
 <?php
@@ -1374,6 +1376,7 @@ echo "Conectado com sucesso";
 *******************************************************************************
 -> Puppet -> É uma ferramenta relacionada ao IaC (Infrastructure as Code) 
 -> Puppet -> Puppet precisa de um agent instalado, como na máquina guest -> Para aplicar o script de configuração (*.pp), precisa ter instalado um puppet client na máquina guest.
+*******************************************************************************
 -> Conteúdo atual Vagrantfile:
 *******************************************************************************
 $script_mysql = <<-SCRIPT
