@@ -1,0 +1,2523 @@
+1 - pagina cliente Angular -->> https://cli.angular.io/
+2 - npm install -g @angular/cli@6.0.7
+3 - Para conferir se instalou -->> ng -v
+4 - Criar o projeto -->> abrir terminal na pasta aonde o projeto sera criado -->>  sudo ng new alurapic -->> vulnerabilidades sarao apontadas -->> ignorar, quem deve corrigir e a equipe que disponibiliza os modulos
+5 - Subir o servidor DENTRO DA PASTA DO PROJETO "ALURAPIC" -->> ng serve --open
+6 - Se der erro para subir o servidor:
+
+npm install rxjs@6.0.0 --save e depois tentar subir novamente com: ng serve --open
+
+7 - Se der erro para acesso a arquivo -->> sudo chmod 777 package.json
+8 - binding -> binding -> dentro de app.component.html ->
+        <h1>
+   		 Welcome to {{ title }}!
+ 	 </h1>
+	dentro de app.component.ts -> 
+		export class AppComponent {
+		  title = 'app';
+9 - Data binding com a imagem da tela inicial -> no arquivo app.component.html -> <img [src]="url" [alt]="title">
+
+No arquivo que vai referenciar, app.component.ts, digitar:  export class AppComponent {
+  title = 'app';
+  description = "Leao";
+  url= "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Sultan_the_Barbary_Lion.jpg/440px-Sultan_the_Barbary_Lion.jpg";
+}
+
+Data binding Utilizamos {{ }} dentro de tags e [ ] para atributos
+
+Adicionar bootstrap ao projeto para criar um componente -> npm install bootstrap@4.1.1 -> verificar se a instalação apareceu no package.json, senão, digitar sudo npm install bootstrap@4.1.1 --save -> isto pode ocorrer por causa da versão do node
+
+no pacote angular.json modificar para conter o conteudo e reiniciar o servidor:
+
+		"styles": [
+              "./node_modules/bootstrap/dist/css/bootstrap.min.css",
+            ],
+            "scripts": [] 
+
+
+
+10 - Conveção de nomes -> arquivos criados pelo Angular CLI, focando em app.component.ts , Se quiséssemos criar um menubar.component.ts e, no nome do menu utilizarmos Pascal Case, ficaria MenubarComponent -> Para arquivos usamos menubar.component.ts, no nome usamos MenubarComponent
+11 - 
+
+####################################################
+Titulo da Pagina
+<h1>{{ title }}</h1>h1>
+<img [src]="url" [alt]="title">
+****************************************************
+export class AppComponent {
+  title = 'AluraPic';
+  description = "Leao";
+  url= "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Sultan_the_Barbary_Lion.jpg/440px-Sultan_the_Barbary_Lion.jpg";
+}
+####################################################
+12 - para redimensionar a imagem -> class ims-thumbnail -> 
+<img class="img-thumbnail" [src]="url" [alt]="title">
+13 - Primeiro componente -> componentizar imagem ->  criar dentro de app a pasta foto e dentro o arquivo foto.componente.ts
+14 - sudo chmod -R 777 alurapic -> para corrigir o problema de acesso as pastas do curso
+15 - Auto import para criar componente -> @Component
+16 - Boa pratica, pre-fixar os nomes do componentes -> selecor: 'ap-photo' -> ap significa alurapic
+17 - Código original do app.component.html:
+<h1>{{ title }}</h1>h1>
+<img class="img-thumbnail" [src]="url" [alt]="title">
+18 - Sequencia de criação do componente:
+app.module.ts
+************************
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { AppComponent } from './app.component';
+
+import { PhotoComponent } from './photo/photo.component';
+
+@NgModule({
+  declarations: [
+    AppComponent,
+    PhotoComponent
+  ],
+  imports: [
+    BrowserModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+*****************************
+app.component.html
+*****************************
+<ap-photo></ap-photo>
+*****************************
+photo.component.ts
+*****************************
+import { Component } from "@angular/core";
+
+@Component({
+    selector: 'ap-photo',
+    templateUrl: 'photo.component.html'
+})
+export class PhotoComponent{
+  description = "Leao";
+  url= "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Sultan_the_Barbary_Lion.jpg/440px-Sultan_the_Barbary_Lion.jpg";
+}
+******************************
+photo.component.html
+******************************
+<img class="img-thumbnail" [src]="url" [alt]="description">
+
+###########################################################
+
+19 - Passando imagens por parâmetros para o componente:
+
+***************************************************
+// photo.component.ts #########################################################
+
+import { Component, Input } from "@angular/core";
+
+@Component({
+    selector: 'ap-photo',
+    templateUrl: 'photo.component.html'
+})
+export class PhotoComponent{
+  @Input() description = '';
+  @Input() url= '';
+}
+***************************************************
+<!-- app.component.html ################################################### -->
+
+<ap-photo url="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Sultan_the_Barbary_Lion.jpg/440px-Sultan_the_Barbary_Lion.jpg" description="Leão"> </ap-photo>
+<ap-photo url="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Sultan_the_Barbary_Lion.jpg/440px-Sultan_the_Barbary_Lion.jpg" description="Foto Paisegem 001"></ap-photo>
+
+***************************************************
+
+20 - Organizando componentes em modulos
+
+Criar a pasta photos e mover a pasta photo para o seu interior
+*************************************************
+// photos.module.ts ###########################################################
+
+import { NgModule } from "@angular/core";
+import { PhotoComponent } from "./photo/photo.component";
+
+@NgModule({
+//    ATENÇÃO - Precisa declarar e exportar para que o modulo possa ser utilizado ################# 
+   declarations: [PhotoComponent], 
+   exports: [ PhotoComponent ] 
+})
+
+export class PhotosModule{
+
+}
+*************************************************
+// app.module.ts ##############################################################
+
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { AppComponent } from './app.component';
+import { PhotosModule } from './photos/photos.module';
+
+@NgModule({
+  declarations: [
+    AppComponent,
+  ],
+  imports: [
+    BrowserModule,
+    PhotosModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+*************************************************
+21 - Adicionando varios componentes com diretivas:
+*************************************************
+<!-- app.component.html ################################################### -->
+
+<ap-photo
+    *ngFor="let photo of photos"
+    [url]="photo.url"
+    [description]="photo.description">
+</ap-photo>
+*************************************************
+// app.component.ts ###########################################################
+
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+
+  photos = [
+    {
+      url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Sultan_the_Barbary_Lion.jpg/440px-Sultan_the_Barbary_Lion.jpg',
+      description: 'Leão'
+    },
+    {
+      url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Lioness_Etosha_NP.jpg/500px-Lioness_Etosha_NP.jpg',
+      description: 'Leoa'
+    }
+  ];
+
+  }
+*************************************************
+22 - Integração com backend
+
+Cuidado: caso apareça uma pasta "api" dentro de outra com mesmo nome, a que deverá ser recortada é a que contém arquivos como data.db, package, package-lock, data e server.
+
+1 - Baixar arquivo API.zip, descompactar e colocar na mesma pasta em que a pasta alurapic esta
+2 - Abrir um segundo terminal na mesma pasta aonde o arquivo api.zip foi descompactado
+3 - Digitar, só precisa fazer na primeira vez -> cd api -> npm install -> npm start -> no browser digitar -> localhost:3000/flavio/photos
+4 - Agora precisa abrir 2 terminais para subir cada servidor
+5 - single Page Application, este servidor normalmente é chamado de Web API
+6 - 
+*************************************************
+http://localhost:3000/flavio/photos
+// app.component.ts ###########################################################
+
+import { Component } from '@angular/core';
+import { HttpClient, HttpHandler } from '@angular/common/http';
+
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+
+  photos: object[] = [];
+  
+  constructor(http: HttpClient) {
+    console.log(http);
+    const observable = http.
+      get<Object[]>('http://localhost:3000/flavio/photos')
+      // Executa a operação a traz os dados #####################################################
+      .subscribe(photos =>{
+         console.log(photos); 
+         this.photos = photos,
+         err => console.log(err.message) 
+        });
+  }
+}
+*************************************************
+// app.module.ts ##############################################################
+
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { AppComponent } from './app.component';
+import { PhotosModule } from './photos/photos.module';
+import { HttpClientModule } from '@angular/common/http';
+
+@NgModule({
+  declarations: [
+    AppComponent,
+  ],
+  imports: [
+    BrowserModule,
+    PhotosModule,
+    HttpClientModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+*************************************************
+09/10/2019 ####################################################################
+
+Subir servidores:
+
+Abrir terminal na pasta alurapic -> ng serve --open
+Abrir terminal na pasta api -> npm start
+*************************************************
+Criando serviços:
+
+criar arquivo photo.service.ts
+
+********************************************************************************
+// photo.service.ts ##############################################################
+// Isolando a acesso em serviços #################################################
+
+// Import do httpclient para poder usar a constante API ##########################
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+
+const API = 'http://localhost:3000';
+
+// Injectable -> com 'root' garante acesso para todas as instâncias do codigo ####
+// providedIn -> para informar que sempre vai usar o mesmo objeto ################
+@Injectable({providedIn: 'root'})
+export class PhotoService{
+
+    // private para http no cliente para poder ser usado em listFromUser abaixo ##
+    constructor(private http: HttpClient){
+    }
+    // A criação do serviço visa impedir a repetição de código, como no caso de ser necessário 
+    // chamar  "/flavio/photos" várias vezes ao longo do código ou no caso de mudança do 
+    // código que é chamado várias vezes em locais diferentes
+
+    // string, com letra minúscula, para setar o tipo de userName ################
+        listFromUser(userName: string){
+            return this.http.
+            get<Object[]>(API + '/flavio/photos');
+    }
+    // subscribe -> quem tem que fazer é o método que for usar o listFromUser
+}
+********************************************************************************
+// app.component.ts ###########################################################
+
+import { Component } from '@angular/core';
+import { PhotoService } from './photos/photo/photo.service';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+
+  photos: object[] = [];
+  
+  constructor(photoService: PhotoService) {
+
+    photoService
+    .listFromUser('flavio')
+    .subscribe(photos => this.photos = photos);
+    }
+}
+********************************************************************************
+09/10/2019
+Tipando nossa API
+interface + refactor 
+criar dentro da pasta photo o arquivo photo.ts para criar uma interface
+// photo.service.ts ##############################################################
+// Isolando a acesso em serviços #################################################
+
+// Import do httpclient para poder usar a constante API ##########################
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { Photo } from "./photo";
+
+const API = 'http://localhost:3000';
+
+// Injectable -> com 'root' garante acesso para todas as instâncias do codigo ####
+// providedIn -> para informar que sempre vai usar o mesmo objeto ################
+@Injectable({providedIn: 'root'})
+export class PhotoService{
+
+    // private para http no cliente para poder ser usado em listFromUser abaixo ##
+    constructor(private http: HttpClient){
+    }
+    // A criação do serviço visa impedir a repetição de código, como no caso de ser necessário 
+    // chamar  "/flavio/photos" várias vezes ao longo do código ou no caso de mudança do 
+    // código que é chamado várias vezes em locais diferentes
+
+    // string, com letra minúscula, para setar o tipo de userName ################
+        listFromUser(userName: string){
+            return this.http.
+            // get<Photo - faz o get dos elementos a partir da interface com 
+            // acesso aos seus parâmetros
+            get<Photo[]>(API + '/flavio/photos');
+    }
+    // subscribe -> quem tem que fazer é o método que for usar o listFromUser
+}
+********************************************************************************
+
+12/10/2019 #####################################################################
+
+Ciclo de vida de um componente - ngoninit
+*******************************************************************************
+// app.component.ts ###########################################################
+
+import { Component, OnInit } from '@angular/core';
+import { PhotoService } from './photos/photo/photo.service';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+
+// implements OnInit para chamar a implementação do método #######################
+// com implements o compilador acusa erro se digitar OnInit errado ###############
+export class AppComponent implements OnInit{
+
+  photos: object[] = [];
+  
+  // dixando construtor somente para injeção de dependências #####################
+  // private para permitir que photoservice seja visto pelo metodo ngOnInit ######
+  constructor(private photoService: PhotoService) {
+  }
+
+  // Fase do ciclo de vida de um componente ###################################### 
+  // Todas as inicializações passam a ser feitas através do OnInit ############### 
+  ngOnInit(): void{
+    // this. para acessar a propriedade de photoservice ##########################
+    this.photoService
+    .listFromUser('flavio')
+    .subscribe(photos => {
+      // acessa a partir da interface o parametro descricao da foto [0] no array #
+      console.log(photos[0].description)
+      console.log(photos[0].id)
+      console.log(photos[0].userId)
+      console.log(photos[0].comments)
+      this.photos = photos
+    });
+  }
+
+}
+*******************************************************************************
+// photos.module.ts ###########################################################
+
+import { NgModule } from "@angular/core";
+import { PhotoComponent } from "./photo/photo.component";
+// Importa HttpClientModule para atender á dependência ########################
+// pois HttpClientModule nãp possui todas as dependências #####################
+// que precisa para funcionar #################################################
+import { HttpClientModule } from "@angular/common/http";
+
+@NgModule({
+//  ATENÇÃO - Precisa declarar e exportar para que ############################
+//  o modulo possa ser utilizado ############################################## 
+   declarations: [PhotoComponent], 
+   exports: [ PhotoComponent ],
+   imports: [ HttpClientModule ] 
+})
+
+export class PhotosModule{
+
+}
+*******************************************************************************
+// app.module.ts ##############################################################
+
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { AppComponent } from './app.component';
+import { PhotosModule } from './photos/photos.module';
+// import { HttpClientModule } from '@angular/common/http';
+
+@NgModule({
+  declarations: [
+    AppComponent,
+  ],
+  imports: [
+    BrowserModule,
+    PhotosModule,
+    // Remove HttpClientModule para importar em photos.module.ts #################
+    // HttpClientModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+*******************************************************************************
+Componente responsável pela exibição de fotos atualmente -> app.component.ts -> primeiro componente carregado pela aplicação
+Módulo que guarda todas as informações sobre fotos -> photos.module.ts
+Criar componente dentro de photos.module que terá a responsabilidade de exibir as fotos -> 
+assim app.component.ts deixará de ter a responsabilidade de carregar as fotos e poderá se transformar um agregador de componentes no futuro
+
+Criar pasta photo-list e seus componentes via console:
+
+Acessar o terminal do Angular CLI -> crtl + c
+Dentro da pasta alurapic -> ng generate component photos/photo-list
+
+ATENÇÃO - Pode dar erro ao executar o comando acima -> Unexpected token ] in JSON at position 819
+
+Utilizar página para validação de json para ajudar a localizar o erro, exemplo: https://jsonformatter.curiousconcept.com/
+
+No caso havia um erro com o "]" em -> 
+
+            "styles": [
+              "./node_modules/bootstrap/dist/css/bootstrap.min.css",
+            ],
+
+Apagando os colchetes que encapsulavam o código resolveu -> 
+
+"styles": 
+              "./node_modules/bootstrap/dist/css/bootstrap.min.css",
+
+A saída do console foi:
+*******************************************************************************
+ng generate component photos/photo-list
+CREATE src/app/photos/photo-list/photo-list.component.css (0 bytes)
+CREATE src/app/photos/photo-list/photo-list.component.html (29 bytes)
+CREATE src/app/photos/photo-list/photo-list.component.spec.ts (650 bytes)
+CREATE src/app/photos/photo-list/photo-list.component.ts (284 bytes)
+UPDATE src/app/photos/photos.module.ts (885 bytes)
+haguenmcleod@haguenmcleod-Inspiron-5557:~/Backup20190927001/CursosInformati
+*******************************************************************************
+-> verificar se foi criada a pasta photo-list dentro de photo
+*******************************************************************************
+// photo-list.component.ts #######################################################
+
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-photo-list',
+  templateUrl: './photo-list.component.html',
+  styleUrls: ['./photo-list.component.css']
+})
+export class PhotoListComponent implements OnInit {
+
+  constructor() { }
+
+  ngOnInit() {
+  }
+
+}
+*******************************************************************************
+// photos.module.ts ###########################################################
+
+import { NgModule } from "@angular/core";
+import { PhotoComponent } from "./photo/photo.component";
+// Importa HttpClientModule para atender á dependência ########################
+// pois HttpClientModule nãp possui todas as dependências #####################
+// que precisa para funcionar #################################################
+import { HttpClientModule } from "@angular/common/http";
+import { PhotoListComponent } from './photo-list/photo-list.component';
+
+@NgModule({
+//  ATENÇÃO - Precisa declarar e exportar para que ############################
+//  o modulo possa ser utilizado ############################################## 
+   declarations: [PhotoComponent, PhotoListComponent], 
+   exports: [ PhotoComponent ],
+   imports: [ HttpClientModule ] 
+})
+
+export class PhotosModule{
+
+}
+*******************************************************************************
+// app.component.ts ###########################################################
+
+import { Component, OnInit } from '@angular/core';
+import { PhotoService } from './photos/photo/photo.service';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+
+// implements OnInit para chamar a implementação do método #######################
+// com implements o compilador acusa erro se digitar OnInit errado ###############
+export class AppComponent implements OnInit{
+
+  photos: object[] = [];
+  
+  // dixando construtor somente para injeção de dependências #####################
+  // private para permitir que photoservice seja visto pelo metodo ngOnInit ######
+  constructor(private photoService: PhotoService) {
+  }
+
+  // Fase do ciclo de vida de um componente ###################################### 
+  // Todas as inicializações passam a ser feitas através do OnInit ############### 
+  ngOnInit(): void{
+    // this. para acessar a propriedade de photoservice ##########################
+    this.photoService
+    .listFromUser('flavio')
+    .subscribe(photos => {
+      // acessa a partir da interface o parametro descricao da foto [0] no array #
+      console.log(photos[0].description)
+      console.log(photos[0].id)
+      console.log(photos[0].userId)
+      console.log(photos[0].comments)
+      this.photos = photos
+    });
+  }
+
+}
+*******************************************************************************
+<!-- app.component.html ################################################### -->
+
+<!-- Remove o conteúdo INTEIRO de app.component.html e move para ############## 
+photo-listcomponent ####################################################### -->
+
+<!-- <ap-photo
+    *ngFor="let photo of photos"
+    [url]="photo.url"
+    [description]="photo.description">
+</ap-photo> -->
+<!-- <ap-photo url="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Sultan_the_Barbary_Lion.jpg/440px-Sultan_the_Barbary_Lion.jpg" description="Leão"> </ap-photo> -->
+<!-- <ap-photo url="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Sultan_the_Barbary_Lion.jpg/440px-Sultan_the_Barbary_Lion.jpg" description="Foto Paisegem 001"></ap-photo> -->
+
+*******************************************************************************
+<!-- photo-list.component.html ########################################### -->
+
+<!-- Recebe o conteúdo que veio de  app.component.html ################### -->
+
+<ap-photo
+    *ngFor="let photo of photos"
+    [url]="photo.url"
+    [description]="photo.description">
+</ap-photo>
+*******************************************************************************
+// photos.module.ts ###########################################################
+
+// Por convenção, agrupar imports do Angular antes das ########################
+// importações do componentes #################################################
+
+import { NgModule } from "@angular/core";
+import { HttpClientModule } from "@angular/common/http";
+
+import { PhotoComponent } from "./photo/photo.component";
+import { PhotoListComponent } from './photo-list/photo-list.component';
+
+@NgModule({
+   declarations: [PhotoComponent, PhotoListComponent], 
+   imports: [ HttpClientModule ] 
+})
+
+export class PhotosModule{
+
+}
+*******************************************************************************
+
+Corrigir auto import do Visual Studio para considerar aspas simples e duplas:
+
+No menu -> File/Preferences/Settings/
+
+do lado esquerdo serão exibidas as configurações padrão do Visual Studio, enquanto que do lado direito estarão as configurações do usuário, em que incluiremos as seguintes linhas entre chaves:
+
+"javascript.preferences.quoteStyle":"single",
+"typescript.preferences.quoteStyle": "single"
+
+*******************************************************************************
+Boa prática, sempre que criar um módulo novo importar o módulo CommonModules, que contpem as diretivas mais comuns para uso, exemplo:
+
+import { NgModule } from "@angular/core";
+import { HttpClientModule } from "@angular/common/http";
+import { CommonModule } from '@angular/common';
+
+import { PhotoComponent } from "./photo/photo.component";
+import { PhotoListComponent } from './photo-list/photo-list.component';
+
+
+@NgModule({
+   declarations: [PhotoComponent, PhotoListComponent], 
+   imports: [ HttpClientModule,
+	CommonModule importado aqui ###########################################
+               CommonModule         
+   ] 
+})
+
+export class PhotosModule{
+
+}
+*******************************************************************************
+Criando segundo componente e rotas:
+
+No console -> ng generate component photos/photo-form
+
+Roteamento de Single Page Apllication
+
+Primeiro componente sendo carregado -> <app-root></app-root> em index.html -> de acordo com o que o usuário digitar a rota deve indeicar o caminho -> index.html vai fazer um de/para -> o Angular vai interceptar o endereço inserido e carregar o compoente específico -> dentro de app criar o arquivo app.routing.module.ts -> 
+*******************************************************************************
+<!-- index.html ########################################################### -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Alurapic</title>
+  <base href="/">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+  <!-- As rotas passam por app-root ####################################### -->
+  <app-root></app-root>
+</body>
+</html>
+*******************************************************************************
+// app.routing.module.ts ######################################################
+
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+
+import { PhotoListComponent } from './photos/photo-list/photo-list.component';
+
+const routes: Routes = [
+    
+        // Rotas listadas abaixo ##############################################
+        // Para que o compilador avise sobre eventuais  #######################
+        // erros de digitação em "path" efetuar o import ######################
+        //  import { Routes } from '@angular/router'; #########################
+        // e definir a constante acima como : Routes ##########################
+        {path: 'user/flavio', component: PhotoListComponent},
+        {path: 'p/add', component: PhotoListComponent}
+];
+
+
+@NgModule({
+    // Conecta com a contante routes criada acima #############################
+    imports: [RouterModule.forRoot(routes)],
+    // Exporta RouterModule para uso em app.component.html ####################    
+    exports: [RouterModule]
+})
+
+export class AppRoutingModule{
+
+}
+*******************************************************************************
+// app.module.ts ##############################################################
+
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { AppComponent } from './app.component';
+import { PhotosModule } from './photos/photos.module';
+import { AppRoutingModule } from './app.routing.module';
+
+@NgModule({
+  declarations: [
+    AppComponent,
+  ],
+  imports: [
+    BrowserModule,
+    PhotosModule,
+    // Importa o AppRoutingModule #############################################
+    // IMPORTANTE o Angular pode ser perder ao importar um modulo ############# 
+    // de rotas , para prevenir , após importar , #############################
+    // reiniciar o servidor -> ng serve --open ################################
+    AppRoutingModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+*******************************************************************************
+<!-- app.component.html ################################################### -->
+<!-- Criar a diretiva abaixo para trabalhar com as rotas ################## -->
+
+<router-outlet></router-outlet>
+
+*******************************************************************************
+
+Para testar, digitar no navegador -> http://localhost:4200/user/flavio ou 
+http://localhost:4200/p/add
+
+*******************************************************************************
+BrowserModule e CommonModule - 13/10/2019
+
+Exports all the basic Angular directives and pipes, such as NgIf, NgForOf, DecimalPipe, and so on. Re-exported by BrowserModule, which is included automatically in the root AppModule when you create a new app with the CLI new command.
+*******************************************************************************
+// photos.module.ts ###########################################################
+
+// Por convenção, agrupar imports do Angular antes das ########################
+// importações do componentes #################################################
+
+import { NgModule } from "@angular/core";
+import { HttpClientModule } from "@angular/common/http";
+// Import de CommonModule #####################################################
+import { CommonModule } from '@angular/common';
+
+import { PhotoComponent } from "./photo/photo.component";
+import { PhotoListComponent } from './photo-list/photo-list.component';
+import { PhotoFormComponent } from './photo-form/photo-form.component';
+
+
+@NgModule({
+   declarations: [PhotoComponent, PhotoListComponent, PhotoFormComponent], 
+   imports: [ 
+      HttpClientModule,
+      // CommonModule deve ser importado para que #############################
+      // photo-list.component.html reconheça o comando ########################
+      // *ngFor="let photo of photos" #########################################
+      CommonModule         
+            ] 
+})
+
+export class PhotosModule{
+
+}
+****************************************
+<!-- photo-list.component.html ########################################### -->
+<!-- Recebe o conteúdo que veio de  app.component.html ################### -->
+
+<ap-photo
+    *ngFor="let photo of photos"
+    [url]="photo.url"
+    [description]="photo.description">
+</ap-photo>
+
+*******************************************************************************
+15/10/2019 ####################################################################
+08 Lidando com rotas inexistentes
+*******************************************************************************
+O Angular sim interpreta a URL e verifica se há um roteamento associado. Se não
+ tiver nenhum roteamento que serve, é mostrado um erro no console.
+*******************************************************************************
+Tratar erro quando uma rota não cadastrada é inserida na barra ################
+de endereço do browser, no console, pausar o ##################################
+servidor e digitar -> ng generate module errors ###############################
+ai criar o modulo para tratamento de erros ####################################
+*******************************************************************************
+// app.routing.module.ts ######################################################
+
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+
+import { PhotoListComponent } from './photos/photo-list/photo-list.component';
+import { NotFoundComponent } from './errors/not-found/not-found.component';
+
+const routes: Routes = [
+    
+        // Rotas listadas abaixo ##############################################
+        // Para que o compilador avise sobre eventuais  #######################
+        // erros de digitação em "path" efetuar o import ######################
+        //  import { Routes } from '@angular/router'; #########################
+        // e definir a constante acima como : Routes ##########################
+        {path: 'user/flavio', component: PhotoListComponent},
+        {path: 'p/add', component: PhotoListComponent},
+        // Rota para o caso de uma rota não cadastrada ser inserida ###########
+        // na barra de endereços do browser ###################################
+        // {path: '**', component: PhotoListComponent}
+        // OUTRA SOLUÇÃO - Criação de Componente NotFound para ################
+        // tratamento de rota inválida ########################################
+        {path: '**', component: NotFoundComponent}
+
+];
+
+
+@NgModule({
+    // Conecta com a contante routes criada acima #############################
+    imports: [RouterModule.forRoot(routes)],
+    // Exporta RouterModule para uso em app.component.html ####################    
+    exports: [RouterModule]
+})
+
+export class AppRoutingModule{
+
+}
+*******************************************************************************
+Criação do componente not found dentro da pasta errors criada #################
+anteriormente -> ng generate component errors/not-found #######################
+*******************************************************************************
+// errors/not-found/not-found.component.ts ####################################
+
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-not-found',
+  templateUrl: './not-found.component.html',
+  styleUrls: ['./not-found.component.css']
+})
+export class NotFoundComponent implements OnInit {
+
+  constructor() { }
+
+  ngOnInit() {
+  }
+
+}
+*******************************************************************************
+<!-- errors/not/found/not-found.component.html ############################ -->
+
+<div class="text-center">
+  <h2>This page is not avaliable</h2>
+  <p>
+      The link you have acccessed may be broken or
+      the page may have ben removed.
+  </p>
+</div>
+*******************************************************************************
+// app.module.ts ##############################################################
+
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { AppComponent } from './app.component';
+import { PhotosModule } from './photos/photos.module';
+import { AppRoutingModule } from './app.routing.module';
+import { ErrorsModule } from './errors/errors.module';
+
+@NgModule({
+  declarations: [
+    AppComponent,
+  ],
+  imports: [
+    BrowserModule,
+    PhotosModule,
+    // Importa o AppRoutingModule #############################################
+    // IMPORTANTE o Angular pode se perder ao importar um modulo ##############
+    // de rotas , para prevenir , após importar , #############################
+    // reiniciar o servidor -> ng serve --open ################################
+    AppRoutingModule,
+    // Importar o módulo correspondente ao compoente criado ###################
+    ErrorsModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+*******************************************************************************
+10 Segmentos de rotas - 16/05/2019
+
+*******************************************************************************
+// app.routing.module.ts ######################################################
+
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+
+import { PhotoListComponent } from './photos/photo-list/photo-list.component';
+import { NotFoundComponent } from './errors/not-found/not-found.component';
+
+const routes: Routes = [
+    
+        // Segmentação de rotas -> user/flavio -> user/:userName ##############
+        {path: 'user/:userName', component: PhotoListComponent},
+
+        {path: 'p/add', component: PhotoListComponent},
+        {path: '**', component: NotFoundComponent}
+
+];
+
+@NgModule({
+    imports: [RouterModule.forRoot(routes)],
+    exports: [RouterModule]
+})
+
+export class AppRoutingModule{ }
+*******************************************************************************
+// photo-list.component.ts #######################################################
+
+import { Component, OnInit } from '@angular/core';
+import { PhotoService } from '../photo/photo.service';
+import { ActivatedRoute } from '@angular/router';
+
+@Component({
+  selector: 'app-photo-list',
+  templateUrl: './photo-list.component.html',
+  styleUrls: ['./photo-list.component.css']
+})
+export class PhotoListComponent implements OnInit {
+
+  photos: any[] = [];
+
+  constructor(
+    private photoService: PhotoService,
+    // Segmentação de rotas 1/3 ############################################### 
+    private activatedRoute: ActivatedRoute
+    ) {  }
+
+  ngOnInit(): void{
+    // Segmentação de rotas 2/3 ############################################### 
+    const userName = this.activatedRoute.snapshot.params.userName;
+    this.photoService
+    
+    // Segmentação de rotas 3/3 ############################################### 
+    // .listFromUser('flavio') ################################################
+    .listFromUser(userName)
+    .subscribe(photos => {
+      console.log(photos[0].description)
+      console.log(photos[0].id)
+      console.log(photos[0].userId)
+      console.log(photos[0].comments)
+      this.photos = photos
+    });
+  }
+
+}
+
+*******************************************************************************
+// photo.service.ts ###########################################################
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { Photo } from "./photo";
+
+const API = 'http://localhost:3000';
+
+@Injectable({providedIn: 'root'})
+export class PhotoService{
+
+    constructor(private http: HttpClient){
+    }
+        listFromUser(userName: string){
+            return this.http.
+            // Segmentação de rotas ###########################################
+            get<Photo[]>(API + '/' + userName + '/photos');
+    }
+}
+*******************************************************************************
+02 Melhorando a apresentação da lista - 16/10/2019 ############################
+Grid do bootstrap #############################################################
+*******************************************************************************
+<!-- photo-list.component.html ########################################### -->
+<!-- 02 Melhorando a apresentação da lista ############################### -->
+<!-- Usando grid do booststrap ########################################### -->
+
+<ol class="list-unstyled row">
+    <li *ngFor="let photo of photos" class="col-4">
+        <ap-photo
+            [url]="photo.url"
+            [description]="photo.description">
+        </ap-photo>
+    </li>
+</ol>
+*******************************************************************************
+ 03 Componente exclusivo para listar fotos
+*******************************************************************************
+Criar o componente photo-list -> ng generate component photos/photo-list/photos
+*******************************************************************************
+<!-- photo-list.component.html ########################################### -->
+<!-- 02 Melhorando a apresentação da lista ############################### -->
+
+<ap-photos [photos]="photos"></ap-photos>
+*******************************************************************************
+// photo-list.component.ts #######################################################
+
+import { Component, OnInit } from '@angular/core';
+import { PhotoService } from '../photo/photo.service';
+import { ActivatedRoute } from '@angular/router';
+import { Photo } from '../photo/photo';
+
+@Component({
+  selector: 'app-photo-list',
+  templateUrl: './photo-list.component.html',
+  styleUrls: ['./photo-list.component.css']
+})
+export class PhotoListComponent implements OnInit {
+  // Mudar o array de photos: any[] para photos: Photo[] ######################
+  // já que o componete correspondente foi criado #############################
+  photos: Photo[] = [];
+
+  constructor(
+    private photoService: PhotoService,
+    private activatedRoute: ActivatedRoute
+    ) {  }
+
+  ngOnInit(): void{
+    const userName = this.activatedRoute.snapshot.params.userName;
+    this.photoService
+    
+    .listFromUser(userName)
+    .subscribe(photos => {
+      console.log(photos[0].description)
+      console.log(photos[0].id)
+      console.log(photos[0].userId)
+      console.log(photos[0].comments)
+      this.photos = photos
+    });
+  }
+}
+*******************************************************************************
+<!-- photos.component.html ############################################### -->
+<!-- 02 Melhorando a apresentação da lista ############################### -->
+<!-- Usando grid do booststrap ########################################### -->
+
+<ol class="list-unstyled row">
+  <li *ngFor="let photo of photos" class="col-4">
+      <ap-photo
+          [url]="photo.url"
+          [description]="photo.description">
+      </ap-photo>
+  </li>
+</ol>
+*******************************************************************************
+// photos.component.ts ########################################################
+
+import { Component, OnInit, Input } from '@angular/core';
+import { Photo } from '../../photo/photo';
+
+@Component({
+  // Atenção para mudar para ap-not-found abaixo após #########################
+  // criar o componente #######################################################
+  selector: 'ap-photos',
+  templateUrl: './photos.component.html',
+  styleUrls: ['./photos.component.css']
+})
+export class PhotosComponent implements OnInit {
+
+  @Input() photos: Photo[] = [];
+
+  constructor() { }
+
+  ngOnInit() {
+  }
+}
+*******************************************************************************
+// photo-form.component.ts ####################################################
+
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  // Atenção para mudar para ap-not-found abaixo após #########################
+  // criar o componente #######################################################
+  selector: 'ap-photo-form',
+  templateUrl: './photo-form.component.html',
+  styleUrls: ['./photo-form.component.css']
+})
+export class PhotoFormComponent implements OnInit {
+
+  constructor() { }
+
+  ngOnInit() {
+  }
+}
+*******************************************************************************
+// errors/not-found/not-found.component.ts ####################################
+
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  // Atenção para mudar para ap-not-found abaixo após #########################
+  // criar o componente #######################################################
+  selector: 'ap-not-found',
+  templateUrl: './not-found.component.html',
+  styleUrls: ['./not-found.component.css']
+})
+export class NotFoundComponent implements OnInit {
+
+  constructor() { }
+
+  ngOnInit() {
+  }
+}
+*******************************************************************************
+// photos.module.ts ###########################################################
+
+import { NgModule } from "@angular/core";
+import { HttpClientModule } from "@angular/common/http";
+import { CommonModule } from '@angular/common';
+
+import { PhotoComponent } from "./photo/photo.component";
+import { PhotoListComponent } from './photo-list/photo-list.component';
+import { PhotoFormComponent } from './photo-form/photo-form.component';
+import { PhotosComponent } from './photo-list/photos/photos.component';
+
+
+@NgModule({
+   declarations: [PhotoComponent, 
+      PhotoListComponent, 
+      PhotoFormComponent,
+      // Criação de PhotosComponentnent após comando no console ############### 
+      PhotosComponent], 
+   imports: [ 
+      HttpClientModule,
+      CommonModule         
+            ] 
+})
+export class PhotosModule{
+}
+*******************************************************************************
+04 Implementando a lógica do Grid - 17/10/2019 ################################
+*******************************************************************************
+// photos.component.ts ########################################################
+
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Photo } from '../../photo/photo';
+
+@Component({
+  selector: 'ap-photos',
+  templateUrl: './photos.component.html',
+  styleUrls: ['./photos.component.css']
+})
+export class PhotosComponent implements OnChanges {
+
+  // lista de dados que conterá as fotos na tela ##############################
+  // Serão 3 colunas por linha ################################################
+  @Input() photos: Photo[] = [];
+  rows: any[] = [];
+ 
+  constructor() { }
+
+  // ngOnInit() {
+  //   this.rows = this.groupColumns(this.photos);
+  // }
+  // ngOnInit -> Deve ser trocado por ngOnChanges porque ngOnInit #############
+  // alimenta o componente apenas na inicialização e o for alimenta ###########
+  // o compomente em loop até preencher o grid com tantas fotos ###############
+  // quantas o array tiver ####################################################
+  ngOnChanges(changes: SimpleChanges){
+    if(changes.photos)
+    this.rows = this.groupColumns(this.photos);
+  }
+
+  // Itera fotos de 3 em 3 ####################################################
+  groupColumns(photos: Photo[]){
+    const newRows = [];
+    
+    for(let index = 0; index < photos.length; index+=3) {
+      // Adiciona as fotos de 3 em 3 ##########################################
+      // Slice = fatia de array de fotos, de 3 em 3 ###########################
+      // O primeiro parâmetro de slice é a posição inclusive na ###############
+      // qual os elementos serão considerados. O segundo é a posição ##########
+      // final (não inclusiva). ###############################################
+      newRows.push(photos.slice(index, index + 3));
+    }
+    return newRows;
+  }
+}
+
+// Exercício(s) Slice #########################################################
+// O primeiro parâmetro de slice é a posição inclusive na #####################
+// qual os elementos serão considerados. O segundo é a posição ################
+// final (não inclusiva). #####################################################
+// 
+// const idades = [22, 18, 17, 25, 38, 42];
+// for(let i = 0; i < idades.length; i++) {
+//   console.log(idades.slice(i, i + 2)); // qual a saída?
+// }
+// Saída do console:
+// [22, 18]
+// [18, 17]
+// [17, 25]
+// [25, 38]
+// [38, 42]
+// [42]
+// ****************************************************************************
+// const idades = [22, 15, 31, 10];
+// console.log(idades.slice(1,3));
+// Saída do console:
+// [15, 31]
+// ############################################################################
+*******************************************************************************
+<!-- photos.component.html ################################################ -->
+
+<ol class="list-unstyled">
+    <!-- cols = colunas ################################################### -->
+    <!-- For para iterar o grid ########################################### -->
+    <li *ngFor="let cols of rows" class="row">
+        <!-- For para iterar as fotos por linha ########################### -->
+        <!-- Define que serão linhas com 3 itens ########################## -->
+        <div *ngFor="let photo of cols" class="col-4">
+            <ap-photo
+                [url]="photo.url"
+                [description]="photo.description">
+            </ap-photo>
+        </div>
+    </li>
+</ol>
+*******************************************************************************
+02 Binding de eventos - 19/10/2019 ############################################
+Inserção de campo filtro para exibição de fotos ###############################
+*******************************************************************************
+03 Pipe e implementação #######################################################
+*******************************************************************************
+<!-- photo-list.component.html ########################################### -->
+<!-- Este é o componente que tras os dados e diponibiliza para 
+    photos.component.html que faz a rederização ########################## -->
+
+<!-- Insere um campo text para pesquisa centralizado no alto da tela ##### -->
+<!-- mt-3 mb-3 -> margem top e e margem botom e ########################## -->
+<!-- EVENT BIDING -> (keyup) entre () significa que para cada evento a
+    expressão será avaliada -->
+<div class="text-center mt-3 mb-3">
+    <form>
+        <input
+            class="rounded"
+            type="search"
+            placeholder="search..."
+            autofocus
+            (keyup)="filter = $event.target.value"
+            >
+    </form>
+</div>
+
+<!-- Para testar se o event de digitação do teclado esta funcionando ##########
+     descomentar o comando abaixo -->
+<!-- {{ filter }} -->
+
+<!-- Exemplo de uso de Pipe ############################################### -->
+{{ nome | uppercase }}
+
+<!-- Pipe sendo usado abaixo -->
+<ap-photos [photos]="photos | filterByDescription: filter"></ap-photos>
+
+<!-- Diferença Data Binding e Event Biding ################################ -->
+<!-- São unidirecionais ################################################### -->
+<!-- [] -> o dado vem do componente em direção ao template
+     () -> o dado vai do template para o componente -->
+*******************************************************************************
+<!-- photos.component.html ################################################ -->
+
+<!-- Tratamento para o caso de o usuário informar um valor ####################
+inválido no campo de busca -->
+<!-- text-muted -> Fonte do texto alterada  -->
+<!-- *ngIf="!photos.length -> Diretiva para só exibir a msg de erro se
+    não forem encontradas fotos para exibição -->
+<p class="text-center text-muted" *ngIf="!photos.length">
+    Sorry, no photos
+</p>
+
+<ol class="list-unstyled">
+    <li *ngFor="let cols of rows" class="row">
+        <div *ngFor="let photo of cols" class="col-4">
+            <ap-photo
+                [url]="photo.url"
+                [description]="photo.description">
+            </ap-photo>
+        </div>
+    </li>
+</ol>
+*******************************************************************************
+// photos/filter-by-description.pipe.ts #######################################
+
+import { Pipe, PipeTransform } from '@angular/core';
+import { Photo } from '../../photo/photo';
+
+// @Pipe({ name -> inica o nome do filtro #####################################
+@Pipe({ name: 'filterByDescription'})
+export class FilterByDescription implements PipeTransform {
+
+    transform(photos: Photo[], descriptionQuery: string) {
+        descriptionQuery = descriptionQuery
+            .trim()
+            .toLowerCase();
+
+        // Se o campo filtro estive preeenchido executa o filtro ##############    
+        if(descriptionQuery) {
+            return photos.filter(photo =>
+                photo.description.toLowerCase().includes(descriptionQuery)
+            );
+        // Se não for informado um valor no filtro retorna todas as fotos ##### 
+        } else {
+            return photos;
+        }
+    }
+}
+*******************************************************************************
+// photos.module.ts ###########################################################
+
+import { NgModule } from "@angular/core";
+import { HttpClientModule } from "@angular/common/http";
+import { CommonModule } from '@angular/common';
+
+import { PhotoComponent } from "./photo/photo.component";
+import { PhotoListComponent } from './photo-list/photo-list.component';
+import { PhotoFormComponent } from './photo-form/photo-form.component';
+import { PhotosComponent } from './photo-list/photos/photos.component';
+import { FilterByDescription } from './photo-list/photos/filter-by-description.pipe';
+
+@NgModule({
+   declarations: [PhotoComponent, 
+      PhotoListComponent, 
+      PhotoFormComponent,
+      PhotosComponent,
+      // Declarar o modulo do filtro criado e importar ########################
+      FilterByDescription
+   ], 
+   imports: [ 
+      HttpClientModule,
+      CommonModule         
+            ] 
+})
+export class PhotosModule{
+}
+*******************************************************************************
+// photo-list.component.ts #######################################################
+
+import { Component, OnInit } from '@angular/core';
+import { PhotoService } from '../photo/photo.service';
+import { ActivatedRoute } from '@angular/router';
+import { Photo } from '../photo/photo';
+
+@Component({
+  selector: 'app-photo-list',
+  templateUrl: './photo-list.component.html',
+  styleUrls: ['./photo-list.component.css']
+})
+export class PhotoListComponent implements OnInit {
+  photos: Photo[] = [];
+  
+  // Variável para receber o texto digitado no campo de filtro ################ 
+  filter: string = '';
+
+  // Variável criada temporariamente para demonstrar o uso de Pipe ############
+  // Na tela devará aparecer o texto com a tranformação 
+  // indicada em photo-list.component.html
+  nome = 'Haguen'
+
+  constructor(
+    private photoService: PhotoService,
+    private activatedRoute: ActivatedRoute
+    ) {  }
+
+  ngOnInit(): void{
+    const userName = this.activatedRoute.snapshot.params.userName;
+    this.photoService
+    
+    .listFromUser(userName)
+    .subscribe(photos => {
+      console.log(photos[0].description)
+      console.log(photos[0].id)
+      console.log(photos[0].userId)
+      console.log(photos[0].comments)
+      this.photos = photos
+    });
+  }
+}
+*******************************************************************************
+05 Resolvers ##################################################################
+No momento, ao carregar a página e teclar f5, o sistema exibe por #############
+alguns instantes a msg de sorry no photos
+*******************************************************************************
+// /photos/photo-listresolver.ts ##############################################
+
+// Resolver, capaz de lidar com dados durante a ###############################
+// navegação de uma rota para disponibilizá-los a um 
+// componente antes deste ser carregado
+
+import { Injectable } from '@angular/core';
+import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { Observable } from 'rxjs';
+
+import { PhotoService } from '../../photo/photo.service';
+import { Photo } from '../../photo/photo';
+
+@Injectable({ providedIn: 'root'})
+export class PhotoListResolver implements Resolve<Observable<Photo[]>>{
+
+    constructor(private service: PhotoService) {}
+    // ActivatedRouteSnapshot -> já traz informações do que ocorre na rota ####
+    // em tempo de execução 
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+        const userName = route.params.userName;
+        return this.service.listFromUser(userName);
+    }
+}
+*******************************************************************************
+// photo-list.component.ts #######################################################
+
+import { Component, OnInit } from '@angular/core';
+import { PhotoService } from '../photo/photo.service';
+import { ActivatedRoute } from '@angular/router';
+import { Photo } from '../photo/photo';
+
+@Component({
+  selector: 'app-photo-list',
+  templateUrl: './photo-list.component.html',
+  styleUrls: ['./photo-list.component.css']
+})
+export class PhotoListComponent implements OnInit {
+  
+  // photos é carregado com vazio quando o sistema sobe e só é ################
+  // populado depois, isto causa a exibição por instantes da
+  // mensagem sorry no photos" que é sobrescrita depois com
+  // a listagem das fotos
+  
+  photos: Photo[] = [];
+  
+  filter: string = '';
+
+  nome = 'Haguen'
+
+  constructor(
+    private photoService: PhotoService,
+    private activatedRoute: ActivatedRoute
+    ) {  }
+
+  //  Altera o ngOnInit para trabalhar com o resolver #########################
+  ngOnInit(): void{
+    // data -> permite pegar o valor photos me app.routing.module.ts ##########
+    this.photos = this.activatedRoute.snapshot.data['photos']
+    }
+}
+
+*******************************************************************************
+// app.routing.module.ts ######################################################
+
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+
+import { PhotoListComponent } from './photos/photo-list/photo-list.component';
+import { NotFoundComponent } from './errors/not-found/not-found.component';
+import { PhotoListResolver } from './photos/photo-list/photos/photo-listresolver';
+
+const routes: Routes = [
+    
+        // Alteração de rota principal para trabalhar com o resolver ##########
+        {path: 'user/:userName', 
+            component: PhotoListComponent,
+            resolve:{
+                photos: PhotoListResolver
+            }
+        },
+
+        {path: 'p/add', component: PhotoListComponent},
+        {path: '**', component: NotFoundComponent}
+];
+
+@NgModule({
+    imports: [RouterModule.forRoot(routes)],
+    exports: [RouterModule]
+})
+
+export class AppRoutingModule{
+}
+*******************************************************************************
+07 RxJS e seu Subject - 20/10/2019 ############################################
+Melhoria de performance
+Aplicar intervalo de tempo parametrizável após a digitação para só então
+submeter a consulta, para não submeter uma consulta a cada
+caractere digitado
+*******************************************************************************
+// photo/list/photo-list.component.ts #########################################
+
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { PhotoService } from '../photo/photo.service';
+import { ActivatedRoute } from '@angular/router';
+import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+
+import { Photo } from '../photo/photo';
+
+@Component({
+  selector: 'app-photo-list',
+  templateUrl: './photo-list.component.html',
+  styleUrls: ['./photo-list.component.css']
+})
+export class PhotoListComponent implements OnInit, OnDestroy {
+  
+  photos: Photo[] = [];
+  filter: string = '';
+
+  // debounce -> propriedade para aguardar tempo parametrizável ###############
+  // entre a digitação para não submeter a consulta a
+  // cada caractere digitado
+  debounce: Subject<string> = new Subject<string>();
+
+  nome = 'Haguen'
+
+  constructor(
+    private photoService: PhotoService,
+    private activatedRoute: ActivatedRoute
+    ) {  }
+
+  ngOnInit(): void {
+      this.photos = this.activatedRoute.snapshot.data['photos'];
+      this.debounce
+      // Só vai submeter a consulta após o intervalo de #######################
+      // digitação parametrizado abaixo
+      .pipe(debounceTime(500))
+      .subscribe(filter => this.filter = filter);
+  }  
+  // Como neste caso não ocorre o comando this.debounce.complete(), ###########
+  // já que o debounce precisa ficar "ouvindo" a digitação do usuário
+  // o tempo todo, a memória não será liberada quando sair para outra rota,
+  // é preciso chamar o método abaixo para destuir o compoente
+  ngOnDestroy(): void {
+    this.debounce.unsubscribe();
+  }  
+}
+*******************************************************************************
+<!-- photo-list.component.html ########################################### -->
+
+<!-- Incluiu debounce em -> (keyup)="debounce.next($event.target.value)" -->
+
+<div class="text-center mt-3 mb-3">
+    <form>
+        <input
+           class="rounded"
+            type="search"
+            placeholder="search..."
+            autofocus
+            (keyup)="debounce.next($event.target.value)"
+        >
+    </form>
+</div>
+
+{{ nome | uppercase }}
+
+<ap-photos [photos]="photos | filterByDescription: filter"></ap-photos>
+*******************************************************************************
+09 Paginação de dados e 10 LoadButton- 22/10/2019 #############################
+Para o caso de haverem muitos registros a serem trazidos pela aplicação,
+carrega uma parte, depois outra e assim por diante...
+*******************************************************************************
+Cria o componente do botão via console -> ng g c photos/photo-list/load-button
+-> no comando acima -> substitui o "ng generate" -> g significa "generate" e c significa "componente"
+*******************************************************************************
+<!-- photo-list/load-button.component.html ################################ -->
+
+<!-- If /Else no Angular ################################################## -->
+
+<!-- *ngIf -> para só exibir msg de que não tem mais ##########################
+fotos se hasMore for falso -->
+<div class="text-center" *ngIf="hasMore; else messageTemplate">
+  <button class="btn btn-primary">Load more</button>
+</div>
+
+<!-- #messageTemplate -> é usado acima no ngIf ############################ -->
+<ng-template #messageTemplate>
+  <p class="text-center text-muted">No more data to load</p>
+</ng-template>
+*******************************************************************************
+// photo-list/load-button.component.ts ########################################
+
+import { Component, OnInit, Input } from '@angular/core';
+
+@Component({
+  // Retirar um "p" de app-load-button ########################################
+  selector: 'ap-load-button',
+  templateUrl: './load-button.component.html',
+  styleUrls: ['./load-button.component.css']
+})
+export class LoadButtonComponent implements OnInit {
+
+  @Input() hasMore: boolean = true;
+
+  constructor() { }
+
+  ngOnInit() {
+  }
+}
+*******************************************************************************
+// photo.service.ts ############################################################
+import { HttpClient, HttpParams } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { Photo } from "./photo";
+
+const API = 'http://localhost:3000';
+
+@Injectable({providedIn: 'root'})
+export class PhotoService{
+
+    constructor(private http: HttpClient){
+    }
+        listFromUser(userName: string){
+            return this.http.
+            get<Photo[]>(API + '/' + userName + '/photos');
+    }
+
+        // Cria método da paginação ###########################################
+        listFromUserPaginated(userName: string, page: number) {
+            const params = new HttpParams()
+                .append('page', page.toString());
+        
+            return this.http
+            .get<Photo[]>(API + '/' + userName + '/photos', { params });
+        }
+}
+*******************************************************************************
+// photos.component.ts ########################################################
+
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Photo } from '../../photo/photo';
+
+@Component({
+  selector: 'ap-photos',
+  templateUrl: './photos.component.html',
+  styleUrls: ['./photos.component.css']
+})
+export class PhotosComponent implements OnChanges {
+
+  // lista de dados que conterá as fotos na tela ##############################
+  // Serão 3 colunas por linha ################################################
+  @Input() photos: Photo[] = [];
+  rows: any[] = [];
+ 
+  constructor() { }
+
+  // ngOnInit() {
+  //   this.rows = this.groupColumns(this.photos);
+  // }
+  // ngOnInit -> Deve ser trocado por ngOnChanges porque ngOnInit #############
+  // alimenta o componente apenas na inicialização e o for alimenta ###########
+  // o compomente em loop até preencher o grid com tantas fotos ###############
+  // quantas o array tiver ####################################################
+  ngOnChanges(changes: SimpleChanges){
+    if(changes.photos)
+    this.rows = this.groupColumns(this.photos);
+  }
+
+  // Itera fotos de 3 em 3 ####################################################
+  groupColumns(photos: Photo[]){
+    const newRows = [];
+    
+    for(let index = 0; index < photos.length; index+=3) {
+      // Adiciona as fotos de 3 em 3 ##########################################
+      // Slice = fatia de array de fotos, de 3 em 3 ###########################
+      // O primeiro parâmetro de slice é a posição inclusive na ###############
+      // qual os elementos serão considerados. O segundo é a posição ##########
+      // final (não inclusiva). ###############################################
+      newRows.push(photos.slice(index, index + 3));
+    }
+    return newRows;
+  }
+}
+*******************************************************************************
+// /photos/photo-listresolver.ts ##############################################
+
+import { Injectable } from '@angular/core';
+import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { Observable } from 'rxjs';
+
+import { PhotoService } from '../../photo/photo.service';
+import { Photo } from '../../photo/photo';
+
+@Injectable({ providedIn: 'root'})
+export class PhotoListResolver implements Resolve<Observable<Photo[]>>{
+
+    constructor(private service: PhotoService) {}
+
+    // Modifica o resolver para a paginação ###################################
+    // Por padrão já carrega os 12 primeiros registros 
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Photo[]> {
+        const userName = route.params.userName;
+        return this.service.listFromUserPaginated(userName, 1);
+    }
+}
+*******************************************************************************
+<!-- photo-list.component.html ########################################### -->
+
+<div class="text-center mt-3 mb-3">
+    <form>
+        <input
+           class="rounded"
+            type="search"
+            placeholder="search..."
+            autofocus
+            (keyup)="debounce.next($event.target.value)"
+        >
+    </form>
+</div>
+
+{{ nome | uppercase }}
+
+<ap-photos [photos]="photos | filterByDescription: filter"></ap-photos>
+
+<!-- Inclusão do botão load more ########################################## -->
+<!-- click chama load -> que altera hasMore com dados ou vazio -->
+<ap-load-button 
+    (click)="load()" 
+    [hasMore]="hasMore">
+</ap-load-button>
+*******************************************************************************
+// photo/list/photo-list.component.ts #########################################
+
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { PhotoService } from '../photo/photo.service';
+import { ActivatedRoute } from '@angular/router';
+import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+
+import { Photo } from '../photo/photo';
+
+@Component({
+  selector: 'app-photo-list',
+  templateUrl: './photo-list.component.html',
+  styleUrls: ['./photo-list.component.css']
+})
+export class PhotoListComponent implements OnInit, OnDestroy {
+  
+  photos: Photo[] = [];
+  filter: string = '';
+
+  debounce: Subject<string> = new Subject<string>();
+
+  // Adiciona variável para o hasMore #########################################
+  hasMore: boolean = true;
+  // Adiciona propriedade para numeração da paginação #########################
+  currentPage: number = 1;
+  // Adiciona propriedade para identificar o usuário que está paginando #######
+  userName: string = '';
+
+  nome = 'Haguen'
+
+  constructor(
+    // Retorna photoService para alimentar a paginação ########################
+    private activatedRoute: ActivatedRoute,
+    private photoService: PhotoService
+    ) {  }
+
+  ngOnInit(): void {
+
+      // Captura o userName na inicialização ##################################
+      this.userName = this.activatedRoute.snapshot.params.userName;
+
+      this.photos = this.activatedRoute.snapshot.data['photos'];
+      this.debounce
+      .pipe(debounceTime(1000))
+      .subscribe(filter => this.filter = filter);
+  }  
+  
+  ngOnDestroy(): void {
+    this.debounce.unsubscribe();
+  }  
+
+  // Método para carregamento das fotos #######################################
+  load() {
+    this.photoService
+        // ++this.currentPage -> recebe "++" pois o resolver já é #############
+        // carregado com dados o precisa passar para o
+        // próximo registro
+        .listFromUserPaginated(this.userName, ++this.currentPage)
+        .subscribe(photos => {
+            // push(...photos); -> indica para fazer push de cada #############
+            // foto do registro
+            // this.photos.push(...photos);
+            this.photos = this.photos.concat(photos);
+            if(!photos.length) this.hasMore = false;
+        });
+  }
+}
+*******************************************************************************
+02 Submódulos - 25/10/2019 ####################################################
+*******************************************************************************
+Criar o arquivo -> photo-list.module.ts em photo-list
+
+// photo-list/photo-list.module.ts ###########################################
+
+import { NgModule } from '@angular/core';
+import { PhotoListComponent } from './photo-list.component';
+import { PhotosComponent } from './photos/photos.component';
+import { LoadButtonComponent } from './load-button/load-button.component';
+import { FilterByDescription } from './photos/filter-by-description.pipe';
+import { CommonModule } from '@angular/common';
+import { PhotoModule } from '../photo/photo.module';
+
+@NgModule({
+    declarations: [
+        PhotoListComponent,
+        PhotosComponent,
+        LoadButtonComponent,
+        FilterByDescription
+    ],
+    // Importar CommonModule aqui após criar os submodulos ####################
+    imports: [
+        CommonModule,
+    // Importar PhotoModule aqui após criar os submodulos #####################    
+        PhotoModule
+    ]
+})
+export class PhotoListModule {}
+*******************************************************************************
+Criar o arquivo -> photo-form.module.ts em photo-form
+
+// photo-form/photo-form.module.ts ###########################################
+
+import { NgModule } from '@angular/core';
+import { PhotoFormComponent } from './photo-form.component';
+import { CommonModule } from '@angular/common';
+
+@NgModule({
+    declarations: [PhotoFormComponent],
+    // Importar CommonModule aqui após criar os submodulos ####################
+    imports: [CommonModule]
+})
+export class PhotoFormModule { }
+*******************************************************************************
+Criar o arquivo -> photo.module.ts em photo
+
+// photo/photo.module.ts ######################################################
+
+import { NgModule } from '@angular/core';
+import { PhotoComponent } from './photo.component';
+import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+
+@NgModule({
+    declarations: [PhotoComponent],
+    // Importar CommonModule aqui após criar os submodulos ####################
+    imports: [CommonModule,
+    // Importar HttpClientModule aqui após criar os submodulos ################    
+              HttpClientModule  
+    ],
+    // Exportar PhotoComponent apos criar os submodulos #######################
+    exports: [PhotoComponent]
+})
+export class PhotoModule { }
+*******************************************************************************
+
+Alterar photos.module.ts após criar os submodulos #############################
+
+// photos.module.ts ###########################################################
+
+import { NgModule } from "@angular/core";
+import { PhotoModule } from './photo/photo.module';
+import { PhotoFormModule } from './photo-form/photo-form.module';
+import { PhotoListModule } from './photo-list/photo-list.module';
+
+@NgModule({
+   imports: [ 
+      // photos.module.ts se tornará agregador dos demais modulos #############
+      // Chamar os novos modulos criados aqui #################################
+      PhotoModule,
+      PhotoFormModule,
+      PhotoListModule
+      // Remover HttpClientModule após criar os submodulos ####################
+      // HttpClientModule,
+      // Remover CommonModule após criar os submodulos ########################
+      // CommonModule         
+            ] 
+})
+export class PhotosModule{
+}
+*******************************************************************************
+03 Integração com Font Awesome - 27/10/2019 - Icones
+
+-> npm install font-awesome@4.7.0 -S
+-> No package.json deve aparecer a dependência -> "font-awesome": "^4.7.0",
+*******************************************************************************
+// package.json ###############################################################
+{
+  "name": "alurapic",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "test": "ng test",
+    "lint": "ng lint",
+    "e2e": "ng e2e"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "^6.0.3",
+    "@angular/common": "^6.0.3",
+    "@angular/compiler": "^6.0.3",
+    "@angular/core": "^6.0.3",
+    "@angular/forms": "^6.0.3",
+    "@angular/http": "^6.0.3",
+    "@angular/platform-browser": "^6.0.3",
+    "@angular/platform-browser-dynamic": "^6.0.3",
+    "@angular/router": "^6.0.3",
+    "bootstrap": "^4.1.1",
+    "core-js": "^2.5.4",
+    "font-awesome": "^4.7.0",
+*******************************************************************************
+-> No angular.json declarar a fonte de "font-awesome"
+-> Procurar dentro de NodeModules, expandindo o nó na 
+árvore do VisualStudio -> font-awesome -> css ->  No angular.json copiar 
+o caminho já existente para o bootstrap.min.css -> 
+              "./node_modules/bootstrap/dist/css/bootstrap.min.css"
+-> Adicionar a linha copiada abaixo da original em "styles" -> Alterar a 
+linha copiada para ficar assim: "./node_modules/font-awesome/css/font-awesome.css"
+ATENÇÃO -> Quando alterar o angular.json é preciso reiniciar o AngularCli
+*******************************************************************************
+<!-- photo-list.component.html ########################################### -->
+
+<!-- Inclusão de ícone para campo pesquisa ############################### -->
+
+<div class="text-center mt-3 mb-3">
+    <form>
+
+        <!-- Utilização do font awesome incluída aqui #################### -->
+        <!-- Chamar o font awesome -> class="fa -->
+        <!-- Icone adicionado -> fa-search -->
+        <!-- Afastamento do ícone de dois pixels -> mr-2 -->
+        <!-- Para compatibilidade com leitores de acessabilidade, 
+            adiionar o parâmetro -> aria-hidden ="true"-->
+        <i aria-hidden ="true" class="fa fa-search mr-2"></i>
+
+        <!-- Teste de utilização de outro ícone abaixo ################### -->
+        <!-- <i class="fa fa-asymmetrik"></i> -->
+        <!-- Endereço com exempos de ícones -> 
+        https://fontawesome.com/v4.7.0/examples/ -->
+        <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
+        <span class="sr-only">Loading...</span>
+
+        <input
+           class="rounded"
+            type="search"
+            placeholder="search..."
+            autofocus
+            (keyup)="debounce.next($event.target.value)"
+        >
+    </form>
+</div>
+
+{{ nome | uppercase }}
+
+<ap-photos [photos]="photos | filterByDescription: filter"></ap-photos>
+
+<ap-load-button 
+    (click)="load()" 
+    [hasMore]="hasMore">
+</ap-load-button>
+*******************************************************************************
+<!-- photos/photos.component.html ######################################### -->
+
+<!-- Tratamento para o espaçamento das fotos na tela ###################### -->
+
+<p class="text-center text-muted" *ngIf="!photos.length">
+    Sorry, no photos
+</p>
+
+<ol class="list-unstyled">
+    <!-- Adicionar ao parâmetro class -> no-gutters -> para 
+        remover o espaçamento -->
+    <li *ngFor="let cols of rows" class="row no-gutters">
+        <div *ngFor="let photo of cols" class="col-4">
+            <ap-photo
+                [url]="photo.url"
+                [description]="photo.description">
+            </ap-photo>
+        </div>
+    </li>
+</ol>
+*******************************************************************************
+04 Component container e ng-content - 28/10/2019 
+
+// Likes, comments e cards ####################################################
+
+-> Criar dentro de app as pastas "shared/component/card"
+-> Criar dentro da pasta card o arquivo card.component.ts
+-> Criar dentro da pasta card o arquivo card.component.html
+-> Criar dentro da pasta card  o arquivo card.module.ts
+
+*******************************************************************************
+// photo/photo.ts #############################################################
+
+// Mostrar "likes" e "comments" nas fotos exibidas ############################
+// Dentro deste arquivo já estão declaradas as 
+// variáevis referentes a likes e comments
+
+export interface Photo {
+    id:number;
+    postDate:Date;
+    url:string;
+    description:string;
+    allowComments:boolean;
+    likes:number;
+    comments:number;
+    userId:number;
+}
+*******************************************************************************
+<!-- shared/component/card/card.component.html ############################ -->
+
+<!-- Criar dentro da pasta card o arquivo card.component.html -->
+
+<div class="card border-light text-center">
+    <h4 class="card-header">{{ title }}</h4>
+    <div class="card-block text-justify">
+
+
+
+        <!-- ng-content -> para informar ao componente os dados a 
+            serem carregados na tela-->
+        <ng-content></ng-content>
+    </div>
+</div>
+*******************************************************************************
+// shared/components/card/card.component.ts ###################################
+
+// Criar dentro da pasta card o arquivo card.component.ts
+
+import { Component, Input } from '@angular/core';
+
+@Component({
+    selector: 'ap-card',
+    templateUrl: './card.component.html'
+})
+export class CardComponent { 
+    @Input() title: string = '';
+}
+*******************************************************************************
+// photo-list/photo-list.module.ts ###########################################
+
+import { NgModule } from '@angular/core';
+import { PhotoListComponent } from './photo-list.component';
+import { PhotosComponent } from './photos/photos.component';
+import { LoadButtonComponent } from './load-button/load-button.component';
+import { FilterByDescription } from './photos/filter-by-description.pipe';
+import { CommonModule } from '@angular/common';
+import { PhotoModule } from '../photo/photo.module';
+import { CardModule } from 'src/app/shared/components/card/card.module';
+
+@NgModule({
+    declarations: [
+        PhotoListComponent,
+        PhotosComponent,
+        LoadButtonComponent,
+        FilterByDescription
+    ],
+    imports: [
+        CommonModule,
+        PhotoModule,
+
+
+        
+        // Importar CardModule após criar o componente ########################
+        CardModule
+    ]
+})
+export class PhotoListModule {}
+*******************************************************************************
+<!-- photos/photos.component.html ######################################### -->
+
+<!-- Tratamento para o espaçamento das fotos na tela ###################### -->
+
+<p class="text-center text-muted" *ngIf="!photos.length">
+    Sorry, no photos
+</p>
+
+<ol class="list-unstyled">
+
+
+    <!-- Adicionar ao parâmetro class -> no-gutters -> para 
+        remover o espaçamento -->
+    <li *ngFor="let cols of rows" class="row no-gutters">
+        <div *ngFor="let photo of cols" class="col-4">
+
+
+            <!-- [title]="photo.description -> exibe a descrição das fotos -->
+            <ap-card [title]="photo.description">    
+                <ap-photo
+                    [url]="photo.url"
+                    [description]="photo.description">
+                </ap-photo>
+
+
+
+
+
+
+                
+
+                <!-- Adição de itens de tela para registrar likes e comments -->
+                <!-- fa-1x -> define o tamanho do icone -->
+                <!-- mr-2 -> define margem direita com 2 pixels -->
+                <!-- class=text-center -> centraliza os ícones -->
+                <div class="text-center p-1">
+                    <i aria-hidden="true" class="fa fa-heart-o fa-1x mr-2"></i>{{ photo.likes }}
+                    <i aria-hidden="true" class="fa fa-comment-o fa-1x mr-2 ml-2"></i>{{ photo.comments }}
+                </div>  
+            </ap-card>  
+        </div>
+    </li>
+</ol>
+*******************************************************************************
+// shared/component/card/card.module.ts
+
+
+// Compomente transformado em modulo para que possa ser importado por 
+// todos os outros modulos da aplicação
+
+// Criar dentro da pasta card  o arquivo card.module.ts
+
+import { NgModule } from '@angular/core';
+import { CardComponent } from './card.component';
+import { CommonModule } from '@angular/common';
+
+@NgModule({
+    declarations: [CardComponent],
+    exports: [CardComponent],
+
+
+    
+    // Importar Commonmodule como boa pratica para ############################ 
+    // atender a eventuais uso futuros
+    imports: [CommonModule]
+})
+export class CardModule { }
+*******************************************************************************
+06 Componentizando o filtro - 29/10/2019 ######################################
+07 Output property - 29/10/2019 ###############################################
+*******************************************************************************
+<!-- photo-list.component.html ############################################ -->
+
+<!--  Dentro de "photos" criar a pasta "search" e dentro ###################### 
+    desta pasta criar os arquivos 
+     "search.component.html" e "search.component.ts" -->
+
+<!-- Inserir "<ap-search><" como chamada para o ############################### 
+    componente filtro criado -->
+
+<!-- (onTyping) -> para receber o que for ##################################### 
+        digitado na caixa de texto do filtro e armazenar em "$event" -->
+        
+<!-- [value]="filter" para limpar o valor do filtro após ######################
+        o usuário digitar algum valor e clicar em "loadMore" -->
+
+<ap-search 
+    (onTyping)="filter = $event" [value]="filter">
+</ap-search>
+
+{{ nome | uppercase }}
+
+<ap-photos [photos]="photos | filterByDescription: filter"></ap-photos>
+
+<ap-load-button 
+    (click)="load()" 
+    [hasMore]="hasMore">
+</ap-load-button>
+*******************************************************************************
+// search.component.ts ########################################################
+
+import { Component, OnInit, OnDestroy, Output, EventEmitter, Input } from '@angular/core';
+import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+
+@Component({
+    selector: 'ap-search',
+    templateUrl: './search.component.html'
+})
+export class SearchComponent implements OnInit, OnDestroy  { 
+
+    // Criar chamada para EventEmitter para trabalhar #########################
+    // com onTyping usado em photo-list.component.html
+    @Output() onTyping = new EventEmitter<string>();
+    
+    // Limpa o valor do filtro após o usuário digitar algum valor #############
+    @Input() value: string = '';
+
+    // Tipagem com <string> pois o dado que será passado é string #############
+    debounce: Subject<string> = new Subject<string>();
+ 
+    ngOnInit(): void {
+        this.debounce
+        .pipe(debounceTime(1000))
+
+    // subscribe passa a trabalhar com o onTyping #############################
+    // após o tempo parametrizado em debounceTime emite o 
+    // evento carregado por onTyping
+    .subscribe(filter => this.onTyping.emit(filter));
+} 
+
+ngOnDestroy(): void {
+    this.debounce.unsubscribe();
+  }
+}  
+*******************************************************************************
+// photo/list/photo-list.component.ts #########################################
+
+import { Component, OnInit } from '@angular/core';
+import { PhotoService } from '../photo/photo.service';
+import { ActivatedRoute } from '@angular/router';
+
+import { Photo } from '../photo/photo';
+
+@Component({
+  selector: 'app-photo-list',
+  templateUrl: './photo-list.component.html',
+  styleUrls: ['./photo-list.component.css']
+})
+
+export class PhotoListComponent implements OnInit {  
+  
+  photos: Photo[] = [];
+
+  // Inicializa a variaǘel do campo de pesquisa com vazio #####################
+  filter: string = '';
+  hasMore: boolean = true;
+  currentPage: number = 1;
+  userName: string = '';
+
+  nome = 'Haguen'
+
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private photoService: PhotoService
+    ) {  }
+
+  ngOnInit(): void {
+
+      this.userName = this.activatedRoute.snapshot.params.userName;
+      this.photos = this.activatedRoute.snapshot.data['photos'];
+  }  
+  
+  load() {
+    this.photoService
+        .listFromUserPaginated(this.userName, ++this.currentPage)
+        .subscribe(photos => {
+            // Para limpar o filtro após o usuário digitar algum ############## 
+            // valor e clicar no botão loadMore
+            this.filter = '';
+            this.photos = this.photos.concat(photos);
+            if(!photos.length) this.hasMore = false;
+        });
+  }
+}
+*******************************************************************************
+<!-- search.component.html ################################################ -->
+
+<!-- [value]="value" -> recebe o valor da var filter para limpar 
+    o campo de pesquisa após o usuário clicar em load more -->
+
+<div class="text-center mt-3 mb-3">
+    <form>
+        <i aria-hidden ="true" class="fa fa-search mr-2"></i>
+        <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
+        <span class="sr-only">Loading...</span>
+        <input
+            class="rounded"
+            type="search"
+            placeholder="search..."
+            autofocus
+            (keyup)="debounce.next($event.target.value)"
+            [value]="value" 
+        >
+    </form>
+</div>    
+*******************************************************************************
+// photo-list/photo-list.module.ts ###########################################
+
+import { NgModule } from '@angular/core';
+import { PhotoListComponent } from './photo-list.component';
+import { PhotosComponent } from './photos/photos.component';
+import { LoadButtonComponent } from './load-button/load-button.component';
+import { FilterByDescription } from './photos/filter-by-description.pipe';
+import { CommonModule } from '@angular/common';
+import { PhotoModule } from '../photo/photo.module';
+import { CardModule } from 'src/app/shared/components/card/card.module';
+import { SearchComponent } from './search/search.component';
+
+@NgModule({
+    declarations: [
+        PhotoListComponent,
+        PhotosComponent,
+        LoadButtonComponent,
+        FilterByDescription,
+        // Adicionar chamada para o componente filtro criado ##################
+        SearchComponent
+    ],
+    imports: [
+        CommonModule,
+        PhotoModule,
+        CardModule
+    ]
+})
+export class PhotoListModule {}
+*******************************************************************************
+10 Terminando a implementação da diretiva - 30/10/2019 ########################
+
+Criando efeito de escurecimento ao passar o mouse sobre elementos da tela
+
+*******************************************************************************
+// shared/directives/darken-on-hover.module.ts ################################
+
+// Criar o arquivo e a pasta a seguir ######################################### 
+// dentro de "shared" -> directives/darken-on-hover.module.ts
+
+import { NgModule } from '@angular/core';
+import { DarkenOnHoverDirective } from './darken-on-hover.directive';
+
+@NgModule({
+    declarations: [ DarkenOnHoverDirective ],
+    exports: [ DarkenOnHoverDirective ]
+})
+export class DarkenOnHoverModule { }
+*******************************************************************************
+// shared/directives/darken-on-hover.directive.ts #############################
+
+// Criar o arquivo e a pasta a seguir ######################################### 
+// dentro de "shared" -> directives/darken-on-hover.directive.ts
+
+import { Directive, ElementRef, HostListener, Renderer, Input } from '@angular/core';
+
+// Selector entre colchetes para poder ser usado como ######################### 
+// atributo nas tags html e componentes
+@Directive({
+    selector: '[apDarkenOnHover]'
+})
+export class DarkenOnHoverDirective { 
+
+    // Cria var com valor incial que pode ser sobrescrito em outros ###########
+    // pontos da aplicação com outros valores
+    @Input() brightness = '70%';
+
+    constructor(private el: ElementRef,
+                // Modulo Render para manipular o DOM #########################
+                private render: Renderer    ) {
+    }
+
+    // Metodo para capturar o movimento do mouse sobre ########################
+    // os elementos da tela
+    // this.el.nativeElement -> Acesso aos elemento nativos do DOM aonde a ####
+    // diretiva foi adicionada
+    // Modulo Render para manipular o DOM #####################################
+    @HostListener('mouseover')
+    darkenOn(){
+        console.log('darkenOn');
+        // brightness(70%) -> vai reduzir o brilho para 70% ao passar #########
+        // o mouse em cima do elemento
+        // ${this.brightness} -> carrega o valor inical que pode ##############
+        //  ser sobrescrito em outros pontos da aplicação
+        this.render.setElementStyle(this.el.nativeElement, 'filter', `brightness(${this.brightness})`);
+    }
+    
+    @HostListener('mouseleave')
+    darkenOff() {
+         // brightness(100%) -> retorna o brilho para 100% ao remover ##########
+        // o mouse de cima do elemento
+        this.render.setElementStyle(this.el.nativeElement, 'filter', 'brightness(100%)');
+    }
+}    
+*******************************************************************************
+// photo-list/photo-list.module.ts ###########################################
+
+import { NgModule } from '@angular/core';
+import { PhotoListComponent } from './photo-list.component';
+import { PhotosComponent } from './photos/photos.component';
+import { LoadButtonComponent } from './load-button/load-button.component';
+import { FilterByDescription } from './photos/filter-by-description.pipe';
+import { CommonModule } from '@angular/common';
+import { PhotoModule } from '../photo/photo.module';
+import { CardModule } from 'src/app/shared/components/card/card.module';
+import { SearchComponent } from './search/search.component';
+import { DarkenOnHoverModule } from 'src/app/shared/directives/darken-on-hover.module';
+
+@NgModule({
+    declarations: [
+        PhotoListComponent,
+        PhotosComponent,
+        LoadButtonComponent,
+        FilterByDescription,
+        SearchComponent
+    ],
+    imports: [
+        CommonModule,
+        PhotoModule,
+        CardModule,
+        // Importa DarkenOnHoverModule para uso por todos os ##################
+        // compomentes da aplicação
+        DarkenOnHoverModule
+    ]
+})
+export class PhotoListModule {}
+*******************************************************************************
+<!-- photos/photos.component.html ######################################### -->
+
+<p class="text-center text-muted" *ngIf="!photos.length">
+    Sorry, no photos
+</p>
+<ol class="list-unstyled">
+    <li *ngFor="let cols of rows" class="row no-gutters">
+
+
+
+        
+        <!-- apDarkenOnHover pode ser usado como atributo na tag
+             html como na tag abaixo -->
+        <div *ngFor="let photo of cols" class="col-4" apDarkenOnHover>
+
+
+            <ap-card [title]="photo.description">    
+                <ap-photo
+                    [url]="photo.url"
+                    [description]="photo.description">
+                </ap-photo>
+                <div class="text-center p-1">
+                    <i aria-hidden="true" class="fa fa-heart-o fa-1x mr-2"></i>{{ photo.likes }}
+                    <i aria-hidden="true" class="fa fa-comment-o fa-1x mr-2 ml-2"></i>{{ photo.comments }}
+                </div>  
+            </ap-card>  
+        </div>
+    </li>
+</ol>
+*******************************************************************************
+<!-- photo-list.component.html ############################################ -->
+
+<!-- Adiciona Título na página com barra colorida para testar o ###############
+    escurecimento do elemento ao passar o mouse 
+    em cima usando otributo apDarkenOnHover-->
+<!-- brightness="20%" -> é sobrescrito com outro valor para teste ######### -->
+<h1 style="background: blue" apDarkenOnHover brightness="20%">Photos</h1>
+
+<ap-search 
+    (onTyping)="filter = $event" [value]="filter">
+</ap-search>
+
+{{ nome | uppercase }}
+
+<ap-photos [photos]="photos | filterByDescription: filter"></ap-photos>
+
+<ap-load-button 
+    (click)="load()" 
+    [hasMore]="hasMore">
+</ap-load-button>
+
+<!-- Todo componente é uma diretiva que possui template. No entanto, ##########
+     uma diretiva em seu estado bruto não possui templates. -->
+
+<!-- Podemos usar uma diretiva como atributo envolvendo o valor do ############
+    seu seletor entre colchetes -->
+
+<!-- Podemos injetar no constructor da diretiva uma referência para ###########
+    o elemento no qual ela foi associada. Angular nos dá acesso ao 
+    elemento através do wrapper ElementRef. -->
+*******************************************************************************
+<!-- shared/component/card/card.component.html ############################ -->
+
+<div class="card border-light text-center">
+
+
+
+
+    <!-- No card, se a foto não tiver título, a moldura será recuada ##########
+        por conta da ausência do texto -->
+    <h4 class="card-header" *ngIf="title">{{ title }}</h4>
+    <div class="card-block text-justify">
+        <ng-content></ng-content>
+    </div>
+</div>
+*******************************************************************************
+*******************************************************************************
+*******************************************************************************
+*******************************************************************************
+*******************************************************************************
+*******************************************************************************
+*******************************************************************************
+*******************************************************************************
+*******************************************************************************
+*******************************************************************************
+*******************************************************************************
+*******************************************************************************
+*******************************************************************************
+*******************************************************************************
+*******************************************************************************
+*******************************************************************************
+*******************************************************************************
+*******************************************************************************
+*******************************************************************************
+*******************************************************************************
+*******************************************************************************
+*******************************************************************************
+*******************************************************************************
+*******************************************************************************
+*******************************************************************************
+*******************************************************************************
+*******************************************************************************
+*******************************************************************************
+*******************************************************************************
+*******************************************************************************
+*******************************************************************************
+
+
+
+
+
+
+ 
