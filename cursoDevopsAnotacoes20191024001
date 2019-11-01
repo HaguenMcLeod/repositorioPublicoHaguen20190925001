@@ -1274,11 +1274,10 @@ exec { 'run-php7':
 -> ATENÇÃO -> As duas VMs precisam estar rodando ##############################
 -> Verificar na página do Vagrant a opção Puppet Apply ########################
 para alterar o Vagrantfile
--> Adicionar ao Vagrantfile as linhas abaixo, ficarão 3 end's ao todo
+-> Adicionar ao Vagrantfile as linhas abaixo, ficarão 3 end's, ao todo,
  ao final do arquivo
 *******************************************************************************
 		phpweb.vm.provision "shell", inline: "apt-get update && apt-get install -y puppet"
-
         	phpweb.vm.provision "puppet" do |puppet|
             	puppet.manifests_path = "./configs/manifests"
             	puppet.manifest_file = "phpweb.pp"
@@ -1286,7 +1285,7 @@ para alterar o Vagrantfile
 *******************************************************************************
 -> Criar dentro de "bionic" a pasta "src"
 -> Criar dentro da pasta "src" o arquivo "index.php"
--> Inserir dentro da pasta "index.php" o conteúdo abaixo:
+-> Inserir no arquivo "index.php" o conteúdo abaixo:
 *******************************************************************************
 <?php
 echo "Funcionou!!!"
@@ -1309,44 +1308,6 @@ exec { 'run-php7':
     command => '/usr/bin/php -S 0.0.0.0:8888 -t /vagrant/src &'
 }
 *******************************************************************************
--> Alterar o Vagrantfile:
-*******************************************************************************
-$script_mysql = <<-SCRIPT
-    apt-get update && \
-    apt-get install -y mysql-server-5.7 && \
-    mysql -e "create user 'phpuser'@'%' identified by 'pass';"
-SCRIPT
-
-Vagrant.configure("2") do |config|
-  
-	config.vm.box = "ubuntu/bionic64"
-
-  	config.vm.define "mysqldb" do |mysql|		
-
-		mysql.vm.network "public_network", ip: "192.168.1.24"
-		mysql.vm.provision "shell", inline: "cat /configs/id_bionic.pub >> .ssh/authorized_keys"
-		mysql.vm.provision "shell", inline: $script_mysql 
-		mysql.vm.provision "shell", inline: "cat /configs/mysqld.cnf > /etc/mysql/mysql.conf.d/mysqld.cnf"
-		mysql.vm.provision "shell", inline: "service mysql restart"
-		mysql.vm.synced_folder "./configs", "/configs"
-		mysql.vm.synced_folder ".", "/vagrant", disabled: true
-	end
-
-	config.vm.define "phpweb" do |phpweb|
-
-		phpweb.vm.network "forwarded_port", guest: 8888, host:8888	
-		phpweb.vm.network "public_network", ip: "192.168.1.25"
-
-		phpweb.vm.provision "shell", inline: "apt-get update && apt-get install -y puppet"
-
-        	phpweb.vm.provision "puppet" do |puppet|
-            	puppet.manifests_path = "./configs/manifests"
-            	puppet.manifest_file = "phpweb.pp"
-        	end
-
-	end
-end
-*******************************************************************************
 -> vagrant destroy -f phpweb && vagrant up phpweb
 -> vagrant status
 -> vagrant ssh phpweb
@@ -1354,8 +1315,9 @@ end
 -> ps aux | grep php -> deve mostrar o processo phpweb rodando
 -> para testar, subir a máquina mysqldb -> vagrant up mysqldb
 -> no browser -> http://localhost:8888/ -> deve exibir msg de sucesso - OK
--> no browser -> http://192.168.1.25:8888/ -> deve exibir msg de sucesso -> senão, 
-testar o endereço -> http://0.0.0.0:8888/ -> OK
+-> no browser -> http://192.168.1.25:8888/ -> deve exibir msg de sucesso, pode
+ ser que a rede não libere o IP em questão e não permita conectar -> testar então 
+o endereço -> http://0.0.0.0:8888/ -> OK
 -> Alterar o "index.php" para:
 *******************************************************************************
 <?php
