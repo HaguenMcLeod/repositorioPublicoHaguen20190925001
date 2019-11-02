@@ -1292,7 +1292,7 @@ para alterar o Vagrantfile
 echo "Funcionou!!!"
 ?>
 *******************************************************************************
--> Alterar o arquivo php.pp:
+-> Alterar o arquivo phpweb.pp:
 *******************************************************************************
 # execute 'apt-get update'
 exec { 'apt-update':
