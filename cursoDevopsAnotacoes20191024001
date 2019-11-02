@@ -1316,7 +1316,8 @@ exec { 'run-php7':
 -> ps aux | grep php -> deve mostrar o processo phpweb rodando
 -> para testar, subir a máquina mysqldb -> vagrant up mysqldb
 -> no browser -> http://localhost:8888/ -> deve exibir msg de sucesso - OK
--> no browser -> http://192.168.1.25:8888/ -> deve exibir msg de sucesso, pode
+-> no browser -> http://192.168.1.25:8888/ -> deve exibir msg de 
+sucesso - funcionou na máquina de casa, na da empresa não , pode
  ser que a rede não libere o IP em questão e não permita conectar -> testar então 
 o endereço -> http://0.0.0.0:8888/ -> OK
 -> Alterar o "index.php" para:
