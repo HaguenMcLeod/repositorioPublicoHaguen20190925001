@@ -1422,6 +1422,33 @@ Puppet precisa
 -> O Ansible não roda no Windows, só no Mac e Linux ###########################
 -> O Ansible empurra as configurações do host para o guest, o Puppet "puxa" as 
 configurações do host para o guest.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+-> ATENÇÃO -> Tags "Solução de ERRO" colocadas ao longo do arquivo para 
+ajudar em soluções de uso quando se tentr utilizar os comandos em 
+outras máquinas e fora da ordem de execução das aulas
+-> Solução de ERRO -> Se der erro por falta de pasta "configs" para instalar o mysql
+-> dentro da pasta "bionic" criar a pasta "configs"
+-> mkdir configs
+-> mover para dentro a pasta "configs" a chave pública que esta dentro da pasta bionic
+
+-> Solução de ERRO -> Falta da pasta "mysqld.cnf"
+-> Após executar vagrant up e criar a maquina com o mysql com sucesso:
+-> vagrant ssh
+-> sudo mysql
+-> o cursor deve ter mudado para dentro do mysql
+-> select user from mysql.user
+-> digitar ";" após enter no comando acima
+-> exit
+-> cat /etc/mysql/mysql.conf.d/mysqld.cnf 
+-> Para criar um arquivo de configuração do mysql dentro da pasta 
+config do projeto -> cat /etc/mysql/mysql.conf.d/mysqld.cnf >> /configs/mysqld.cnf
+
+############################################
+
+-> Solução de ERRO -> "vagrant The specified host network collides with a non-hostonly network! This will cause your specified IP to be inaccessible. Please change the IP or name of your host only network so that it no longer matches that of a bridged or non-hostonly network."
+-> "Check the IP you have on your LAN connection and make sure no devices are colliding with the IP on your Vagrantfile.
+I got this error and I had 192.168.1.2 on my laptop's wifi and I was setting 192.168.1.10 on my Vagrantfile. So I changed the IP on my Vagrantfile to 192.168.2.10 to make sure it won't collide with any device on my network."
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 -> 
 -> 
 -> 
