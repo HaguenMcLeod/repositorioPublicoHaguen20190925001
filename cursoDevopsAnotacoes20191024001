@@ -1269,80 +1269,16 @@ exec { 'run-php7':
 -> Ativar o Puppet -> sudo puppet apply /vagrant/configs/manifests/phpweb.pp
 -> O comando logo acima deve demorar pois vai instalar o php em segundo plano
 ###############################################################################
-06 Integração do Puppet com o Vagrant - 01/11/2019 ############################
+06 Integração do Puppet com o Vagrant - 02/11/2019 ############################
 -> ATENÇÃO -> As duas VMs precisam estar rodando ##############################
 -> Verificar na página do Vagrant a opção Puppet Apply ########################
 para alterar o Vagrantfile
--> Adicionar ao Vagrantfile as linhas abaixo, ficarão 3 end's, ao todo,
- ao final do arquivo:
--> ATENÇÃO para versões "temp/incompletas" dos arquivos de configuração antes do final dos capítulos 
-*******************************************************************************
-		phpweb.vm.provision "shell", inline: "apt-get update && apt-get install -y puppet"
-        	phpweb.vm.provision "puppet" do |puppet|
-            	puppet.manifests_path = "./configs/manifests"
-            	puppet.manifest_file = "phpweb.pp"
-        	end
-*******************************************************************************
+-> ATENÇÃO para versões "temp/incompletas" dos arquivos de configuração 
+antes do final dos capítulos 
 -> Criar dentro de "bionic" a pasta "src"
 -> Criar dentro da pasta "src" o arquivo "index.php"
--> Inserir no arquivo "index.php" o conteúdo abaixo:
-*******************************************************************************
-<?php
-echo "Funcionou!!!"
-?>
-*******************************************************************************
--> Alterar o arquivo phpweb.pp:
--> ATENÇÃO para versões "temp/incompletas" dos arquivos de configuração antes do final dos capítulos
-*******************************************************************************
-# execute 'apt-get update'
-exec { 'apt-update':
-    command => '/usr/bin/apt-get update' 
-}
-
-package { ['php7.2' ,'php7.2-mysql'] :
-    require => Exec['apt-update'],
-    ensure => installed,
-}
-
-exec { 'run-php7':
-    require => Package['php7.2'],
-    command => '/usr/bin/php -S 0.0.0.0:8888 -t /vagrant/src &'
-}
-*******************************************************************************
--> vagrant destroy -f phpweb && vagrant up phpweb
--> vagrant status
--> vagrant ssh phpweb
--> netstat -tlnp -> deve mostrar o endereço 0.0.0.0:8888 em uso
--> ps aux | grep php -> deve mostrar o processo phpweb rodando
--> para testar, subir a máquina mysqldb -> vagrant up mysqldb
--> no browser -> http://localhost:8888/ -> deve exibir msg de sucesso - OK
--> no browser -> http://192.168.1.25:8888/ -> deve exibir msg de 
-sucesso - funcionou na máquina de casa, na da empresa não , pode
- ser que a rede não libere o IP em questão e não permita conectar -> testar então 
-o endereço -> http://0.0.0.0:8888/ -> OK
--> Alterar o "index.php" para:
--> ATENÇÃO para versões "temp/incompletas" dos arquivos de configuração antes do final dos capítulos
-*******************************************************************************
-<?php
-echo "Testando conexao <br /> <br />";
-$servername = "192.168.1.24";
-$username = "phpuser";
-$password = "pass";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Conexão falhou: " . $conn->connect_error);
-}
-echo "Conectado com sucesso";
-?>
-*******************************************************************************
--> Puppet -> É uma ferramenta relacionada ao IaC (Infrastructure as Code) 
--> Puppet -> Puppet precisa de um agent instalado, como na máquina guest -> Para aplicar o script de configuração (*.pp), precisa ter instalado um puppet client na máquina guest.
-*******************************************************************************
--> Conteúdo atual Vagrantfile - 02/11/2019:
+-> Alterar o Vagranfile para conter instruções para criação da VM phpweb:
+-> O Vagrantfile deve ficar assim:
 *******************************************************************************
 $script_mysql = <<-SCRIPT
     apt-get update && \
@@ -1380,7 +1316,7 @@ Vagrant.configure("2") do |config|
 	end
 end
 *******************************************************************************
--> Conteúdo atual index.php - 02/11/2019:
+-> Inserir no arquivo "index.php" o conteúdo abaixo:
 *******************************************************************************
 <?php
 echo "Testando conexao <br /> <br />";
@@ -1398,7 +1334,10 @@ if ($conn->connect_error) {
 echo "Conectado com sucesso";
 ?>
 *******************************************************************************
--> Conteúdo atual phpweb.pp - 02/11/2019:
+-> Alterar o arquivo phpweb.pp:
+-> SE JÁ NÃO EXISTIR -> Criar dentro da pasta "manifests" o arquivo "phpweb.pp"
+-> ATENÇÃO para versões "temp/incompletas" dos arquivos de 
+configuração antes do final dos capítulos
 *******************************************************************************
 # execute 'apt-get update'
 exec { 'apt-update':
@@ -1415,6 +1354,42 @@ exec { 'run-php7':
     command => '/usr/bin/php -S 0.0.0.0:8888 -t /vagrant/src &'
 }
 *******************************************************************************
+-> vagrant up
+-> vagrant status
+-> A saída do console deve ser:
+*******************************************************************************
+mysqldb                   running (virtualbox)
+phpweb                    running (virtualbox)
+*******************************************************************************
+-> vagrant destroy -f  phpweb && vagrant up phpweb
+-> vagrant status
+-> A saída do console deve ser:
+*******************************************************************************
+mysqldb                   running (virtualbox)
+phpweb                    running (virtualbox)
+*******************************************************************************
+-> vagrant ssh phpweb
+-> netstat -tlnp
+-> A saída do console deve ser:
+*******************************************************************************
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN      -                   
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      -                   
+tcp        0      0 0.0.0.0:8888            0.0.0.0:* 
+*******************************************************************************
+-> ps aux | grep php
+-> No browser -> http://localhost:8888/
+-> A resposta no browser deve ser:
+*******************************************************************************
+Testando conexao 
+Conectado com sucesso
+*******************************************************************************
+-> No browser -> http://192.168.1.25:8888/
+-> A resposta no browser deve ser:
+*******************************************************************************
+Testando conexao 
+Conectado com sucesso
+***************************************************************************
 ###############################################################################
 02 Introdução ao Ansible - 01/11/2019 #########################################
 -> Verificar na página do Vagrant sobre o provisionador Ansible ###############
