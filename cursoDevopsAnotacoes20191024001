@@ -1059,7 +1059,8 @@ mysql> select user from mysql.user
 -> cat /etc/mysql/mysql.conf.d/mysqld.cnf 
 -> procurar no retorno do console o termo "bind-address	= 127.0.0.1"
 -> Quando o servidor sobe fica associado ao IP listado acima
--> Para criar um arquivo de onfiguração do mysql dentro da pasta config do projeto -> cat /etc/mysql/mysql.conf.d/mysqld.cnf >> /configs/mysqld.cnf
+-> Para criar um arquivo de configuração do mysql dentro da pasta 
+config do projeto -> cat /etc/mysql/mysql.conf.d/mysqld.cnf >> /configs/mysqld.cnf
 -> exit
 -> Abrir no bloco de notas o arquivo criado acima e modificar o termo bind-address para bind-address = 0.0.0.0 -> para aceitar conexão de qualquer IP
 -> ATENÇÃO -> O procedimento acima não oferece grande risco para máquinas de desenvolvimento, porém para produção não se deve liberar acesso por qualquer IP
