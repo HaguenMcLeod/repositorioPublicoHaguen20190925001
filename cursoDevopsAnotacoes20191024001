@@ -1547,6 +1547,20 @@ Vagrant.configure("2") do |config|
 	end
 end
 *******************************************************************************
-
-Comando en teste para resolver o erro de nao achar a pasta /vagrant/ -> sudo cp /home/05329594774/backupMaquina20190911001/cursosAlura/cursoDevOps/ambiente_dev/bionic/id_bionic /home/vagrant
+############################
+Teste para criação de nova chave privada:
+-> Com a VM em questão rodando:
+-> ...../ambiente_dev/bionic$ ssh-keygen -t rsa
+-> Informar como destino da chave o caminho da pasta "bionic" + o nome da chave "id_bionic"
+-> ls
+-> vagrant ssh nome da VM
+-> ls /vagrant/
+-> cp /vagrant/id_bionic.pub .
+-> ls
+-> cat id_bionic.pub
+-> cat id_bionic.pub >> .ssh/authorized_keys
+-> cat .ssh/authorized_keys
+-> exit
+-> 
+############################
 
