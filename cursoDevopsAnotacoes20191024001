@@ -1547,3 +1547,6 @@ Vagrant.configure("2") do |config|
 	end
 end
 *******************************************************************************
+
+Comando en teste para resolver o erro de nao achar a pasta /vagrant/ -> sudo cp /home/05329594774/backupMaquina20190911001/cursosAlura/cursoDevOps/ambiente_dev/bionic/id_bionic /home/vagrant
+
