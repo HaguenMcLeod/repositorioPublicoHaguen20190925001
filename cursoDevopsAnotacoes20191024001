@@ -1582,7 +1582,8 @@ Aula abaixo ainda em teste - 06/11/2019 ######################################
 
 06 Testando o playbook - 06/11/2019 ###########################################
 -> ATENÇÂO - > As máquinas "mysqlserver" e "ansible" precisam estar rodando
--> Criar dentro de "bionic/configs" a pasta "ansible" e dentro desta criar o arquivo "hosts", com o seguinte conteúdo:
+-> Criar dentro de "bionic/configs" a pasta "ansible" e dentro desta criar 
+os arquivos "hosts" e "playbook.yml", "hosts" com o seguinte conteúdo:
 *******************************************************************************
 [mysqlserver]
 192.168.1.22
@@ -1669,6 +1670,7 @@ Solução em teste -> O erro ocorreu na máquina corporativa, pode ser causado p
 ##########
 ************************************************************************************
 Conteúdo do Vagrantfile em 06/11/2019:
+
 $script_mysql = <<-SCRIPT
     apt-get update && \
     apt-get install -y mysql-server-5.7 && \
