@@ -1578,3 +1578,96 @@ The SSH command responded with a non-zero exit status"
 -> O comando correto era "inline: "cp /vagrant/id_bionic /home/vagrant &&"
 ##########
 
+Aula abaixo ainda em teste - 06/11/2019 ######################################
+
+06 Testando o playbook - 06/11/2019 ###########################################
+-> ATENÇÂO - > As máquinas "mysqlserver" e "ansible" precisam estar rodando
+-> Criar dentro de "bionic/configs" a pasta "ansible" e dentro desta criar o arquivo "hosts", com o seguinte conteúdo:
+*******************************************************************************
+[mysqlserver]
+192.168.1.22
+
+[mysqlserver:vars]
+ansible_user=vagrant
+ansible_ssh_private_key_file=/home/vagrant/id_bionic
+ansible_python_interpreter=/urs/bin/python3
+ansible_ssh-commom_args='-o StrictHostKeyChecking=no'
+******************************************************************************* 
+-> O IP listado no arquivo "hosts",192.168.1.22 , precisa coincidir com o IP listado no "Vagrantfile" para a VM "mysqlserver" 
+-> Mais de um IP podem ser listados no arquivo "hosts" e para outros usuários, [mysqlserver] e [phpweb], por exemplo
+-> No arquivo "hosts" a linha "ansible_ssh-commom_args='-o StrictHostKeyChecking=no'" indica para o arquivo "known hosts" não exibir msg de aviso que a máquina é recriada com uma chave ssh no servidor mysql
+-> No arquivo "playbook.yml" o comando "become: yes" significa que todos os comandos serão executados como root  
+-> O arquivo "playbook,yml" deverá ficar com o seguinte conteúdo:
+*******************************************************************************
+- hosts: all
+  handlers:
+        - name: restart mysql
+          service:
+                name: mysql
+                state: restarted
+          become: yes
+
+  tasks:
+        - name: 'Instalar MySQL Server'
+          apt:
+                update_cache: yes
+                cache_valid_time: 3600 #1 hora
+                name: ["mysql-server-5.7", "python3-mysqldb"]
+                state: latest
+          become: yes
+
+        - name: 'Criar usuario no MySQL'
+          mysql_user:
+                login_user: root
+                name: phpuser
+                password: pass
+                priv: '*.*:ALL'
+                host: '%'
+                state: present
+          become: yes
+
+        - name: 'Copiar arquivo mysqld.cnf'
+          copy:
+                src: /vagrant/configs/mysqld.cnf
+                dest: /etc/mysql/mysql.conf.d/mysqld.cnf
+                owner: root
+                group: root
+                mode: 0644
+          become: yes
+          notify:
+                - restart mysql
+*******************************************************************************
+-> vagrant up ansible
+-> vagrant ssh ansible
+-> ansible-playbook -i /vagrant/configs/ansible/hosts /vagrant/configs/ansible/playbook.yml
+-> Se der erro ao submeter o comando acima, verificar as DUAS possibilidades de solução abaixo:
+##########
+ERRO -> ERROR! Syntax Error while loading YAML.
+  mapping values are not allowed in this context
+
+The error appears to be in '/vagrant/configs/ansible/playbook.yml': line 2, column 13, but may be elsewhere in the file depending on the exact syntax problem.
+The offending line appears to be:
+
+- hosts: all
+    handlers:
+            ^ here
+Solução -> O problema era a identação do arquivo, testar a identação na internet, exemplo no site: https://yamlchecker.com/
+##########
+##########
+ERRO -> fatal: [192.168.1.22]: UNREACHABLE! => {"changed": false, "msg": "Failed to connect to the host via ssh: ssh: connect to host 192.168.1.22 port 22: No route to host", "unreachable": true}
+
+-> ls -al -> deve mostrar que a chave id_bionic só pode ser usada pelo root
+
+Solução -> sudo chown vagrant:vagrant id_bionic
+##########
+-> ls -al -> após o comando "sudo chown vagrant:vagrant id_bionic" acima deve permitir que a chave seja usada por todos os usuários
+-> ansible-playbook -i /vagrant/configs/ansible/hosts /vagrant/configs/ansible/playbook.yml
+##########
+ERRO -> fatal: [192.168.1.22]: UNREACHABLE! => {"changed": false, "msg": "Failed to connect to the host via ssh: Warning: Permanently added '192.168.1.22' (ECDSA) to the list of known hosts.\r\nvagrant@192.168.1.22: Permission denied (publickey).", "unreachable": true}
+Solução em teste -> O erro ocorreu na máquina corporativa, pode ser causado pelo fato de o IP não estar livre na rede, testar na máquina de casa
+##########
+-> 
+-> 
+-> 
+
+
