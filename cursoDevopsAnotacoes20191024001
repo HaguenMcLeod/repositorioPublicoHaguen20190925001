@@ -1570,3 +1570,11 @@ Teste para criação de nova chave privada:
 -> 
 ############################
 
+########## - 06/11/2019 
+ERRO -> "ansible: /tmp/vagrant-shell: line 1: /home/vagrant: Is a directory
+The SSH command responded with a non-zero exit status"
+-> Verificar se texto escrito com erro, nesse caso
+ era o ">>" no comando "inline: "cp /vagrant/id_bionic >> /home/vagrant &&"
+-> O comando correto era "inline: "cp /vagrant/id_bionic /home/vagrant &&"
+##########
+
