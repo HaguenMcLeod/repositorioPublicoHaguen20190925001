@@ -1726,7 +1726,7 @@ Vagrant.configure("2") do |config|
 	end
 end
 ************************************************************************************
-Comandos para sincronizar OU SOBRESCREVER dados no repositório de trabalho - 07/11/2019: 
+Comandos para SOBRESCREVER dados no repositório de trabalho - 07/11/2019: 
 -> Para sobrescrever tudo que está no seu repositório local com as versões 
 do branch do repositório remoto, executar os comandos abaixo:
 -> git fetch --all
