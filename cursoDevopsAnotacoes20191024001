@@ -734,7 +734,8 @@ Para testar com IP estático -> exit se estiver executando "vagrant ssh"
 -> digitar o IP estático no browser do celular, por exemplo
 *******************************************************************************
 02 Adicionando a chave SSH - 24/10/2019 #######################################
-Só é possível conectar na VM localmente, outras estações de trab não conseguem ainda conectar nessa VM -> é necessário usar uma chave privada para acesso remoto
+Só é possível conectar na VM localmente, outras estações de trab não 
+conseguem ainda conectar nessa VM -> é necessário usar uma chave privada para acesso remoto
 -> vagrant ssh-config -> vai mostrar que só é possível acessar a MV via SSH através do localhost
 saída do console:
 *******************************************************************************
@@ -827,8 +828,7 @@ Last login: Thu Oct 24 22:48:48 2019 from 10.0.2.2
 -> dentro da VM -> exit 
 -> vagrant status
 -> Se o SSH estiver instalado no SO -> ssh-keygen -t rsa
-Informar, de preferência, o endereço da pasta "bionic" -> /home/haguenmcleod/Backup20190927001/CursosInformatica/
-DevOps/ambiente_dev/bionic/id_bionic ("id_bionic" é informado pelo usuário) 
+Informar, de preferência, o endereço da pasta "bionic" -> /home/haguenmcleod/Backup20190927001/CursosInformatica/DevOps/ambiente_dev/bionic/id_bionic ("id_bionic" é informado pelo usuário) 
 -> criar senha - opcional
 Saída do console:
 ********************************************************************************
