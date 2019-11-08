@@ -1737,7 +1737,9 @@ Confirmar chave pública dentro da VM - 08/11/2019 #############################
 -> vagrant ssh "VM em questão"
 -> cd .ssh
 -> ls
--> cat .ssh/authorized_keys
+-> cat authorized_keys
+************************************************************************************
+
 
 
 
