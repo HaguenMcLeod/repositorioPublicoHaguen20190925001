@@ -1732,7 +1732,12 @@ do branch do repositório remoto, executar os comandos abaixo:
 -> git fetch --all
 -> git reset --hard origin/<nome do branch remoto>
 ************************************************************************************
-
+Confirmar chave pública dentro da VM - 08/11/2019 ##################################
+-> vagrant up "VM em questão"
+-> vagrant ssh "VM em questão"
+-> cd .ssh
+-> ls
+-> cat .ssh/authorized_keys
 
 
 
