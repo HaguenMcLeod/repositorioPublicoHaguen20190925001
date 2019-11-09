@@ -827,7 +827,7 @@ Last login: Thu Oct 24 22:48:48 2019 from 10.0.2.2
 -> vagrant ssh
 -> dentro da VM -> exit 
 -> vagrant status
--> Se o SSH estiver instalado no SO -> ssh-keygen -t rsa
+-> Se o SSH estiver instalado no SO -> ssh-keygen -t rsa (comando a ser executado fora da VM)
 Informar, de preferência, o endereço da pasta "bionic" -> /home/haguenmcleod/Backup20190927001/CursosInformatica/DevOps/ambiente_dev/bionic/id_bionic ("id_bionic" é informado pelo usuário) 
 -> criar senha - opcional
 Saída do console:
@@ -1556,7 +1556,7 @@ end
 ############################
 Teste para criação de nova chave privada:
 -> Com a VM em questão rodando:
--> ...../ambiente_dev/bionic$ ssh-keygen -t rsa
+-> ...../ambiente_dev/bionic$ ssh-keygen -t rsa (comando a ser executado fora da VM)
 -> Informar como destino da chave o caminho da pasta "bionic" + o nome da chave "id_bionic"
 -> ls
 -> vagrant ssh nome da VM
