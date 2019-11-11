@@ -1744,4 +1744,8 @@ privada com o comando "ssh-keygen -t rsa"
 -> Copiar a chave .pub de uma VM para outra dentro dos respectivos 
 arqivos "authorised_keys"
 
-
+-> Conexão entre duas VMs:
+-> A VM que predende se conectar deve possuir duas chaves, uma pública e outra
+privada, deve conter os arquivos "fisicamente", a VM a receber a conexão 
+deve conter "o conteúdo" da chave pública da VM que pretende conectar dentro
+do arquivo "authorized_keys"
