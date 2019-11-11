@@ -1737,7 +1737,11 @@ Confirmar chave pública dentro da VM - 08/11/2019 #############################
 -> vagrant ssh "VM em questão"
 -> cat .ssh/authorized_keys
 ************************************************************************************
+Teste em 11/11/2019 ################################################################
 
-
+-> Criar, dentro de cada VM, ansible e mysqlserver, as chaves pública e 
+privada com o comando "ssh-keygen -t rsa"
+-> Copiar a chave .pub de uma VM para outra dentro dos respectivos 
+arqivos "authorised_keys"
 
 
