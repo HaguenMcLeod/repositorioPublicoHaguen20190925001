@@ -1749,3 +1749,133 @@ arqivos "authorised_keys"
 privada, deve conter os arquivos "fisicamente", a VM a receber a conexão 
 deve conter "o conteúdo" da chave pública da VM que pretende conectar dentro
 do arquivo "authorized_keys"
+
+Reproduzir teste do playbook em casa - 11/11/2019: #################################
+-> Criar as chaves pública e privada dentro da VM "mysqlserver" com o comando: 
+-> "ssh-keygen -t rsa" utilizando a nomenclatura "id_rsa" e "id_rsa.pub"
+-> Copiar o conteúdo da chave pública criada dentro de "mysqlserver" para dentro 
+do arquivo authorized_keys da VM "ansible"
+-> Conteúdo do arquivo Vagrantfile abaixo - 11/11/2019:
+************************************************************************************
+$script_mysql = <<-SCRIPT
+    apt-get update && \
+    apt-get install -y mysql-server-5.7 && \
+    mysql -e "create user 'phpuser'@'%' identified by 'pass';"
+SCRIPT
+
+Vagrant.configure("2") do |config|
+  
+	config.vm.box = "ubuntu/bionic64"
+
+  	config.vm.define "mysqldb" do |mysql|		
+
+		mysql.vm.network "public_network", ip: "192.168.1.24"
+		mysql.vm.provision "shell", inline: "cat /configs/id_bionic.pub >> .ssh/authorized_keys"
+		mysql.vm.provision "shell", inline: $script_mysql 
+		mysql.vm.provision "shell", inline: "cat /configs/mysqld.cnf > /etc/mysql/mysql.conf.d/mysqld.cnf"
+		mysql.vm.provision "shell", inline: "service mysql restart"
+		mysql.vm.synced_folder "./configs", "/configs"
+		mysql.vm.synced_folder ".", "/vagrant", disabled: true
+	end
+
+	config.vm.define "phpweb" do |phpweb|
+
+		phpweb.vm.network "forwarded_port", guest: 8888, host:8888	
+		phpweb.vm.network "public_network", ip: "192.168.1.25"
+
+		phpweb.vm.provision "shell", inline: "apt-get update && apt-get install -y puppet"
+
+        	phpweb.vm.provision "puppet" do |puppet|
+            	puppet.manifests_path = "./configs/manifests"
+            	puppet.manifest_file = "phpweb.pp"
+        	end
+
+	end
+
+		config.vm.define "mysqlserver" do |mysqlserver|
+		mysqlserver.vm.network "public_network", ip: "192.168.1.22"
+
+		mysqlserver.vm.provision "shell", inline: "cat /vagrant/configs/id_bionic.pub >> .ssh/authorized_keys"
+		mysqlserver.vm.provision "shell", inline: "cat /vagrant/configs/id_absible.pub >> .ssh/authorized_keys"
+		mysqlserver.vm.provision "shell", inline: "cp /vagrant/configs/id_absible.pub .ssh"
+
+
+
+	end
+
+		config.vm.define "ansible" do |ansible|
+    			ansible.vm.network "public_network", ip: "192.168.1.26"
+		ansible.vm.provision "shell", 
+			inline: "cat /vagrant/configs/id_bionic.pub >> .ssh/authorized_keys"
+		ansible.vm.provision "shell", 
+			inline: "cat /vagrant/configs/id_mysqlserver.pub >> .ssh/authorized_keys"
+
+		ansible.vm.provision "shell", 
+			inline: "cp /vagrant/configs/id_mysqlserver.pub .ssh"
+
+    		ansible.vm.provision "shell",
+        		inline: "cp /vagrant/id_bionic /home/vagrant && \
+                		chmod 600 /home/vagrant/id_bionic && \
+				chown vagrant:vagrant /home/vagrant/id_bionic"
+
+		ansible.vm.provision "shell",
+                	inline: "apt-get update && \
+                apt-get install -y software-properties-common && \
+                apt-add-repository --yes --update ppa:ansible/ansible && \
+                apt-get install -y ansible"
+
+	end
+
+end
+************************************************************************************
+-> Conteúdo do arquivo playbook.yml abaixo - 11/11/2019:
+************************************************************************************
+- hosts: all
+  handlers:
+        - name: restart mysql
+          service:
+                name: mysql
+                state: restarted
+          become: yes
+
+  tasks:
+        - name: 'Instalar MySQL Server'
+          apt:
+                update_cache: yes
+                cache_valid_time: 3600 #1 hora
+                name: ["mysql-server-5.7", "python3-mysqldb"]
+                state: latest
+          become: yes
+
+        - name: 'Criar usuario no MySQL'
+          mysql_user:
+                login_user: root
+                name: phpuser
+                password: pass
+                priv: '*.*:ALL'
+                host: '%'
+                state: present
+          become: yes
+
+        - name: 'Copiar arquivo mysqld.cnf'
+          copy:
+                src: /vagrant/configs/mysqld.cnf
+                dest: /etc/mysql/mysql.conf.d/mysqld.cnf
+                owner: root
+                group: root
+                mode: 0644
+          become: yes
+          notify:
+                - restart mysql
+************************************************************************************		
+-> Conteúdo do arquivo hosts abaixo - 11/11/2019:
+************************************************************************************
+[mysqlserver]
+192.168.1.22
+
+[mysqlserver:vars]
+ansible_user=vagrant
+#ansible_ssh_private_key_file=/home/vagrant/id_bionic
+ansible_python_interpreter=/usr/bin/python3
+ansible_ssh_commom_args='-o StrictHostKeyChecking=no'
+************************************************************************************
