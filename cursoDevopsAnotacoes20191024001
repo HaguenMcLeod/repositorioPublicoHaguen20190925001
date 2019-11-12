@@ -1901,4 +1901,18 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC5WSe7ES+7jGnWF/1SROkWzlIi0TAW1CK5753dQ14L
 -> A VM que vai logar precisa receber em seu authorized_keys a chave pública
 da VM que receberá a conexão
 ************************************************************************************
+Teste mais recente - 12/11/2019 - 17:35hr ##########################################
+-> vagrant ssh ansible
+-> ssh-keygen -t rsa 
+-> cat id_rsa.pub -> copiar a chave publica
+-> vagrant ssh mysqlserver
+-> cd .ssh
+-> vi authorized_keys -> colar a chave copiada
+-> vagrant ssh ansible
+-> ssh vagrant@192.168.1.22
+-> ansible-playbook -i /vagrant/configs/ansible/hosts /vagrant/configs/ansible/playbook.yml
+-> 
+-> 
+
+
 
