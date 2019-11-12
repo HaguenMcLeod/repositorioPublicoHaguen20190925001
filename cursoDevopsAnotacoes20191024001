@@ -1906,6 +1906,7 @@ Teste mais recente - 12/11/2019 - 17:35hr ######################################
 -> ssh-keygen -t rsa 
 -> cd .ssh
 -> cat id_rsa.pub -> copiar a chave publica
+-> cd ..
 -> vagrant ssh mysqlserver
 -> cd .ssh
 -> vi authorized_keys -> colar a chave copiada
