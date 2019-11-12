@@ -1896,6 +1896,9 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC5WSe7ES+7jGnWF/1SROkWzlIi0TAW1CK5753dQ14L
 -> parou de logar quando essa chave foi apagada -> id_absible.pub -> ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCnIsO449PjMZ1UPdPJCWXwuNiFD/T8Js/FppR8pXYj+NQmUNvc/9/hj1ca+Gpk9ZZRI9+ZrRx3m96A37re+PQOKep/NhCbWg+9aNgwgzi6otkwgDRCvUHt3neWYj54Xjb2/86fT/PH9OSTAhev2Ywril//E/ySvIZEKqcH2UoN+w+Plc1ye+vH0cmQnrnql+niqYetTsKf+/iRxkcBCenbp3EJlY1nrvxSIaz9jIld+3n8UInQoGSID+wrGEHZ1ggyGcjvOCIhVeruBFd9q7USPioH/JZv3T1KLO6dcuqYTFqojKR4g/nxzigpKHTnC80Ybmzai+ejEbqmfv1bpFXR vagrant@ubuntu-bionic
 ***************************************************************************
 
-Localização de id_absible.pub -> /home/05329594774/backupMaquina20190911001/cursosAlura/cursoDevOps/ambiente_dev/bionic/configs
+-> Localização de id_absible.pub -> /home/05329594774/backupMaquina20190911001/cursosAlura/cursoDevOps/ambiente_dev/bionic/configs
+
+-> A VM que vai logar precisa receber em seu authorized_keys a chave pública
+da VM que receberá a conexão
 ************************************************************************************
 
