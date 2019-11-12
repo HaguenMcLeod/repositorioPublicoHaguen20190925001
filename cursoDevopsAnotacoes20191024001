@@ -1904,6 +1904,7 @@ da VM que receberá a conexão
 Teste mais recente - 12/11/2019 - 17:35hr ##########################################
 -> vagrant ssh ansible
 -> ssh-keygen -t rsa 
+-> cd .ssh
 -> cat id_rsa.pub -> copiar a chave publica
 -> vagrant ssh mysqlserver
 -> cd .ssh
