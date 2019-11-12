@@ -1911,6 +1911,7 @@ Teste mais recente - 12/11/2019 - 17:35hr ######################################
 -> vi authorized_keys -> colar a chave copiada
 -> vagrant ssh ansible
 -> ssh vagrant@192.168.1.22
+-> exit
 -> ansible-playbook -i /vagrant/configs/ansible/hosts /vagrant/configs/ansible/playbook.yml
 
 -> Vagrantfile mais recente abaixo:
