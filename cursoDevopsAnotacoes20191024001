@@ -1578,29 +1578,36 @@ The SSH command responded with a non-zero exit status"
 -> O comando correto era "inline: "cp /vagrant/id_bionic /home/vagrant &&"
 ##########
 
-Aula abaixo ainda em teste - 06/11/2019 ######################################
-
 06 Testando o playbook - 06/11/2019 ###########################################
 -> ATENÇÂO - > As máquinas "mysqlserver" e "ansible" precisam estar rodando
 -> Criar dentro de "bionic/configs" a pasta "ansible" e dentro desta criar 
 os arquivos "hosts" e "playbook.yml", "hosts" com o seguinte conteúdo:
+-> Conteúdo do arquivo hosts abaixo - 11/11/2019:
 *******************************************************************************
 [mysqlserver]
 192.168.1.22
 
 [mysqlserver:vars]
 ansible_user=vagrant
-ansible_ssh_private_key_file=/home/vagrant/id_bionic
+#ansible_ssh_private_key_file=/home/vagrant/id_bionic
 ansible_python_interpreter=/usr/bin/python3
-ansible_ssh-commom_args='-o StrictHostKeyChecking=no'
+ansible_ssh_commom_args='-o StrictHostKeyChecking=no'
 ******************************************************************************* 
--> O IP listado no arquivo "hosts",192.168.1.22 , precisa coincidir com o IP listado no "Vagrantfile" para a VM "mysqlserver" 
--> Mais de um IP podem ser listados no arquivo "hosts" e para outros usuários, [mysqlserver] e [phpweb], por exemplo
--> No arquivo "hosts" a linha "ansible_ssh-commom_args='-o StrictHostKeyChecking=no'" indica para o arquivo "known hosts" não exibir msg de aviso que a máquina é recriada com uma chave ssh no servidor mysql
--> O arquivo "hosts" -> É o inventário que define quais máquinas queremos provisionar
--> No arquivo "playbook.yml" o comando "become: yes" significa que todos os comandos serão executados como root  
+-> O IP listado no arquivo "hosts",192.168.1.22 , precisa coincidir com o 
+IP listado no "Vagrantfile" para a VM "mysqlserver" 
+-> Mais de um IP podem ser listados no arquivo "hosts" e para outros 
+usuários, [mysqlserver] e [phpweb], por exemplo
+-> No arquivo "hosts" a linha
+ "ansible_ssh-commom_args='-o StrictHostKeyChecking=no'" indica para 
+o arquivo "known hosts" não exibir msg de aviso que a máquina é 
+recriada com uma chave ssh no servidor mysql
+-> O arquivo "hosts" -> É o inventário que define quais máquinas
+ queremos provisionar
+-> No arquivo "playbook.yml" o comando "become: yes" significa que 
+todos os comandos serão executados como root  
 -> O arquivo "playbook,yml" deverá ficar com o seguinte conteúdo:
-*******************************************************************************
+-> Conteúdo do arquivo playbook.yml abaixo - 11/11/2019:
+************************************************************************************
 - hosts: all
   handlers:
         - name: restart mysql
@@ -1638,35 +1645,40 @@ ansible_ssh-commom_args='-o StrictHostKeyChecking=no'
           become: yes
           notify:
                 - restart mysql
-*******************************************************************************
+************************************************************************************		
 -> vagrant up ansible
 -> vagrant ssh ansible
 -> ansible-playbook -i /vagrant/configs/ansible/hosts /vagrant/configs/ansible/playbook.yml
--> Se der erro ao submeter o comando acima, verificar as DUAS possibilidades de solução abaixo:
+-> Se der erro ao submeter o comando acima:
 ##########
 ERRO -> ERROR! Syntax Error while loading YAML.
   mapping values are not allowed in this context
 
-The error appears to be in '/vagrant/configs/ansible/playbook.yml': line 2, column 13, but may be elsewhere in the file depending on the exact syntax problem.
+The error appears to be in '/vagrant/configs/ansible/playbook.yml': line 2, 
+column 13, but may be elsewhere in the file depending on the exact syntax problem.
 The offending line appears to be:
 
 - hosts: all
     handlers:
             ^ here
-Solução -> O problema era a identação do arquivo, testar a identação na internet, exemplo no site: https://yamlchecker.com/
+Solução -> O problema era a identação do arquivo, testar a identação na 
+internet, exemplo no site: https://yamlchecker.com/
 ##########
 ##########
-ERRO -> fatal: [192.168.1.22]: UNREACHABLE! => {"changed": false, "msg": "Failed to connect to the host via ssh: ssh: connect to host 192.168.1.22 port 22: No route to host", "unreachable": true}
+ERRO -> fatal: [192.168.1.22]: UNREACHABLE! => {"changed": false, "msg": 
+"Failed to connect to the host via ssh: ssh: connect to host 192.168.1.22 port 22:
+ No route to host", "unreachable": true}
 
 -> ls -al -> deve mostrar que a chave id_bionic só pode ser usada pelo root
 
 Solução -> sudo chown vagrant:vagrant id_bionic
 ##########
--> ls -al -> após o comando "sudo chown vagrant:vagrant id_bionic" acima deve permitir que a chave seja usada por todos os usuários
+-> ls -al -> após o comando "sudo chown vagrant:vagrant id_bionic" acima deve
+ permitir que a chave seja usada por todos os usuários
 -> ansible-playbook -i /vagrant/configs/ansible/hosts /vagrant/configs/ansible/playbook.yml
 ##########
 ERRO -> fatal: [192.168.1.22]: UNREACHABLE! => {"changed": false, "msg": "Failed to connect to the host via ssh: Warning: Permanently added '192.168.1.22' (ECDSA) to the list of known hosts.\r\nvagrant@192.168.1.22: Permission denied (publickey).", "unreachable": true}
-Solução em teste -> O erro ocorreu na máquina corporativa, pode ser causado pelo fato de o IP não estar livre na rede, testar na máquina de casa
+Solução -> Possivel falta da chave púlica dentro do arquivo "authorized_keys"
 ##########
 ************************************************************************************
 Conteúdo do Vagrantfile em 06/11/2019:
@@ -1737,24 +1749,28 @@ Confirmar chave pública dentro da VM - 08/11/2019 #############################
 -> vagrant ssh "VM em questão"
 -> cat .ssh/authorized_keys
 ************************************************************************************
-Teste em 11/11/2019 ################################################################
-
--> Criar, dentro de cada VM, ansible e mysqlserver, as chaves pública e 
-privada com o comando "ssh-keygen -t rsa"
--> Copiar a chave .pub de uma VM para outra dentro dos respectivos 
-arqivos "authorised_keys"
-
--> Conexão entre duas VMs:
--> A VM que predende se conectar deve possuir duas chaves, uma pública e outra
-privada, deve conter os arquivos "fisicamente", a VM a receber a conexão 
-deve conter "o conteúdo" da chave pública da VM que pretende conectar dentro
-do arquivo "authorized_keys"
-
-Reproduzir teste do playbook em casa - 11/11/2019: #################################
--> Criar as chaves pública e privada dentro da VM "mysqlserver" com o comando: 
--> "ssh-keygen -t rsa" utilizando a nomenclatura "id_rsa" e "id_rsa.pub"
--> Copiar o conteúdo da chave pública criada dentro de "mysqlserver" para dentro 
-do arquivo authorized_keys da VM "ansible"
+-> Conexão entre duas VMs - exemplo ansible e mysqlserver: 
+Teste mais recente - 12/11/2019 - 17:35hr ##########################################
+Solução do ERRO -> fatal: [192.168.1.22]: UNREACHABLE! => {"changed": false, "msg": 
+"Failed to connect to the host via ssh: vagrant@192.168.1.22: Permission denied 
+(publickey).", "unreachable": true}
+************************************************************************************
+-> vagrant ssh ansible
+-> ssh-keygen -t rsa 
+-> cd .ssh
+-> cat id_rsa.pub -> copiar a chave publica
+-> cd ..
+-> exit
+-> vagrant ssh mysqlserver
+-> cd .ssh
+-> vi authorized_keys -> colar a chave copiada
+-> cd ..
+-> exit
+-> vagrant ssh ansible
+-> ssh vagrant@192.168.1.22
+-> exit
+-> ansible-playbook -i /vagrant/configs/ansible/hosts /vagrant/configs/ansible/playbook.yml
+*******************************************************************************
 -> Conteúdo do arquivo Vagrantfile abaixo - 11/11/2019:
 ************************************************************************************
 $script_mysql = <<-SCRIPT
@@ -1878,112 +1894,9 @@ ansible_user=vagrant
 #ansible_ssh_private_key_file=/home/vagrant/id_bionic
 ansible_python_interpreter=/usr/bin/python3
 ansible_ssh_commom_args='-o StrictHostKeyChecking=no'
-************************************************************************************
-Reprodução da conexão entre VMs em 12/11/2019 ######################################
-************************************************************************************
-ansible authorized_keys:
-***************************************************************************
-ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDOM8Uii79k9myQroonJ23nUOVQnX/g2qZMpTcNOMx5JPfHesJUreHLHxNUeNS0PHlO2M8R2XSD3/y4evAfRWCUFWa9U07+r32IsBDnH1eMakf3VbPdO68sTdqEYacQYcuBjkfM6d5/aqP4Uig30U/o0m2Qw4cFLqA4sZWgC7HUPfYHgzwidhXtng/oxWIQIpcstEzpe5NFgKaZaetkT2zhyt7eSSrszyNLORpPa+3cJct3hT+dnLrJNQdwvRJDrjdSi/9M6a2eY+vRZSbl46NdQMOyXCQ906HzUcrz1jtT9xg1SraElSUg/m0ZalE8vAfhdPA2ceaMnyJ1Jcnw8Le5 vagrant
--> chave apagada para teste - continuou a logar -> ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC1lp/F8fawreR+9Abb2tKdE0PZSWl2Q17cP122dM65tquEXHNtnAAza3fA6oDM3kQH7KokqUFN8xW6TOC0WfkQU964/uwWcggmQOoKPfBfK8pE7MeBADIQg+hDvOjhy7H7DZowiwd8CWQrZaO7mdvHUVJBMTIHfktveb6q6Hg/XZPzoCKdNfsJCRc/G6ATFFJRRTxnhWMqCoRa2x563a1RXjDUD5PSVPVYEbMi2tP8hGUiU8mPHb6Gku2sYHnR9w/z8u/KSvmBbnPoeMOfHfrbjBXKYTxoMF68q2UVyFEwbak4HmUwQ1cfZjotZCChq3VjrBwlKcmV3ls2M+o4JrWJ 05329594774@serpro-1562699
 
--> chave apagada para teste - continuou a logar -> id_mysqlserver.pub -> ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDCR3VfOJZzLjFQOsx3wbyspQnJs/NwFjDQ9J/ta91MJdCfMabyJduev4utptDoXsq/KsR3dEvzG17m8aDirbsL3AR/trQQk+cHMz1Lk334lctUqJCP3v5CTp7bPcIKCwYiGO6O54A84eYYEDzNB6BB6tR6uzO6OIGFQmdNGQhV/ReOqI2OpkzWsMTCaN2Lh8QqnAWW0ey5mmrPO+/x1oneq/Y0syVu7s+/HC196XEnrmTavtYdC+1gzhwCB+0LI3S1Zp6lSsx24nRUqEd7+DiGe7jAvHJESkWr7ZM3IRjb96tuxlN7Zd5CrwJQPvuHDJ69r1a+j42Lv+GIXOeDjgb5 vagrant@ubuntu-bionic
-***************************************************************************
-mysqlserver authorized_keys:
-***************************************************************************
-ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC5WSe7ES+7jGnWF/1SROkWzlIi0TAW1CK5753dQ14Loa55TBrfL4eYUyp9SgGCymStEfdRcTqt1HSS5FXWRC3IX59z/cr01rnX+t6tIqMVrS+cwbWcvEQgzIvWsNWRXEGmccSIot/nLUdNgaT5XKsP2Q/DPCjvVdTDxot48vGxU/gcR58eYvZdhfTyla9PR7Wl3q9qnPIH6w/nc/dpzHT/dge+SImiKucf2CAfLdnW3HESyTxGhhXjSE2N1ZdptmP9X0nU3ZCsqlY9Rgdmjqo3H89h7wPgqixcrfl5eSaVhnW0/iG+wXWfIa4FAdtZgwqly1gvY+w7vZ8X0JmRuyc3 vagrant
--> chave apagada para teste - continuou a logar -> ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC1lp/F8fawreR+9Abb2tKdE0PZSWl2Q17cP122dM65tquEXHNtnAAza3fA6oDM3kQH7KokqUFN8xW6TOC0WfkQU964/uwWcggmQOoKPfBfK8pE7MeBADIQg+hDvOjhy7H7DZowiwd8CWQrZaO7mdvHUVJBMTIHfktveb6q6Hg/XZPzoCKdNfsJCRc/G6ATFFJRRTxnhWMqCoRa2x563a1RXjDUD5PSVPVYEbMi2tP8hGUiU8mPHb6Gku2sYHnR9w/z8u/KSvmBbnPoeMOfHfrbjBXKYTxoMF68q2UVyFEwbak4HmUwQ1cfZjotZCChq3VjrBwlKcmV3ls2M+o4JrWJ 05329594774@serpro-1562699
-
--> parou de logar quando essa chave foi apagada -> id_absible.pub -> ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCnIsO449PjMZ1UPdPJCWXwuNiFD/T8Js/FppR8pXYj+NQmUNvc/9/hj1ca+Gpk9ZZRI9+ZrRx3m96A37re+PQOKep/NhCbWg+9aNgwgzi6otkwgDRCvUHt3neWYj54Xjb2/86fT/PH9OSTAhev2Ywril//E/ySvIZEKqcH2UoN+w+Plc1ye+vH0cmQnrnql+niqYetTsKf+/iRxkcBCenbp3EJlY1nrvxSIaz9jIld+3n8UInQoGSID+wrGEHZ1ggyGcjvOCIhVeruBFd9q7USPioH/JZv3T1KLO6dcuqYTFqojKR4g/nxzigpKHTnC80Ybmzai+ejEbqmfv1bpFXR vagrant@ubuntu-bionic
-***************************************************************************
-
--> Localização de id_absible.pub -> /home/05329594774/backupMaquina20190911001/cursosAlura/cursoDevOps/ambiente_dev/bionic/configs
-
--> A VM que vai logar precisa receber em seu authorized_keys a chave pública
-da VM que receberá a conexão
-************************************************************************************
-Teste mais recente - 12/11/2019 - 17:35hr ##########################################
-Solução do ERRO -> fatal: [192.168.1.22]: UNREACHABLE! => {"changed": false, "msg": 
-"Failed to connect to the host via ssh: vagrant@192.168.1.22: Permission denied 
-(publickey).", "unreachable": true}
-************************************************************************************
--> vagrant ssh ansible
--> ssh-keygen -t rsa 
--> cd .ssh
--> cat id_rsa.pub -> copiar a chave publica
--> cd ..
--> exit
--> vagrant ssh mysqlserver
--> cd .ssh
--> vi authorized_keys -> colar a chave copiada
--> cd ..
--> exit
--> vagrant ssh ansible
--> ssh vagrant@192.168.1.22
--> exit
--> ansible-playbook -i /vagrant/configs/ansible/hosts /vagrant/configs/ansible/playbook.yml
-
--> Vagrantfile mais recente abaixo - 12/11/2019:
-************************************************************************************
-$script_mysql = <<-SCRIPT
-    apt-get update && \
-    apt-get install -y mysql-server-5.7 && \
-    mysql -e "create user 'phpuser'@'%' identified by 'pass';"
-SCRIPT
-
-Vagrant.configure("2") do |config|
-  
-	config.vm.box = "ubuntu/bionic64"
-
-#  	config.vm.define "mysqldb" do |mysql|		
-#
-#		mysql.vm.network "public_network", ip: "192.168.1.24"
-#		mysql.vm.provision "shell", inline: "cat /configs/id_bionic.pub #>> .ssh/authorized_keys"
-#		mysql.vm.provision "shell", inline: $script_mysql 
-#		mysql.vm.provision "shell", inline: "cat /configs/mysqld.cnf > /etc/#mysql/mysql.conf.d/mysqld.cnf"
-#		mysql.vm.provision "shell", inline: "service mysql restart"
-#		mysql.vm.synced_folder "./configs", "/configs"
-#		mysql.vm.synced_folder ".", "/vagrant", disabled: true
-#	end
-
-	config.vm.define "phpweb" do |phpweb|
-		phpweb.vm.network "forwarded_port", guest: 8888, host:8888	
-		phpweb.vm.network "public_network", ip: "192.168.1.25"
-		phpweb.vm.provision "shell", inline: "apt-get update && apt-get install -y puppet"
-        	phpweb.vm.provision "puppet" do |puppet|
-            	puppet.manifests_path = "./configs/manifests"
-            	puppet.manifest_file = "phpweb.pp"
-        	end
-	end
-		config.vm.define "mysqlserver" do |mysqlserver|
-		mysqlserver.vm.network "public_network", ip: "192.168.1.22"
-		mysqlserver.vm.provision "shell", inline: "cat /vagrant/configs/id_bionic.pub >> .ssh/authorized_keys"
-#		mysqlserver.vm.provision "shell", inline: "cat /vagrant/configs/id_absible.pub >> .ssh/authorized_keys"
-#		mysqlserver.vm.provision "shell", inline: "cp /vagrant/configs/id_absible.pub .ssh"
-	end
-		config.vm.define "ansible" do |ansible|
-    			ansible.vm.network "public_network", ip: "192.168.1.26"
-		ansible.vm.provision "shell", 
-			inline: "cat /vagrant/configs/id_bionic.pub >> .ssh/authorized_keys"
-#		ansible.vm.provision "shell", 
-#			inline: "cat /vagrant/configs/id_mysqlserver.pub >> .ssh/authorized_keys"
-#		ansible.vm.provision "shell", 
-#			inline: "cp /vagrant/configs/id_mysqlserver.pub .ssh"
-    		ansible.vm.provision "shell",
-        		inline: "cp /vagrant/id_bionic /home/vagrant && \
-                		chmod 600 /home/vagrant/id_bionic && \
-				chown vagrant:vagrant /home/vagrant/id_bionic"
-		ansible.vm.provision "shell",
-                	inline: "apt-get update && \
-                apt-get install -y software-properties-common && \
-                apt-add-repository --yes --update ppa:ansible/ansible && \
-                apt-get install -y ansible"
-		ansible.vm.provision "shell",
-            		inline: "ansible-playbook -i /vagrant/configs/ansible/hosts \
-                 		/vagrant/configs/ansible/playbook.yml"
-	end
-end
-************************************************************************************
-02 Configurações do provider - 13/11/2019
+*******************************************************************************
+02 Configurações do provider - 13/11/2019 #####################################
 -> Definir parâmetros das máquinas, como memória, espaço em disco, 
 processadores e etc
 -> No Vagrantfile modificar as linhas referentes a do |config| e adicionar:
