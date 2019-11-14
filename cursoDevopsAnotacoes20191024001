@@ -2121,8 +2121,10 @@ Vagrant.configure("2") do |config|
 		mysqlserver.vm.provision "shell", 
 			inline: $script_mysqlserver
 
-	end
+#		mysqlserver.vm.provision "shell", 
+#			inline: "cat /home/vagrant/.ssh/id_rsa_ansible.pub >> .ssh/authorized_keys"
 
+	end
 		config.vm.define "ansible" do |ansible|
     			ansible.vm.network "public_network", ip: "192.168.1.26"
 		ansible.vm.provision "shell", 
@@ -2138,6 +2140,10 @@ Vagrant.configure("2") do |config|
                 		chmod 600 /home/vagrant/id_bionic && \
 				chown vagrant:vagrant /home/vagrant/id_bionic"
 		ansible.vm.provision "shell", inline: $script_ansible
+
+#		mysqlserver.vm.provision "shell", 
+#			inline: "cat /home/vagrant/.ssh/id_rsa_mysqlserver.pub >> .ssh/authorized_keys"
+
 		ansible.vm.provision "shell",
                 	inline: "apt-get update && \
                 apt-get install -y software-properties-common && \
