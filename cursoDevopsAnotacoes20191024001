@@ -2137,6 +2137,28 @@ Vagrant.configure("2") do |config|
 end
 *******************************************************************************
 ###############################################################################
+Testar comando para criar as chaves pelo Vagrantfile - 14/11/2019:
+https://stackoverflow.com/questions/37729806/vagrant-generate-an-ssh-key-and-output-it
+*******************************************************************************
+config.vm.provision "shell", inline: <<SCRIPT
+  yes | ssh-keygen -b 2048 -t rsa -f /home/vagrant/.ssh/id_rsa -q -N ""
+  echo
+  echo *********************************
+  echo * PUBLIC KEY - PUT ME ON GITLAB *
+  echo *********************************
+  echo
+  cat /home/vagrant/.ssh/id_rsa.pub
+  echo
+SCRIPT
+
+A friend also suggested copying the key to /vargrant which is the folder which is usually mounted from the host folder containing the relevant Vagrantfile.
+
+config.vm.provision "shell", inline: <<SCRIPT
+  yes | ssh-keygen -b 2048 -t rsa -f /home/vagrant/.ssh/id_rsa -q -N ""
+  cp /home/vagrant/.ssh/id_rsa.pub /vagrant
+SCRIPT
+*******************************************************************************
+###############################################################################
 02 O que são containers? ******************************************************
 -> 
 -> 
