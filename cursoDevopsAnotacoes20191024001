@@ -2070,6 +2070,30 @@ $script_mysqlserver = <<-SCRIPT
   			echo
 		SCRIPT
 
+$script_mysqlserver_TST = <<-SCRIPT
+  			yes | ssh-keygen -b 2048 -t rsa -f /vagrant/configs/id_mysqlserver -q -N ""
+  			echo
+  			echo ********************************
+  			echo ****** id_mysqlserver.pub ******
+  			echo ********************************
+  			echo
+  			cat /vagrant/configs/id_mysqlserver.pub
+			
+  			echo
+		SCRIPT
+
+$script_ansible_TST = <<-SCRIPT
+  			yes | ssh-keygen -b 2048 -t rsa -f /vagrant/configs/id_ansible -q -N ""
+  			echo
+  			echo ********************************
+  			echo ****** id_ansible.pub ******
+  			echo ********************************
+  			echo
+  			cat /vagrant/configs/id_ansible.pub
+			
+  			echo
+		SCRIPT
+
 Vagrant.configure("2") do |config|
   
 	config.vm.box = "ubuntu/bionic64"
@@ -2107,9 +2131,9 @@ Vagrant.configure("2") do |config|
 
 	end
 
-		config.vm.define "mysqlserver" do |mysqlserver|
+	config.vm.define "mysqlserver" do |mysqlserver|
+	
 		mysqlserver.vm.network "public_network", ip: "192.168.1.22"
-
 		mysqlserver.vm.provision "shell", 
 			inline: "cat /vagrant/configs/id_bionic.pub >> .ssh/authorized_keys"
 		mysqlserver.vm.provision "shell", 
@@ -2118,20 +2142,20 @@ Vagrant.configure("2") do |config|
 			inline: "cp /vagrant/configs/id_absible.pub .ssh"
 		mysqlserver.vm.provision "shell", 
 			inline: "cat /vagrant/configs/id_ansible.pub >> .ssh/authorized_keys"
+#		mysqlserver.vm.provision "shell", 
+#			inline: $script_mysqlserver
 		mysqlserver.vm.provision "shell", 
-			inline: $script_mysqlserver
-
+			inline: $script_mysqlserver_TST
 #		mysqlserver.vm.provision "shell", 
 #			inline: "cat /home/vagrant/.ssh/id_rsa_ansible.pub >> .ssh/authorized_keys"
-
 	end
+
 		config.vm.define "ansible" do |ansible|
     			ansible.vm.network "public_network", ip: "192.168.1.26"
 		ansible.vm.provision "shell", 
 			inline: "cat /vagrant/configs/id_bionic.pub >> .ssh/authorized_keys"
 		ansible.vm.provision "shell", 
 			inline: "cat /vagrant/configs/id_mysqlserver.pub >> .ssh/authorized_keys"
-
 		ansible.vm.provision "shell", 
 			inline: "cp /vagrant/configs/id_mysqlserver.pub .ssh"
 		ansible.vm.provision "shell", inline: "cat /vagrant/configs/id_ansible.pub >> .ssh/authorized_keys"
@@ -2140,10 +2164,10 @@ Vagrant.configure("2") do |config|
                 		chmod 600 /home/vagrant/id_bionic && \
 				chown vagrant:vagrant /home/vagrant/id_bionic"
 		ansible.vm.provision "shell", inline: $script_ansible
-
+		ansible.vm.provision "shell", 
+			inline: $script_ansible_TST
 #		mysqlserver.vm.provision "shell", 
 #			inline: "cat /home/vagrant/.ssh/id_rsa_mysqlserver.pub >> .ssh/authorized_keys"
-
 		ansible.vm.provision "shell",
                 	inline: "apt-get update && \
                 apt-get install -y software-properties-common && \
@@ -2152,7 +2176,6 @@ Vagrant.configure("2") do |config|
 		ansible.vm.provision "shell",
             		inline: "ansible-playbook -i /vagrant/configs/ansible/hosts \
                  		/vagrant/configs/ansible/playbook.yml"
-
 	end
         	config.vm.define "memcached" do |memcached|
         	memcached.vm.box = "centos/7"
