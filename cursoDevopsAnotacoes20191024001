@@ -2176,7 +2176,7 @@ config.vm.define "dockerhost" do |dockerhost|
         end
 
         dockerhost.vm.provision "shell", 
-            inline: "apt-get uptade&& apt-get install -y docker.io"
+            inline: "apt-get uptade && apt-get install -y docker.io"
 end
 *******************************************************************************
 -> vagrant up dockerhost
