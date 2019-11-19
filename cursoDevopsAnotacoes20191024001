@@ -2138,6 +2138,32 @@ Vagrant.configure("2") do |config|
 
 end
 *******************************************************************************
+-> Conexão entre duas VMs - exemplo ansible e mysqlserver: 
+Teste mais recente - 19/11/2019 - 17:35hr #####################################
+Solução do ERRO -> fatal: [192.168.1.22]: UNREACHABLE! => {"changed": false, "msg": 
+"Failed to connect to the host via ssh: vagrant@192.168.1.22: Permission denied 
+(publickey).", "unreachable": true}
+*******************************************************************************
+IMPORTANTE -> O ansible, IP 192.168.1.26, quer ser conectar na MV mysqlserver, o 
+ansible deverá gerar uma chave pública e a inserir no authorized keys da 
+máquina a receber a conexão, no caso o mysqlserver
+*******************************************************************************
+-> vagrant ssh ansible 
+-> ssh-keygen -t rsa 
+-> cd .ssh
+-> cat id_rsa.pub -> copiar a chave publica
+-> cd ..
+-> exit
+-> vagrant ssh mysqlserver
+-> cd .ssh
+-> vi authorized_keys -> colar a chave copiada
+-> cd ..
+-> exit
+-> vagrant ssh ansible
+-> ssh vagrant@192.168.1.22
+-> exit
+-> ansible-playbook -i /vagrant/configs/ansible/hosts /vagrant/configs/ansible/playbook.yml
+*******************************************************************************
 ###############################################################################
 02 O que são containers? ******************************************************
 -> 
