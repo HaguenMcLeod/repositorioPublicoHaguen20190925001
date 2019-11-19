@@ -2191,6 +2191,7 @@ SCRIPT
 $script_mysqlserver_CHAVE_PUBLICA_LOCAL_COMUM = <<-SCRIPT
   			yes | ssh-keygen -b 2048 -t rsa -f /home/vagrant/.ssh/id_rsa/id_mysqlserver5 -q -N ""
 			cp /vagrant/id_rsa_ANSIBLE.pub /home/vagrant/.ssh 
+			cat /vagrant/id_rsa_ANSIBLE.pub >> .ssh/authorized_keys
   			echo
   			echo ********************************
   			echo ****** id_mysqlserver.pub ******
