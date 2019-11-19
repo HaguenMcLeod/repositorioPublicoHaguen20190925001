@@ -2165,10 +2165,23 @@ máquina a receber a conexão, no caso o mysqlserver
 -> ansible-playbook -i /vagrant/configs/ansible/hosts /vagrant/configs/ansible/playbook.yml
 *******************************************************************************
 ###############################################################################
-02 O que são containers? ******************************************************
--> 
--> 
--> 
+05 Docker no Windows? - 19/11/2019 ********************************************
+-> No Vagrantfile, inserir:
+*******************************************************************************
+config.vm.define "dockerhost" do |dockerhost|
+        dockerhost.vm.provider "virtualbox" do |vb|
+            vb.memory = 512
+            vb.cpus = 1
+            vb.name = "ubuntu_dockerhost"
+        end
+
+        dockerhost.vm.provision "shell", 
+            inline: "apt-get uptade&& apt-get install -y docker.io"
+end
+*******************************************************************************
+-> vagrant up dockerhost
+-> sudo docker --version
+-> sudo docker run hello-world
 ###############################################################################
 Vagantfile em teste em 19/11/2019 *********************************************
 $script_mysql = <<-SCRIPT
