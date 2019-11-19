@@ -2169,6 +2169,172 @@ máquina a receber a conexão, no caso o mysqlserver
 -> 
 -> 
 -> 
+###############################################################################
+Vagantfile em teste em 19/11/2019 *********************************************
+$script_mysql = <<-SCRIPT
+    apt-get update && \
+    apt-get install -y mysql-server-5.7 && \
+    mysql -e "create user 'phpuser'@'%' identified by 'pass';"
+SCRIPT
+
+#$script_mysqlserver_CHAVE_PUBLICA_LOCAL_COMUM = <<-SCRIPT
+#  			yes | ssh-keygen -b 2048 -t rsa -f /vagrant/#configs/id_mysqlserver -q -N ""
+#  			echo
+#  			echo ********************************
+#  			echo ****** id_mysqlserver.pub ******
+#  			echo ********************************
+#  			echo
+#  			cat /vagrant/configs/id_mysqlserver.pub
+#  			echo
+#		SCRIPT
+
+$script_mysqlserver_CHAVE_PUBLICA_LOCAL_COMUM = <<-SCRIPT
+  			yes | ssh-keygen -b 2048 -t rsa -f /home/vagrant/.ssh/id_rsa/id_mysqlserver5 -q -N ""
+			cp /vagrant/id_rsa_ANSIBLE.pub /home/vagrant/.ssh 
+  			echo
+  			echo ********************************
+  			echo ****** id_mysqlserver.pub ******
+  			echo ********************************
+  			echo
+  			cat /home/vagrant/.ssh/id_rsa/id_mysqlserver5.pub
+  			echo
+		SCRIPT
+
+$script_ansible_CHAVE_PUBLICA_LOCAL_COMUM = <<-SCRIPT
+  			yes | ssh-keygen -b 2048 -t rsa -f /home/vagrant/.ssh/id_rsa -q -N ""
+			cp /home/vagrant/.ssh/id_rsa.pub /vagrant
+  			echo
+  			echo ********************************
+  			echo ********** id_rsa.pub **********
+  			echo ********************************
+  			echo
+  			cat /vagrant/configs/id_ansible.pub
+  			echo
+		SCRIPT
+
+#$script_ansible_CHAVE_PUBLICA_LOCAL_COMUM = <<-SCRIPT
+#  			yes | ssh-keygen -b 2048 -t rsa -f /home/vagrant/.ssh/id_rsa -q -N ""
+#  			echo
+#  			echo ********************************
+#  			echo ****** id_rsa.pub ******
+#  			echo ********************************
+#  			echo
+#  			cat /home/vagrant/.ssh/id_rsa/id_ansible5.pub
+#  			echo
+#		SCRIPT
+
+Vagrant.configure("2") do |config|
+  
+	config.vm.box = "ubuntu/bionic64"
+        config.vm.provider "virtualbox" do |vb|
+        vb.memory = 512
+        vb.cpus = 1
+     end
+
+	config.vm.define "mysqlserver" do |mysqlserver|
+		mysqlserver.vm.network "public_network", ip: "192.168.1.22", bridge: "wlp2s0"
+		mysqlserver.vm.provision "shell", 
+			inline: "cat /vagrant/configs/id_bionic.pub >> .ssh/authorized_keys"
+		mysqlserver.vm.provision "shell", 
+			inline: $script_mysqlserver_CHAVE_PUBLICA_LOCAL_COMUM
+
+
+		mysqlserver.vm.provision "shell",
+        		inline: "cp /vagrant/configs/id_ansible.pub /home/vagrant && \
+                		chmod 600 /home/vagrant/id_ansible.pub && \
+				chown vagrant:vagrant /home/vagrant/id_ansible.pub"
+
+
+		mysqlserver.vm.provision "shell",
+        		inline: "cp /vagrant/configs/id_ansible /home/vagrant && \
+                		chmod 600 /home/vagrant/id_ansible && \
+				chown vagrant:vagrant /home/vagrant/id_ansible"
+
+
+	end
+
+	config.vm.define "ansible" do |ansible|
+		ansible.vm.network "public_network", ip: "192.168.1.26", bridge: "wlp2s0"
+		ansible.vm.provision "shell", 
+			inline: "cat /vagrant/configs/id_bionic.pub >> .ssh/authorized_keys"
+		ansible.vm.provision "shell", 
+			inline: "cat /vagrant/configs/id_mysqlserver.pub >> .ssh/authorized_keys"
+		ansible.vm.provision "shell", 
+			inline: "cp /vagrant/configs/id_mysqlserver.pub .ssh"
+    		ansible.vm.provision "shell",
+        		inline: "cp /vagrant/id_bionic /home/vagrant && \
+                		chmod 600 /home/vagrant/id_bionic && \
+				chown vagrant:vagrant /home/vagrant/id_bionic"
+
+
+
+		ansible.vm.provision "shell",
+        		inline: "cp /vagrant/configs/id_mysqlserver.pub /home/vagrant && \
+                		chmod 600 /home/vagrant/id_mysqlserver.pub && \
+				chown vagrant:vagrant /home/vagrant/id_mysqlserver.pub"
+
+
+		ansible.vm.provision "shell",
+        		inline: "cp /vagrant/configs/id_mysqlserver /home/vagrant && \
+                		chmod 600 /home/vagrant/id_mysqlserver && \
+				chown vagrant:vagrant /home/vagrant/id_mysqlserver"
+
+
+
+		ansible.vm.provision "shell", 
+			inline: $script_ansible_CHAVE_PUBLICA_LOCAL_COMUM
+		
+
+# 				/home/vagrant/.ssh/id_rsa
+
+		ansible.vm.provision "shell",
+        		inline: "chmod 600 /home/vagrant/.ssh/id_rsa && \
+				chown vagrant:vagrant /home/vagrant/.ssh/id_rsa"
+
+		ansible.vm.provision "shell",
+        		inline: "chmod 600 /home/vagrant/.ssh/id_rsa.pub && \
+				chown vagrant:vagrant /home/vagrant/.ssh/id_rsa.pub"
+
+
+		ansible.vm.provision "shell",
+                	inline: "apt-get update && \
+                apt-get install -y software-properties-common && \
+                apt-add-repository --yes --update ppa:ansible/ansible && \
+                apt-get install -y ansible"
+		ansible.vm.provision "shell",
+            		inline: "ansible-playbook -i /vagrant/configs/ansible/hosts \
+                 		/vagrant/configs/ansible/playbook.yml"
+	end
+
+#	config.vm.define "phpweb" do |phpweb|
+
+#		phpweb.vm.network "forwarded_port", guest: 8888, host:8888	
+#		phpweb.vm.network "public_network", ip: "192.168.1.25"
+#		phpweb.vm.provider "virtualbox" do |vb|
+#    			vb.memory = 1024
+#    			vb.cpus = 2
+#			vb.name = "ubuntu_bionic_php7"
+#		end
+#   		phpweb.vm.provision "shell", inline: "apt-get update && apt-get install -y puppet"
+#        	phpweb.vm.provision "puppet" do |puppet|
+#            	puppet.manifests_path = "./configs/manifests"
+#            	puppet.manifest_file = "phpweb.pp"
+#        	end
+
+#	end
+
+#	config.vm.define "memcached" do |memcached|
+#        	memcached.vm.box = "centos/7"
+#        	memcached.vm.provider "virtualbox" do |vb|
+#            	vb.memory = 512
+#            	vb.cpus = 1
+#            	vb.name = "centos7_memcached"
+#  		end
+#	end
+
+end
+*******************************************************************************
+###############################################################################
 -> 
 -> 
 
