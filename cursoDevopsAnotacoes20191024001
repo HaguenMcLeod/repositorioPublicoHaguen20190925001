@@ -2416,7 +2416,41 @@ end
       became: yes
 *******************************************************************************
 -> ansible-playbook provisioning.yml -u vagrant -i hosts --private-key .vagrant/machines/wordpress/virtualbox/private_key
--> Confirmar ser o apache esta funcionando -> No browser: 172.17.177.40
+-> Confirmar se o apache esta funcionando -> No browser: 172.17.177.40
+02 Simplificando o playbook with_items - 20191121001 ##########################
+-> Modificar o provisioning.yml para incluir o "with":
+*******************************************************************************
+- hosts: all
+  tasks:
+    - name: 'Instala pacotes de dependencia do sistema operacional'
+      apt:
+        name: "{{ item }}"
+        state: latest
+      become: yes
+      with_items:
+        - php5
+        - apache2
+        - libapache2-mod-php5
+        - php5-gd
+        - libssh2-php
+        - php5-mcrypt
+        - mysql-server-5.6
+        - python-mysqldb
+        - php5-mysql
+*******************************************************************************
+Outra forma em que também funciona o "with":
+*******************************************************************************
+    - name: 'Instala pacotes do sistema operacional'
+      apt:
+        name:
+        - php5
+        - apache2
+        - libapache2-mod-php5
+        state: latest
+      become: yes
+*******************************************************************************
+-> ATENÇÃO -> Não usar TAB para formatar o playbook 
+-> 
 -> 
 -> 
 -> 
