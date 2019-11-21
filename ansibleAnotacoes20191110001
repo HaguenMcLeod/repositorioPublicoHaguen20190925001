@@ -60,16 +60,19 @@ Hello, World
 *******************************************************************************
 -> Executar, para teste, o mesmo comando com saída no console com mais detalhes para fins de debug
 -> ansible -vvvv wordpress -u vagrant --private-key .vagrant/machines/wordpress/virtualbox/private_key -i hosts -m shell -a 'echo Hello, World'
--> 
--> 
--> 
--> 
--> 
--> 
--> 
--> 
--> 
--> 
+###############################################################################
+02 O primeiro Playbook - 20191121001 ##########################################
+-> Criar dentro da pasta do projeto o arquivo "provisioning.yml"
+-> O conteúdo do arquivo criado acima sempre começa com 3 ífens, como exemplo abaixo:
+*******************************************************************************
+---
+- hosts: all
+  tasks: 
+   - shell: 'echo hello > /vagrant/world.txt'
+*******************************************************************************
+-> exit se estiver logado na VM
+-> o comando abaixo deve criar um arquivo texto com uma msg gravada
+-> ansible-playbook provisioning.yml -u vagrant -i hosts --private-key .vagrant/machines/wordpress/virtualbox/private_key 
 -> 
 -> 
 -> 
