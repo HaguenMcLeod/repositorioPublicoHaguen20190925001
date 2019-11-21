@@ -1,0 +1,82 @@
+02 Por que usar Ansible *******************************************************
+-> Abrir terminal na pasta do curso
+-> sudo apt-get install ansible
+-> Criar dentro da pasta do curso o arquivo hosts com o seguinte conteúdo:
+*******************************************************************************
+[wordpress]
+172.17.177.40
+*******************************************************************************
+-> Criar dentro da pasta do curso o arquivo Vagrantfile com o seguinte conteúdo:
+*******************************************************************************
+Vagrant.configure("2") do |config|
+
+    config.vm.box = "ubuntu/trusty64"
+
+    config.vm.provider "virtualbox" do |v|
+        v.memory = 1024
+    end
+
+    config.vm.define "wordpress" do |m|
+        m.vm.network "private_network", ip: "172.17.177.40"
+    end
+
+end
+*******************************************************************************
+-> ansible wordpress -u vagrant --private-key .vagrant/machines/wordpress/virtualbox/private_key -i hosts -m shell -a 'echo Hello, World'
+*******************************************************************************
+172.17.177.40 | SUCCESS | rc=0 >>
+Hello, World
+*******************************************************************************
+-> Comando com mais detalhes lançados na saída do terminal:
+-> ansible -vvvv wordpress -u vagrant --private-key .vagrant/machines/wordpress/virtualbox/private_key -i hosts -m shell -a 'echo Hello, World'
+*******************************************************************************
+05 Instalando Ansible e o primeiro comando - 18/11/2019 #######################
+-> sudo apt-get install ansible
+-> ansible --version
+-> vagrant --version
+-> com o Vagrantfile do curso na pasta correspondente
+-> vagrant up
+-> criação do arquivo "hosts":
+*******************************************************************************
+[wordpress]
+172.17.177.40
+*******************************************************************************
+-> vagrant ssh 
+-> exit
+-> ansible wordpress -u vagrant -i hosts -m shell -a 'echo Hello, World'
+-> Vai dar ERRO:
+*******************************************************************************
+172.17.177.40 | UNREACHABLE! => {
+    "changed": false, 
+    "msg": "Failed to connect to the host via ssh: vagrant@172.17.177.40: Permission denied (publickey,password).\r\n", 
+    "unreachable": true
+}
+*******************************************************************************
+-> O comando abaixo executa a operação criando a private key:
+-> ansible wordpress -u vagrant --private-key .vagrant/machines/wordpress/virtualbox/private_key -i hosts -m shell -a 'echo Hello, World' 
+*******************************************************************************
+172.17.177.40 | SUCCESS | rc=0 >>
+Hello, World
+*******************************************************************************
+-> Executar, para teste, o mesmo comando com saída no console com mais detalhes para fins de debug
+-> ansible -vvvv wordpress -u vagrant --private-key .vagrant/machines/wordpress/virtualbox/private_key -i hosts -m shell -a 'echo Hello, World'
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
