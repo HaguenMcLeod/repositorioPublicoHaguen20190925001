@@ -73,13 +73,21 @@ Hello, World
 -> exit se estiver logado na VM
 -> o comando abaixo deve criar um arquivo texto com uma msg gravada
 -> ansible-playbook provisioning.yml -u vagrant -i hosts --private-key .vagrant/machines/wordpress/virtualbox/private_key 
--> 
--> 
--> 
--> 
--> 
--> 
--> 
--> 
--> 
--> 
+###############################################################################
+06 Trabalhando com vários logins - 20191122001 ********************************
+-> Adicionar ao arquivo "hosts" o usuário -> "ansible_user=vagrant"
+-> Identificar o caminho para a private key para isnerção no arquivo "hosts": 
+-> pwd
+-> copiar o retorno para inserir no caminho da prive key -> "/home/haguenmcleod/Backup20190927001/CursosInformatica/DevOps/cursoAnsible"
+-> ls .vagrant/machines/wordpress/virtualbox/private_key 
+-> copiar o retorno para inserir no caminho da 
+prive key(completar os endereços com TAB se necessário) -> ".vagrant/machines/wordpress/virtualbox/private_key"
+-> ansible-playbook provisioning.yml -i hosts
+-> o arquivo hosts deve ficar assim - 22/11/2019:
+*******************************************************************************
+[wordpress]
+172.17.177.40 ansible_user=vagrant ansible_ssh_private_key_file="/home/haguenmcleod/Backup20190927001/CursosInformatica/DevOps/cursoAnsible/.vagrant/machines/wordpress/virtualbox/private_key"
+172.17.177.42 ansible_user=admin
+*******************************************************************************
+
+
