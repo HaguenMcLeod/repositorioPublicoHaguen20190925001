@@ -2450,18 +2450,117 @@ Outra forma em que também funciona o "with":
       become: yes
 *******************************************************************************
 -> ATENÇÃO -> Não usar TAB para formatar o playbook 
--> 
--> 
--> 
--> 
--> 
--> 
--> 
--> 
--> 
--> 
--> 
--> 
--> 
+###############################################################################
 
+02 Por que usar Ansible *******************************************************
+-> Abrir terminal na pasta do curso
+-> sudo apt-get install ansible
+-> Criar dentro da pasta do curso o arquivo hosts com o seguinte conteúdo:
+*******************************************************************************
+[wordpress]
+172.17.177.40
+*******************************************************************************
+-> Criar dentro da pasta do curso o arquivo Vagrantfile com o seguinte conteúdo:
+*******************************************************************************
+Vagrant.configure("2") do |config|
 
+    config.vm.box = "ubuntu/trusty64"
+
+    config.vm.provider "virtualbox" do |v|
+        v.memory = 1024
+    end
+
+    config.vm.define "wordpress" do |m|
+        m.vm.network "private_network", ip: "172.17.177.40"
+    end
+
+end
+*******************************************************************************
+-> ansible wordpress -u vagrant --private-key .vagrant/machines/wordpress/virtualbox/private_key -i hosts -m shell -a 'echo Hello, World'
+*******************************************************************************
+172.17.177.40 | SUCCESS | rc=0 >>
+Hello, World
+*******************************************************************************
+-> Comando com mais detalhes lançados na saída do terminal:
+-> ansible -vvvv wordpress -u vagrant --private-key .vagrant/machines/wordpress/virtualbox/private_key -i hosts -m shell -a 'echo Hello, World'
+*******************************************************************************
+05 Instalando Ansible e o primeiro comando - 18/11/2019 #######################
+-> sudo apt-get install ansible
+-> ansible --version
+-> vagrant --version
+-> com o Vagrantfile do curso na pasta correspondente
+-> vagrant up
+-> criação do arquivo "hosts":
+*******************************************************************************
+[wordpress]
+172.17.177.40
+*******************************************************************************
+-> vagrant ssh 
+-> exit
+-> ansible wordpress -u vagrant -i hosts -m shell -a 'echo Hello, World'
+-> Vai dar ERRO:
+*******************************************************************************
+172.17.177.40 | UNREACHABLE! => {
+    "changed": false, 
+    "msg": "Failed to connect to the host via ssh: vagrant@172.17.177.40: Permission denied (publickey,password).\r\n", 
+    "unreachable": true
+}
+*******************************************************************************
+-> O comando abaixo executa a operação criando a private key:
+-> ansible wordpress -u vagrant --private-key .vagrant/machines/wordpress/virtualbox/private_key -i hosts -m shell -a 'echo Hello, World' 
+*******************************************************************************
+172.17.177.40 | SUCCESS | rc=0 >>
+Hello, World
+*******************************************************************************
+-> Executar, para teste, o mesmo comando com saída no console com mais detalhes para fins de debug
+-> ansible -vvvv wordpress -u vagrant --private-key .vagrant/machines/wordpress/virtualbox/private_key -i hosts -m shell -a 'echo Hello, World'
+###############################################################################
+02 O primeiro Playbook - 20191121001 ##########################################
+-> Criar dentro da pasta do projeto o arquivo "provisioning.yml"
+-> O conteúdo do arquivo criado acima sempre começa com 3 ífens, como exemplo abaixo:
+*******************************************************************************
+---
+- hosts: all
+  tasks: 
+   - shell: 'echo hello > /vagrant/world.txt'
+*******************************************************************************
+-> exit se estiver logado na VM
+-> o comando abaixo deve criar um arquivo texto com uma msg gravada
+-> ansible-playbook provisioning.yml -u vagrant -i hosts --private-key .vagrant/machines/wordpress/virtualbox/private_key 
+###############################################################################
+06 Trabalhando com vários logins - 20191122001 ********************************
+-> Adicionar ao arquivo "hosts" o usuário -> "ansible_user=vagrant"
+-> Identificar o caminho para a private key para isnerção no arquivo "hosts": 
+-> pwd
+-> copiar o retorno para inserir no caminho da prive key -> "/home/haguenmcleod/Backup20190927001/CursosInformatica/DevOps/cursoAnsible"
+-> ls .vagrant/machines/wordpress/virtualbox/private_key 
+-> copiar o retorno para inserir no caminho da 
+prive key(completar os endereços com TAB se necessário) -> ".vagrant/machines/wordpress/virtualbox/private_key"
+-> ansible-playbook provisioning.yml -i hosts
+-> o arquivo hosts deve ficar assim - 22/11/2019:
+*******************************************************************************
+[wordpress]
+172.17.177.40 ansible_user=vagrant ansible_ssh_private_key_file="/home/haguenmcleod/Backup20190927001/CursosInformatica/DevOps/cursoAnsible/.vagrant/machines/wordpress/virtualbox/private_key"
+172.17.177.42 ansible_user=admin
+*******************************************************************************
+-> o arquivo provisioning.yml deve ficar assim - 22/11/2019:
+*******************************************************************************
+---
+- hosts: all
+  tasks:
+    - name: 'Instala pacotes de dependencia do sistema operacional'
+      apt:
+        name: "{{ item }}"
+        state: latest
+      become: yes
+      with_items:
+        - php5
+        - apache2
+        - libapache2-mod-php5
+        - php5-gd
+        - libssh2-php
+        - php5-mcrypt
+        - mysql-server-5.6
+        - python-mysqldb
+        - php5-mysql
+*******************************************************************************
