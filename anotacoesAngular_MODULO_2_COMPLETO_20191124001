@@ -5839,6 +5839,60 @@ export class CoreModule{
 // terminal, verificar a presença da
 //  frase: "A token is send by the application"
 *******************************************************************************
+Curso trabalho - 25/11/2019 ###################################################
+-> curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.1/install.sh | bash
+-> nvm --version -> versao do node
+-> nvm install node -> instala o node
+-> node -v
+-> npm -v
+-> nvm install 8.0.0 -> instala node e npm em versões compativeis
+-> node -v
+-> npm -v
+-> nvm use node 8.0.0 -> seleciona uma versao para uso
+-> pacakge json -> "^" -> Atualiza a minor version automatiamente, 
+"~"-> vai incrementar uma versão de bug fix automaticamente
+-> package lock -> para travar atualizacao de versão mesmo qdo subir para o jenkins - é um arquivo para SER commitado 
+***************************
+https://code.visualstudio.com/
+
+
+VSCODE extensions
+
+-> no VS, selecionar o quarto icone na barra lateral:
+
+Bracket Pair Colorizer
+Material Icon Theme -> file -> preferences -> selecionar "Material Icon Theme"
+NPM -> instalar depois
+TypeScript Extension Pack -> versao loiane   
+Winter is Coming Theme -> versao john papa
+Angular 8 Snippets -> 
+Angular2-switcher
+Angular Console
+Git:
+Git History
+GitLens — Git supercharged
+***************************
+-> terminal no VS -> ctrl + shift + "´" 
+-> npm install -g @angular/cli
+-> ng --version ou ng -v
+-> ng new projeto-angular-angular -> cria a apicação angular
+***************************************
+? Would you like to add Angular routing? Yes
+? Which stylesheet format would you like to use? CSS
+***************************************
+-> cd projeto-angular
+-> ng serve --open -> no firefox pode dar erro, se sim, tentar no chrome
+-> @Injectable -> faz a classe virar um serviço
+-> ng g m shared -> criar pasta/modulo shared e seus arquivos
+-> ng g c shared/input -> criar componente input dentro da pasta shared e atualizou os arquivos
+-> ng g c shared/label -> cria o segundo componente
+-> ng g m importacao -> cria o modulo importacao
+-> ng g c importacao/importar-carga
+-> alt + o -> alterna entre o .ts e o .html correspondente
+-> 
+-> 
+-> 
+-> 
 *******************************************************************************
 *******************************************************************************
 *******************************************************************************
