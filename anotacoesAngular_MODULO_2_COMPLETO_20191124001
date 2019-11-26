@@ -5855,9 +5855,7 @@ Curso trabalho - 25/11/2019 ###################################################
 ***************************
 https://code.visualstudio.com/
 
-
-VSCODE extensions
-
+-> Instalar extenções:
 -> no VS, selecionar o quarto icone na barra lateral:
 
 Bracket Pair Colorizer
@@ -5869,8 +5867,8 @@ Angular 8 Snippets ->
 Angular2-switcher
 Angular Console
 Git:
-Git History
-GitLens — Git supercharged
+    Git History
+    GitLens — Git supercharged
 ***************************
 -> terminal no VS -> ctrl + shift + "´" 
 -> npm install -g @angular/cli
@@ -5889,6 +5887,43 @@ GitLens — Git supercharged
 -> ng g m importacao -> cria o modulo importacao
 -> ng g c importacao/importar-carga
 -> alt + o -> alterna entre o .ts e o .html correspondente
+-> Aula - 26/11/2019 ##########################################################
+<!-- Data Binding --> #########################################################
+<!-- [propetry] = "value" *****************************************************
+(event) = "handler"
+[(ng-model)] = "property" -->
+-> https://pucomex.gitpages.serpro/documentos/frontend/angular2+/guiaDesenvolvimento/01-NovoSistemaAngular/
+-> Configurar o repositório nexus no npm -> 
+-> em um terminal aberto na pasta do projeto -> npm config set @pucomex-ng-infra:registry=http://nexus.aic.serpro/repository/npm-private/
+-> npm install -g @pucomex-ng-infra/pucomex-angular-schematic
+-> Gerar um novo projeto angular utilizando o angularCLI e o schematic pucomex
+-> cd.. (tem que sair da pasta do projeto, será um projeto novo)
+-> ng new --collection=@pucomex-ng-infra/pucomex-angular-schematic
+-> No Visual Studio abrir a pasta "pucomex-cct-frontend"
+-> npm start
+-> https://localhost:4200/
+-> ng g m Shared
+-> ng g m Estoque
+-> ng g c estoque/consulta-pre
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
+-> 
 -> 
 -> 
 -> 
