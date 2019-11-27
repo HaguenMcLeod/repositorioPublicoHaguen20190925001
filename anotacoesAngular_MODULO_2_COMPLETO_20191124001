@@ -5981,6 +5981,189 @@ em teste combo - 26/11/2019 *****************************************
 	</div>
 </pucx-panel>
 #####################################################################
+Aula trab - 27/11/2019 ##############################################
+*********************************************************************
+
+export class EstoqueItemNota {
+  numeroDocumento: string;
+  tipo: string;
+  numeroNF: number;
+  numeroDUE: string;
+  dataEmissaoNF: number;
+  numeroItem: number;
+  codigoNCM: number;
+  codigoURF: number;
+  codigoRA: number;
+  latitude: string;
+  longitude: string;
+  idResponsavel: string;
+  nomeResponsavel: string;
+  codigoPaisDestinatario: number;
+  nomePaisDestinatario: string;
+  anoDeposito: number;
+  sequenciaDeposito: number;
+  existeConteiner: string;
+}
+
+GET https://inc-priv.pucomex.dev.serpro/cct/api/deposito-carga/consultar-estoque-antes-acd?numeroDocumentoNFE=35191100000000002720550900022163151000000005
+
+JSON Response
+{ 
+   "lista":[ 
+      { 
+         "numeroDocumento":"2216315",
+         "tipo":"NF-e",
+         "numeroNF":2216315,
+         "numeroDUE":null,
+         "dataEmissaoNF":1573771929000,
+         "numeroItem":1,
+         "codigoNCM":12011000,
+         "codigoURF":717700,
+         "codigoRA":7911102,
+         "latitude":"-22.812222",
+         "longitude":"-43.248333",
+         "idResponsavel":"00531660000107",
+         "nomeResponsavel":"MOCK Testes Integrados",
+         "codigoPaisDestinatario":676,
+         "nomePaisDestinatario":"RUSSIA, FEDERACAO DA",
+         "anoDeposito":2019,
+         "sequenciaDeposito":106929,
+         "existeConteiner":"N"
+      }
+   ]
+}
+
+
+
+
+https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement
+
+
+
+lo="Consultar Estoque Pré-ACD"></pucx-titulo>
+<pucx-titulo titu
+<pucx-panel header="Filtros da Consulta">
+  <form>
+    <div class="row">
+      <div class="col-md-4">
+        <pucx-field-container label="Chave de acesso">
+          <input
+            name="chaveAcesso"
+            type="text"
+            required
+            id="chaveAcesso"
+            [(ngModel)]="chaveAcesso"
+            class="form-control"
+            aria-describedby="inputHelp"
+          />
+        </pucx-field-container>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <p-button label="Consultar" styleClass="btn btn-primary" type="submit"></p-button>
+        <p-button
+          label="Limpar"
+          type="reset"
+          (click)="limpar()"
+          styleClass="btn btn-secondary"
+        ></p-button>
+      </div>
+    </div>
+  </form>
+</pucx-panel>
+
+
+
+<div class="row">
+      <div class="col-md-12 text-center">
+        <p-button label="Consultar" styleClass="btn btn-primary" type="submit"></p-button>
+        <p-button
+          label="Limpar"
+          type="reset"
+          (click)="limpar()"
+          styleClass="btn btn-secondary"
+        ></p-button>
+      </div>
+    </div>
+    
+
+<pucx-field-container label="Chave de acesso">
+        <input
+          type="text"
+          id="chaveAcesso"
+          [(ngModel)]="chaveAcesso"
+          class="form-control"
+          aria-describedby="inputHelp"
+        />
+      </pucx-field-container>
+      
+      ngModel
+
+pucx-field-container
+
+https://git.serpro/PUCOMEX/angular/pucomex-angular-infra/blob/master/projects/pucx-components/src/lib
+
+https://inc-priv.pucomex.dev.serpro/cct/#/consulta-estoque-antes-acd
+
+Nfe: 35191100000000002720550900022163151000000005
+
+'consulta-estoque-antes-acd'
+
+{
+    "/cct/proxy/*": {
+      "target": "http://inccctruni.pucomex.dev.serpro:9999",
+      "logLevel": "debug",
+      "changeOrigin": true
+    },
+    "/portal/*": {import { httpClient } from '@angular/'
+      "target": "https://inc-priv.pucomex.dev.serpro",
+      "secure": false,
+      "changeOrigin": true
+    },
+    "**/api/**/**/*": {
+      "target": "http://inccctruni.pucomex.dev.serpro:9999",
+      "logLevel": "debug",
+      "changeOrigin": true
+    }
+  }
+  
+
+
+https://pucomex.gitpages.serpro/documentos/frontend/angular2+/guiaDesenvolvimento/01-NovoSistemaAngular/
+
+
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.1/install.sh | bash
+
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.1/install.sh | bash
+      export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+
+
+https://val.pucomex.serpro/angular/
+https://val.pucomex.serpro/angular/#/showcase
+
+https://www.primefaces.org/primeng/#/button
+
+
+https://code.visualstudio.com/
+
+
+VSCODE extensions
+
+Bracket Pair Colorizer
+Material Icon Theme
+TypeScript Extension Pack   
+Angular 8 SnippetschaveAcesso
+Angular2-switcher
+Angular Console
+
+Git History
+GitLens — Git supercharged
+
+
+
+*********************************************************************
 -> 
 -> 
 -> 
