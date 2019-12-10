@@ -7040,12 +7040,208 @@ export class PhotoService{
     word-break: break-all;
 }
 *******************************************************************************
+02 Buscando comentários - 09/12/2019 ##########################################
+	03 Comentários como componente
+-> Criar dentro de photo o arquivo photo-comment.ts
+-> Componente -> Dentro de photo-details criar a pasta "photo-comments" com os arquivos "photo-comments.component.html" e "photo-comments.component.ts"
+
+// photo/photo-comment.ts #####################################################
+// 1/7 ************************************************************************
+
+export interface PhotoComment {
+    date: Date;
+    text: string;
+    userName: string;
+}
 *******************************************************************************
+// photo.service.ts ############################################################
+// 2/7 ************************************************************************* 
+
+import { HttpClient, HttpParams } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { Photo } from "./photo";
+import { PhotoComment } from './photo-comment';
+
+const API = 'http://localhost:3000';
+
+@Injectable({providedIn: 'root'})
+export class PhotoService{
+
+    constructor(private http: HttpClient){
+    }
+        listFromUser(userName: string){
+            return this.http.
+            get<Photo[]>(API + '/' + userName + '/photos');
+    }
+
+    listFromUserPaginated(userName: string, page: number) {
+        const params = new HttpParams()
+            .append('page', page.toString());
+    
+        return this.http
+        .get<Photo[]>(API + '/' + userName + '/photos', { params });
+    }
+
+    upload(description: string, allowComments: boolean, file: File) {
+
+        const formData = new FormData();
+        formData.append('description', description);
+        formData.append('allowComments', allowComments ? 'true' : 'false');
+        formData.append('imageFile', file);
+        return this.http.post(API + '/photos/upload', formData);
+    }    
+
+    // mudar o tipo do id da foto para number *********************************
+    // mudar o tipo id para photoId *******************************************
+    findById(photoId: number) {
+
+        return this.http.get<Photo>(API + '/photos/' + photoId);
+    }
+    
+    // Criar o método getComments *********************************************
+    getComments(photoId: number) {
+        return this.http.get<PhotoComment[]>(
+            // Endereço concatenado da foto e seu comentário ******************
+            API + '/photos/' + photoId + '/comments');
+    }
+}
 *******************************************************************************
+// photos/photo-details/photo-details.component.ts ############################
+// 3/7 ************************************************************************ 
+
+import { Component } from "@angular/core";
+import { ActivatedRoute } from '@angular/router';
+import { PhotoService } from '../photo/photo.service';
+import { Photo } from '../photo/photo';
+import { Observable } from 'rxjs';
+
+@Component({
+    templateUrl: './photo-details.component.html',
+    styleUrls: ['photo-details.css']
+})
+export class PhotoDetailsComponent {
+
+  photo$: Observable<Photo>;
+
+  // Declarar a var photoId ***************************************************  
+  photoId: number;
+
+  constructor(private route: ActivatedRoute,
+              private photoService: PhotoService) {}
+
+  ngOnInit(): void {
+    this.photoId = this.route.snapshot.params.photoId;
+    this.photo$ = this.photoService.findById(this.photoId);
+  }
+}
 *******************************************************************************
+<!-- photo-comments.component.html ######################################## -->
+<!-- 4/7 ****************************************************************** -->
+
+<div *ngIf="(comments$ | async) as comments">
+    <ul class="list-unstyled">
+        <li *ngFor="let comment of comments">
+            <a class="text-dark font-weight-bold mr-1" [routerLink]="['/user', comment.userName]">
+                {{ comment.userName }}
+            </a>
+            <em>
+                {{ comment.date | date:'dd-MM-yyyy HH:mm' }}
+            </em>
+            <p class="break-word mb-2">
+                {{ comment.text }}
+            </p>
+        </li>
+    </ul>
+
+    <div class="mt-4">
+        <form>
+          <div class="input-group">
+            <textarea class="form-control"></textarea>
+            <div class="input-group-append">
+              <button class="btn btn-primary pull-left">Publish</button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+<div>
 *******************************************************************************
+// photo-comments.component.ts ################################################
+// 5/7 ************************************************************************
+
+import { Component, OnInit } from "@angular/core";
+import { Observable } from "rxjs";
+import { PhotoComment } from "../../photo/photo-comment";
+import { Input } from "@angular/core";
+import { PhotoService } from "../../photo/photo.service";
+
+@Component({
+    selector: 'ap-photo-comments',
+    templateUrl: './photo-comments.component.html'
+})
+export class PhotoCommentsComponent implements OnInit {
+
+    @Input() photoId: number;
+
+    comments$: Observable<PhotoComment[]>;
+
+    constructor(private photoService: PhotoService) {}
+
+    ngOnInit(): void {
+
+        this.comments$ = this.photoService.getComments(this.photoId);
+    }
+}
 *******************************************************************************
+// // photos/photo-details/photo-details.module.ts ############################
+// 6/7 ************************************************************************
+
+import { NgModule } from "@angular/core";
+import { PhotoDetailsComponent } from "./photo-details.component";
+import { CommonModule } from "@angular/common";
+import { PhotoModule } from '../photo/photo.module';
+import { PhotoCommentsComponent } from './photo-comments/photo-comments.component';
+import { RouterModule } from '@angular/router';
+
+@NgModule({
+    declarations: [PhotoDetailsComponent, 
+        // Declarar PhotoCommentsComponent ************************************
+        PhotoCommentsComponent
+            ],
+    exports: [PhotoDetailsComponent,
+        // Exportar PhotoCommentsComponent ************************************
+        PhotoCommentsComponent
+            ],
+    imports: [
+        CommonModule,
+        PhotoModule,
+        // Importar RouterModule **********************************************
+        RouterModule        
+        ]
+})
+export class PhotoDetailsModule { }
 *******************************************************************************
+<!-- photo-details.component.html ######################################### -->
+<!-- 7/7 *****************************************************************  -->
+
+<div class="bg-white border" *ngIf="(photo$ | async) as photo">
+  <div class="row">
+    <div class="col-lg-8">
+      <ap-photo [url]="photo.url" [description]="photo.description"></ap-photo>
+    </div>
+
+    <div class="col-lg-4">
+      <small>
+        <p class="text-left break-word">{{photo.description}}</p>
+        <hr>
+      </small>
+
+      <!-- Declarar o componente photo comments *************************** -->
+      <ap-photo-comments [photoId]="photoId"></ap-photo-comments>]>
+   
+    </div>
+  </div>
+</div>
 *******************************************************************************
 *******************************************************************************
 *******************************************************************************
