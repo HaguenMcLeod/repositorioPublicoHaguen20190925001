@@ -2563,3 +2563,5 @@ prive key(completar os endereços com TAB se necessário) -> ".vagrant/machines/
         - python-mysqldb
         - php5-mysql
 *******************************************************************************
+Liberar porta se travada em uso, exemplo, porta 4200:
+-> sudo kill -9 `sudo lsof -t -i:4200`
